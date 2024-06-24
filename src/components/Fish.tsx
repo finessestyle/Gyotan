@@ -1,42 +1,50 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+import { router } from 'expo-router'
+import GoogleMap from '../components/GoogleMap'
 
-const FishInfo = (): JSX.Element => {
+const handlePress = (): void => {
+  router.push('/user/detail')
+}
+
+const Fish = (): JSX.Element => {
   return (
     <ScrollView>
-      <View style={styles.userInfo}>
+      <View style={styles.userInfo} >
         <Image style={styles.userImage} source={ require('../../assets/2.jpeg') } />
-        <Text style={styles.userName}>フィネススタイル さん</Text>
+        <Text style={styles.userName} onPress={handlePress}>フィネススタイル さん</Text>
       </View>
       <View style={styles.postBody}>
         <View style={styles.fishArea}>
           <Text>釣果エリア: 北湖北エリア</Text>
         </View>
-        <View>
-          <Image style={styles.fishAreaImage} source={ require('../../assets/3.png') } />
-        </View>
+        <GoogleMap />
         <View style={styles.fishTime}>
           <Text>釣果日時: 2024年3月21日14:02</Text>
         </View>
         <View>
           <Image style={styles.fishImage} source={ require('../../assets/1.jpeg') } />
         </View>
-        <View>
-          <View style={styles.fishTime}>
+        <View style={styles.fishingInfomation}>
+          <View style={styles.leftInfo}>
             <Text>天気: 晴れ</Text>
           </View>
-          <View style={styles.fishTime}>
+          <View style={styles.rightInfo}>
             <Text>釣果数: 1匹</Text>
           </View>
-          <View style={styles.fishTime}>
-            <Text>長さ: 30cm</Text>
+        </View>
+        <View style={styles.fishingInfomation}>
+          <View style={styles.leftInfo}>
+            <Text>サイズ: 30cm</Text>
           </View>
-          <View style={styles.fishTime}>
-            <Text>重さ: 600g</Text>
+          <View style={styles.rightInfo}>
+            <Text>重さ: 500g</Text>
           </View>
-          <View style={styles.fishTime}>
+        </View>
+        <View style={styles.fishingInfomation}>
+          <View style={styles.leftInfo}>
             <Text>ルアー: ネコリグ</Text>
           </View>
-          <View style={styles.fishTime}>
+          <View style={styles.rightInfo}>
             <Text>カラー: グリパン</Text>
           </View>
         </View>
@@ -54,8 +62,6 @@ const FishInfo = (): JSX.Element => {
 }
 
 const styles = StyleSheet.create({
-  postInfo: {
-  },
   userInfo: {
     height: 80,
     flexDirection: 'row',
@@ -73,17 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 32,
     color: '#467FD3'
-  },
-  postTitle: {
-    color: '#ffffff',
-    fontSize: 20,
-    lineHeight: 32,
-    fontWeight: 'bold'
-  },
-  postDate: {
-    color: '#ffffff',
-    fontSize: 12,
-    lineHeight: 16
   },
   postBody: {
     borderWidth: 1,
@@ -110,14 +105,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  fishingInfomation: {
+    height: 32,
+    width: 'auto',
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderColor: '#B0B0B0'
+  },
+  leftInfo: {
+    flex: 1,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#D0D0D0'
+  },
+  rightInfo: {
+    flex: 1,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   fishImage: {
     height: 322,
     width: 'auto'
   },
   fishInfo: {
     height: 'auto',
-    borderBottomWidth: 1,
-    borderBottomColor: '#B0B0B0',
+    lineHeight: 32,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -128,4 +143,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FishInfo
+export default Fish

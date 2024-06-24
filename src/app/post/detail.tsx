@@ -1,14 +1,21 @@
 import { View, StyleSheet } from 'react-native'
-import Header from '../../components/Header'
+
 import CircleButton from '../../components/CircleButton'
-import FishInfo from '../../components/FishInfo'
+import Fish from '../../components/Fish'
+import Icon from '../../components/Icon'
+import { router } from 'expo-router'
+
+const handlePress = (): void => {
+  router.push('/post/edit')
+}
 
 const Detail = (): JSX.Element => {
   return (
     <View style={styles.container}>
-      <Header />
-      <FishInfo />
-      <CircleButton>＋</CircleButton>
+      <Fish />
+      <CircleButton onPress={handlePress}>
+        <Icon name='pencil' size={40} color='#ffffff' />
+      </CircleButton>
     </View>
   )
 }

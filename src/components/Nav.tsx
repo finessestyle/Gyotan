@@ -1,13 +1,23 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 
 const Nav = (): JSX.Element => {
   return (
     <View style={styles.nav}>
-      <Text style={styles.navBotton}>北湖北</Text>
-      <Text style={styles.navBotton}>北湖東</Text>
-      <Text style={styles.navBotton}>北湖西</Text>
-      <Text style={styles.navBotton}>南湖東</Text>
-      <Text style={styles.navBotton}>南湖西</Text>
+      <TouchableOpacity>
+        <Text style={styles.navBotton}>北湖北</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.navBotton}>北湖東</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.navBotton}>北湖西</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.navBotton}>南湖東</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.navBotton}>南湖西</Text>
+      </TouchableOpacity>
     </View>
   )
 }
