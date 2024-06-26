@@ -9,7 +9,7 @@ const Layout = (): JSX.Element => {
     headerTitle: 'Gyotan',
     headerBackTitle: 'Back',
     headerTitleStyle: {
-      fontSize: 22,
+      fontSize: 26,
       fontWeight: 'bold'
     }
   }} />

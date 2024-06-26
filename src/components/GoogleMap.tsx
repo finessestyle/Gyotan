@@ -1,31 +1,33 @@
-import { View, StyleSheet, Dimensions } from 'react-native'
-import MapView, { Circle, PROVIDER_GOOGLE } from 'react-native-maps'
+import { View, StyleSheet } from 'react-native'
+import MapView, { Circle, UrlTile } from 'react-native-maps'
 
 const GoogleMap = (): JSX.Element => {
   const nRadiusHalfKm = 300
-  const latitude = 35.28537173798231
-  const longitude = 136.09664223303773
+  const latitude = 35.4835
+  const longitude = 136.117
 
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE}
         style={styles.map}
-        region={{
+        mapType='none'
+        initialRegion={{
           latitude: latitude,
           longitude: longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01
         }}
       >
+        <UrlTile
+          urlTemplate="https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png" // Google MapsタイルURL
+          maximumZ={19}
+          flipY={false} // 必要に応じて設定
+        />
         <Circle
           center={{ latitude, longitude }}
           radius={nRadiusHalfKm}
           strokeColor="#3333FF"
-          strokeOpacity={0.2}
-          strokeWeight={2}
-          fillColor="#3333FF"
-          fillOpacity={0.2}
+          fillColor="rgba(51, 51, 255, 0.2)"
         />
       </MapView>
     </View>
@@ -38,8 +40,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   map: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height / 2
+    width: 335,
+    height: 174
   }
 })
 
