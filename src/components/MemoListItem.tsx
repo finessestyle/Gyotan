@@ -1,20 +1,52 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import Icon from './Icon'
 import { Link } from 'expo-router'
+import { type Post } from '../../types/post'
+import Icon from './Icon'
 
-const MemoListItem = (): JSX.Element => {
+interface Props {
+  post: Post
+}
+
+// const handlePress = (id: string): void => {
+//   if (auth.currentUser === null) { return }
+//   const ref = doc(db, `users/${auth.currentUser.uid}/memos`, id)
+//   Alert.alert('投稿を削除します', 'よろしいですか？', [
+//     {
+//       text: 'キャンセル'
+//     },
+//     {
+//       text: '削除する',
+//       style: 'destructive',
+//       onPress: () => {
+//         deleteDoc(ref)
+//           .catch(() => { Alert.alert('削除に失敗しました') })
+//       }
+//     }
+//   ])
+// }
+
+const MemoListItem = (props: Props): JSX.Element | null => {
+  const { post } = props
+  const { title, images, updatedAt } = post
+  const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
+  if (title === null || updatedAt === null || images === null) { return null }
+  const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
   return (
-    <Link href='/post/detail' asChild>
+    <Link
+      href={{ pathname: '/post/detail', params: { id: post.id } }}>
       <TouchableOpacity >
         <View style={styles.memoListItem}>
           <View>
-            <Image style={styles.memoListItemImage} source={ require('../../assets/1.jpeg') } />
+          <Image
+            style={styles.memoListItemImage}
+            source={{ uri: imageUri }}
+          />
           </View>
           <View >
-            <Text style={styles.memoListItemTitle}>買い物リスト</Text>
-            <Text style={styles.memoListItemDate}>2024年6月18日23:19</Text>
+            <Text style={styles.memoListItem}>{post.title}</Text>
+            <Text style={styles.memoListItemDate}>{dateString}</Text>
           </View>
-          <TouchableOpacity style={styles.deliteButton}>
+          <TouchableOpacity>
             <Icon name='delete' size={32} color='#B0B0B0' />
           </TouchableOpacity>
         </View>
@@ -48,10 +80,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: '#848484'
-  },
-  deliteButton: {
-    position: 'absolute',
-    right: 20
   }
 })
 

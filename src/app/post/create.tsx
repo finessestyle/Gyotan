@@ -1,21 +1,14 @@
 import {
-  Text, TextInput, StyleSheet, ScrollView, View, Button, Image
+  View, ScrollView, Text, TextInput, Button, Image, StyleSheet
 } from 'react-native'
 import { useState } from 'react'
-import * as ImagePicker from 'expo-image-picker'
 import { router } from 'expo-router'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
 import { db, auth } from '../../config'
+import * as ImagePicker from 'expo-image-picker'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
-
-interface ImagePickerResult {
-  canceled: boolean
-  assets?: Array<{
-    uri: string
-  }>
-}
 
 const handlePress = (
   title: string,
@@ -30,7 +23,7 @@ const handlePress = (
   fishArea: string
 ): void => {
   if (auth.currentUser === null) { return }
-  const ref = collection(db, `posts/${auth.currentUser.uid}/posts`)
+  const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
   addDoc(ref, {
     title,
     images,
