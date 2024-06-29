@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
-    height: 48,
+    height: 32,
     marginVertical: 8,
     alignItems: 'flex-start',
     justifyContent: 'center',
