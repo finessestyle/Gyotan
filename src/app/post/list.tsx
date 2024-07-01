@@ -5,7 +5,7 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
 
-import MemoListItem from '../../components/MemoListItem'
+import ListItem from '../../components/ListItem'
 import CircleButton from '../../components/CircleButton'
 import Nav from '../../components/Nav'
 import Icon from '../../components/Icon'
@@ -14,7 +14,6 @@ import LogOutButton from '../../components/LogOutButton'
 const handlePress = (): void => {
   router.push('/post/create')
 }
-
 const List = (): JSX.Element => {
   const [posts, setPosts] = useState<Post[]>([])
   const navigation = useNavigation()
@@ -23,7 +22,6 @@ const List = (): JSX.Element => {
       headerRight: () => { return <LogOutButton /> }
     })
   }, [])
-
   useEffect(() => {
     if (auth.currentUser === null) { return }
     const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
@@ -52,13 +50,12 @@ const List = (): JSX.Element => {
     })
     return unsubscribe
   }, [])
-
   return (
     <View style={styles.container}>
       <Nav />
       <FlatList
         data={posts}
-        renderItem={({ item }) => <MemoListItem post={item} /> }
+        renderItem={({ item }) => <ListItem post={item} /> }
       />
       <CircleButton onPress={handlePress}>
         <Icon name='plus' size={40} color='#ffffff' />

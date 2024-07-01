@@ -1,31 +1,74 @@
 import {
-  View, Text, TextInput, Alert,
-  TouchableOpacity, StyleSheet
+  View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Image, Platform
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../config'
+import { auth, db, storage } from '../../config'
+import { doc, setDoc } from 'firebase/firestore'
+import * as ImagePicker from 'expo-image-picker'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 
-const handlePress = (email: string, password: string): void => {
-  // 新規登録
-  console.log(email, password)
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      console.log(userCredential.user.uid)
-      router.replace('/post/list')
+const handlePress = async (email: string, password: string, username: string, profile: string, image: string): Promise<void> => {
+  try {
+    console.log(email, password, username, profile, image)
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+    const userId = userCredential.user.uid
+    console.log(userId)
+
+    let imageUrl = ''
+    if (image !== null) {
+      const response = await fetch(image)
+      const blob = await response.blob()
+      const storageRef = ref(storage, `users/${userId}/profile.jpg`)
+      await uploadBytes(storageRef, blob)
+      imageUrl = await getDownloadURL(storageRef)
+    }
+
+    await setDoc(doc(db, 'users', userId), {
+      username,
+      email,
+      password,
+      profile,
+      imageUrl
     })
-    .catch((error) => {
-      const { code, message } = error
-      console.log(code, message)
-      Alert.alert('新規登録に失敗しました')
-    })
+
+    router.replace('/post/list')
+  } catch (error) {
+    console.log(error)
+    Alert.alert('新規登録に失敗しました')
+  }
 }
 
 const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [profile, setProfile] = useState('')
+  const [image, setImage] = useState<string | null>(null)
+
+  const pickImage = async (): Promise<void> => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+      if (status !== 'granted') {
+        alert('Permission to access gallery is required!')
+        return
+      }
+    }
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1
+    })
+
+    if (!result.canceled) {
+      const selectedAsset = result.assets[0]
+      setImage(selectedAsset.uri)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -48,7 +91,26 @@ const SignUp = (): JSX.Element => {
           placeholder='Password'
           textContentType='password'
         />
-        <Button label='Submit' onPress={() => { handlePress(email, password) }} />
+        <TextInput
+          style={styles.input}
+          value={username}
+          onChangeText={(text) => { setUsername(text) }}
+          autoCapitalize='none'
+          placeholder='Username'
+        />
+        <TextInput
+          style={styles.input}
+          value={profile}
+          onChangeText={(text) => { setProfile(text) }}
+          autoCapitalize='none'
+          placeholder='Profile'
+        />
+        <TouchableOpacity onPress={pickImage}>
+          <Text style={styles.imagePicker}>Pick a Profile Image</Text>
+        </TouchableOpacity>
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+
+        <Button label='Submit' onPress={() => { handlePress(email, password, username, profile, image) }} />
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already registered?</Text>
           <Link href='/auth/login' asChild replace>
@@ -86,6 +148,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     color: '#000000'
+  },
+  imagePicker: {
+    color: '#467FD3',
+    marginBottom: 16
+  },
+  image: {
+    width: 100,
+    height: 100,
+    marginBottom: 16,
+    borderRadius: 50
   },
   footer: {
     flexDirection: 'row'

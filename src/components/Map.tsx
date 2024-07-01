@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native'
 import MapView, { Circle, UrlTile } from 'react-native-maps'
 
-const GoogleMap = (): JSX.Element => {
+const Map = (): JSX.Element => {
   const nRadiusHalfKm = 300
   const latitude = 35.4835
   const longitude = 136.117
@@ -45,4 +45,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default GoogleMap
+export default Map

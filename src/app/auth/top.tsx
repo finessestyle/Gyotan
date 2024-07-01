@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   topInner: {
   },
   topImage: {
-    height: 744,
+    height: 800,
     width: 'auto'
   },
   topText: {

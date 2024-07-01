@@ -1,27 +1,55 @@
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
-import Fish from '../../components/MemoListItem'
-import MemoListItem from '../../components/MemoListItem'
+import {
+  View, Text, StyleSheet, ScrollView, Image
+} from 'react-native'
+import { useLocalSearchParams } from 'expo-router'
+import { useState, useEffect } from 'react'
+import { onSnapshot, doc } from 'firebase/firestore'
+import { auth, db } from '../../config'
+import { type User } from '../../../types/user'
 
 const Detail = (): JSX.Element => {
+  const id = String(useLocalSearchParams().id)
+  console.log(id)
+  const [user, setUser] = useState<User | null>(null)
+  const imageUri = user !== null && Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
+  useEffect(() => {
+    if (auth.currentUser === null) { return }
+    const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
+    const unsubscribe = onSnapshot(ref, (userDoc) => {
+      const { email, password, username, profile, image, updatedAt } = userDoc.data() as User
+      console.log(userDoc.data())
+      setUser({
+        id: userDoc.id,
+        email,
+        password,
+        username,
+        profile,
+        image,
+        updatedAt
+      })
+    })
+    return unsubscribe
+  }, [])
+
   return (
     <ScrollView>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
         <View style={styles.userImageTop}>
-          <Image style={styles.userImage} source={ require('../../../assets/1.jpeg') } />
+          <Image
+            style={styles.userImage}
+            source={{ uri: imageUri }}
+          />
         </View>
         <View>
-          <Text>フィネススタイル さん</Text>
+          <Text>{user?.username}さん</Text>
         </View>
         <View>
-          <Text>finessestyle@gmail.com</Text>
+          <Text>{user?.email}</Text>
         </View>
         <View>
-          <Text>ホームフィールドは、北湖東岸です！！</Text>
+          <Text>{user?.profile}</Text>
         </View>
-        <MemoListItem />
-        <MemoListItem />
-        <MemoListItem />
       </View>
     </ScrollView>
   )
