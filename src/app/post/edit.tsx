@@ -24,7 +24,7 @@ const handlePress = (
   fishArea: string
 ): void => {
   if (auth.currentUser === null) { return }
-  const ref = doc(db, `users/${auth.currentUser.uid}/memos`, id)
+  const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
   setDoc(ref, {
     title,
     images,
@@ -106,6 +106,7 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           value={title}
           onChangeText={(text) => { setTitle(text) }}
+          autoFocus
         />
         <Text>ファイルを選択</Text>
         <Button title="画像を選択" onPress={pickImage} />

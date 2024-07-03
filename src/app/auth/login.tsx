@@ -1,6 +1,5 @@
 import {
-  View, Text, TextInput, Alert,
-  TouchableOpacity, StyleSheet
+  View, Text, TextInput, Alert, TouchableOpacity, StyleSheet
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -28,7 +27,7 @@ const LogIn = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>Log In</Text>
+        <Text style={styles.title}>ログイン</Text>
         <TextInput
           style={styles.input}
           value={email}

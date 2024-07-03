@@ -1,7 +1,7 @@
 import { View, FlatList, StyleSheet } from 'react-native'
 import { router, useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { collectionGroup, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
 
@@ -24,12 +24,11 @@ const List = (): JSX.Element => {
   }, [])
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
+    const ref = collectionGroup(db, 'posts')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        console.log('post', doc.data())
         const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
@@ -47,9 +46,13 @@ const List = (): JSX.Element => {
         })
       })
       setPosts(remotePosts)
+    },
+    (error) => {
+      console.error('Error fetching posts:', error)
     })
     return unsubscribe
   }, [])
+
   return (
     <View style={styles.container}>
       <Nav />

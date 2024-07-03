@@ -1,6 +1,4 @@
-import {
-  View, Text, StyleSheet, ScrollView, Image
-} from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
@@ -16,12 +14,10 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) { return }
     const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
     const unsubscribe = onSnapshot(ref, (userDoc) => {
-      const { email, password, username, profile, image, updatedAt } = userDoc.data() as User
+      const { username, profile, image, updatedAt } = userDoc.data() as User
       console.log(userDoc.data())
       setUser({
         id: userDoc.id,
-        email,
-        password,
         username,
         profile,
         image,
@@ -43,9 +39,6 @@ const Detail = (): JSX.Element => {
         </View>
         <View>
           <Text>{user?.username}さん</Text>
-        </View>
-        <View>
-          <Text>{user?.email}</Text>
         </View>
         <View>
           <Text>{user?.profile}</Text>
@@ -70,7 +63,7 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   userImageTop: {
-    alignContent: 'center'
+    alignItems: 'center'
   },
   userImage: {
     width: 200,

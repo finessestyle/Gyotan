@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   map: {
-    width: 335,
+    width: 'auto',
     height: 174
   }
 })

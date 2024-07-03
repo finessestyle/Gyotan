@@ -1,5 +1,6 @@
 import {
-  View, Text, TextInput, Alert, TouchableOpacity, StyleSheet, Image, Platform
+  View, Text, TextInput, Alert,
+  StyleSheet, TouchableOpacity, Image, Platform
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -71,7 +72,7 @@ const SignUp = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inner}>
+      <View style={styles.innner}>
         <Text style={styles.title}>Sign Up</Text>
         <TextInput
           style={styles.input}
@@ -88,7 +89,7 @@ const SignUp = (): JSX.Element => {
           onChangeText={(text) => { setPassword(text) }}
           autoCapitalize='none'
           secureTextEntry
-          placeholder='Password'
+          placeholder='Pass Word'
           textContentType='password'
         />
         <TextInput
@@ -105,6 +106,7 @@ const SignUp = (): JSX.Element => {
           autoCapitalize='none'
           placeholder='Profile'
         />
+
         <TouchableOpacity onPress={pickImage}>
           <Text style={styles.imagePicker}>Pick a Profile Image</Text>
         </TouchableOpacity>
@@ -113,9 +115,9 @@ const SignUp = (): JSX.Element => {
         <Button label='Submit' onPress={() => { handlePress(email, password, username, profile, image) }} />
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already registered?</Text>
-          <Link href='/auth/login' asChild replace>
+          <Link href='/auth/log_in' asChild replace>
             <TouchableOpacity>
-              <Text style={styles.footerLink}>Log in.</Text>
+              <Text style={styles.footerLink}>Log In.</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -129,7 +131,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F0F4F8'
   },
-  inner: {
+  innner: {
     paddingVertical: 24,
     paddingHorizontal: 27
   },
@@ -140,14 +142,13 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   input: {
+    backgroundColor: '#ffffff',
     borderWidth: 1,
     borderColor: '#DDDDDD',
-    backgroundColor: '#ffffff',
     height: 48,
     padding: 8,
     fontSize: 16,
-    marginBottom: 16,
-    color: '#000000'
+    marginBottom: 16
   },
   imagePicker: {
     color: '#467FD3',
@@ -165,8 +166,7 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 14,
     lineHeight: 24,
-    marginRight: 8,
-    color: '#000000'
+    marginRight: 8
   },
   footerLink: {
     fontSize: 14,

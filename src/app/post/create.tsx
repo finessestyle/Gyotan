@@ -24,6 +24,7 @@ const handlePress = (
   fishArea: string
 ): void => {
   if (auth.currentUser === null) { return }
+  const userId = auth.currentUser.uid
   const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
   addDoc(ref, {
     title,
@@ -36,6 +37,7 @@ const handlePress = (
     lureColor,
     catchFish,
     fishArea,
+    userId,
     updatedAt: Timestamp.fromDate(new Date())
   })
     .then((docRef) => {

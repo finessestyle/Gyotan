@@ -20,8 +20,8 @@ const Detail = (): JSX.Element => {
   const postImageUri = post !== null && Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
-    const unsubscribe = onSnapshot(ref, (postDoc) => {
+    const postRef = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+    const unsubscribe = onSnapshot(postRef, (postDoc) => {
       const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
       console.log(postDoc.data())
       setPost({
@@ -42,31 +42,30 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [])
 
-  console.log(id)
   const [user, setUser] = useState<User | null>(null)
   const userImageUri = user !== null && Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
+
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
-    const unsubscribe = onSnapshot(ref, (userDoc) => {
-      const { email, password, username, profile, image, updatedAt } = userDoc.data() as User
+    const userRef = doc(db, `users/${auth.currentUser.uid}/users`, id)
+    const unsubscribe = onSnapshot(userRef, (userDoc) => {
+      const { username, profile, image, updatedAt } = userDoc.data() as User
       console.log(userDoc.data())
       setUser({
         id: userDoc.id,
-        email,
-        password,
         username,
         profile,
         image,
         updatedAt
       })
     })
+
     return unsubscribe
-  }, [])
+  }, [auth.currentUser, id])
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView style={styles.inner}>
         <Link href='/user/detail'>
           <TouchableOpacity>
             <View style={styles.userInfo} >
@@ -75,7 +74,6 @@ const Detail = (): JSX.Element => {
                 source={{ uri: userImageUri }}
               />
               <Text style={styles.userName}>{user?.username}さん</Text>
-
             </View>
           </TouchableOpacity>
         </Link>
@@ -136,6 +134,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff'
+  },
+  inner: {
+    marginVertical: 30,
+    marginHorizontal: 4
   },
   userInfo: {
     height: 80,
