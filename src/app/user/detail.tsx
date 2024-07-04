@@ -2,14 +2,16 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { auth, db, storage } from '../../config'
 import { type User } from '../../../types/user'
+import { getDownloadURL, ref } from 'firebase/storage'
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   console.log(id)
   const [user, setUser] = useState<User | null>(null)
-  const imageUri = user !== null && Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
+  const [imageUri, setImageUri] = useState<string | undefined>(undefined)
+
   useEffect(() => {
     if (auth.currentUser === null) { return }
     const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
@@ -23,6 +25,18 @@ const Detail = (): JSX.Element => {
         image,
         updatedAt
       })
+
+      if (Array.isArray(image) && image.length > 0) {
+        // 画像のダウンロード URL を取得
+        const imageRef = ref(storage, image[0])
+        getDownloadURL(imageRef)
+          .then((url) => {
+            setImageUri(url)
+          })
+          .catch((error) => {
+            console.error('Error getting download URL:', error)
+          })
+      }
     })
     return unsubscribe
   }, [])

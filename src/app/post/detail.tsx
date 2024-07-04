@@ -1,10 +1,11 @@
 import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { router, useLocalSearchParams, Link } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { onSnapshot, doc } from 'firebase/firestore'
+import { onSnapshot, doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type Post } from '../../../types/post'
 import { type User } from '../../../types/user'
+import ExifReader from 'exif-js'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import Map from '../../components/Map'
@@ -62,6 +63,31 @@ const Detail = (): JSX.Element => {
 
     return unsubscribe
   }, [auth.currentUser, id])
+
+  const [imageUri, setImageUri] = useState('')
+  const [exifData, setExifData] = useState(null)
+
+  useEffect(() => {
+    const fetchImageData = async () => {
+      try {
+        const docRef = doc(db, 'images', id)
+        const snapshot = await getDoc(docRef)
+        const { imageUrl } = snapshot.data()
+        setImageUri(imageUrl)
+
+        // Exifデータを取得してstateにセットする例
+        const response = await fetch(imageUrl)
+        const blob = await response.blob()
+        ExifReader.load(blob, (exifData) => {
+          setExifData(exifData)
+        })
+      } catch (error) {
+        console.error('Error fetching image data:', error)
+      }
+    }
+
+    fetchImageData()
+  }, [id])
 
   return (
     <View style={styles.container}>

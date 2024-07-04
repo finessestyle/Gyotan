@@ -4,16 +4,17 @@ import {
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
-import { db, auth } from '../../config'
+import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 
-const handlePress = (
+const handlePress = async (
   title: string,
-  images: string[],
+  images: Array<{ uri: string }>,
   weather: string,
   content: string,
   length: number,
@@ -22,13 +23,26 @@ const handlePress = (
   lureColor: string,
   catchFish: number,
   fishArea: string
-): void => {
+): Promise<void> => {
   if (auth.currentUser === null) { return }
   const userId = auth.currentUser.uid
   const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
+
+  // 画像のアップロードとダウンロード URL の取得
+  const uploadPromises = images.map(async (image) => {
+    const response = await fetch(image.uri)
+    const blob = await response.blob()
+    const storageRef = ref(storage, `images/${userId}/${Date.now()}_${image.uri.split('/').pop()}`)
+    await uploadBytes(storageRef, blob)
+    const downloadURL = await getDownloadURL(storageRef)
+    return downloadURL
+  })
+
+  const imageUrls = await Promise.all(uploadPromises)
+
   addDoc(ref, {
     title,
-    images,
+    images: imageUrls,
     weather,
     content,
     length,
@@ -73,7 +87,7 @@ const generateCatchFishOptions = () => {
   return options
 }
 
-const Create = (): JSX.Element => {
+const Create = async (): Promise<void> => {
   const [title, setTitle] = useState('')
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')
