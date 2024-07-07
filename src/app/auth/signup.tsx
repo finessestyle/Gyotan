@@ -19,12 +19,16 @@ const handlePress = async (email: string, password: string, username: string, pr
     console.log(userId)
 
     let imageUrl = ''
-    if (image !== null) {
-      const response = await fetch(image)
-      const blob = await response.blob()
-      const storageRef = ref(storage, `users/${userId}/profile.jpg`)
-      await uploadBytes(storageRef, blob)
-      imageUrl = await getDownloadURL(storageRef)
+    if (image === null) {
+      try {
+        const response = await fetch(image)
+        const blob = await response.blob()
+        const storageRef = ref(storage, `users/${userId}/profile.jpg`)
+        await uploadBytes(storageRef, blob)
+        imageUrl = await getDownloadURL(storageRef)
+      } catch (error) {
+        Alert.alert('写真を選択してください')
+      }
     }
 
     await setDoc(doc(db, 'users', userId), {
@@ -53,7 +57,7 @@ const SignUp = (): JSX.Element => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
-        alert('Permission to access gallery is required!')
+        alert('ギャラリーへのアクセス許可が必要です!')
         return
       }
     }
@@ -73,15 +77,16 @@ const SignUp = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.innner}>
-        <Text style={styles.title}>Sign Up</Text>
+        <Text style={styles.title}>会員登録</Text>
         <TextInput
           style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text) }}
           autoCapitalize='none'
           keyboardType='email-address'
-          placeholder='Email Address'
+          placeholder='メールアドレスを入力'
           textContentType='emailAddress'
+          returnKeyType='next'
         />
         <TextInput
           style={styles.input}
@@ -89,35 +94,39 @@ const SignUp = (): JSX.Element => {
           onChangeText={(text) => { setPassword(text) }}
           autoCapitalize='none'
           secureTextEntry
-          placeholder='Pass Word'
+          placeholder='パスワードを入力※６文字以上'
           textContentType='password'
+          returnKeyType='next'
         />
         <TextInput
           style={styles.input}
           value={username}
           onChangeText={(text) => { setUsername(text) }}
           autoCapitalize='none'
-          placeholder='Username'
+          placeholder='ユーザーネームを入力'
+          returnKeyType='next'
         />
         <TextInput
           style={styles.input}
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
           autoCapitalize='none'
-          placeholder='Profile'
+          placeholder='プロフィールを入力'
+          returnKeyType='next'
         />
 
-        <TouchableOpacity onPress={pickImage}>
-          <Text style={styles.imagePicker}>Pick a Profile Image</Text>
+        <TouchableOpacity onPress={pickImage} >
+          <Text style={styles.imagePicker}>ユーザー写真を選択</Text>
         </TouchableOpacity>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
+        <View style={styles.imageBox}>
+          {image && <Image source={{ uri: image }} style={styles.image} />}
+        </View>
 
-        <Button label='Submit' onPress={() => { handlePress(email, password, username, profile, image) }} />
+        <Button label='会員登録' onPress={() => { handlePress(email, password, username, profile, image) }} />
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Already registered?</Text>
-          <Link href='/auth/log_in' asChild replace>
+          <Link href='/auth/login' asChild replace>
             <TouchableOpacity>
-              <Text style={styles.footerLink}>Log In.</Text>
+              <Text style={styles.footerLink}>ログインはこちらをクリック</Text>
             </TouchableOpacity>
           </Link>
         </View>
@@ -151,14 +160,19 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   imagePicker: {
-    color: '#467FD3',
-    marginBottom: 16
+    fontSize: 16
   },
   image: {
     width: 100,
-    height: 100,
-    marginBottom: 16,
-    borderRadius: 50
+    height: 100
+  },
+  imageBox: {
+    borderWidth: 1,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 'auto',
+    width: 'auto',
+    marginBottom: 16
   },
   footer: {
     flexDirection: 'row'

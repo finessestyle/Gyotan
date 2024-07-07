@@ -10,7 +10,8 @@ const firebaseConfig = {
   projectId: process.env.EXPO_PUBLIC_FB_PROJECT_ID,
   storageBucket: process.env.EXPO_PUBLIC_FB_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_FB_MESSAGINGSENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FB_APP_ID
+  appId: process.env.EXPO_PUBLIC_FB_APP_ID,
+  openWeatherApiKey: process.env.EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY
 }
 
 const app = initializeApp(firebaseConfig)
@@ -19,5 +20,6 @@ const auth = initializeAuth(app, {
 })
 const db = getFirestore(app)
 const storage = getStorage(app)
+const { openWeatherApiKey } = firebaseConfig
 
-export { app, auth, db, storage }
+export { app, auth, db, storage, openWeatherApiKey }

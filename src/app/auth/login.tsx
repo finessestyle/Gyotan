@@ -34,8 +34,9 @@ const LogIn = (): JSX.Element => {
           onChangeText={(text) => { setEmail(text) }}
           autoCapitalize='none'
           keyboardType='email-address'
-          placeholder='Email Address'
+          placeholder='メールアドレスを入力'
           textContentType='emailAddress'
+          returnKeyType='next'
         />
         <TextInput
           style={styles.input}
@@ -43,15 +44,15 @@ const LogIn = (): JSX.Element => {
           onChangeText={(text) => { setPassword(text) }}
           autoCapitalize='none'
           secureTextEntry
-          placeholder='Password'
+          placeholder='パスワードを入力'
           textContentType='password'
+          returnKeyType='next'
         />
-        <Button label='Submit' onPress={() => { handlePress(email, password) }} />
+        <Button label='ログイン' onPress={() => { handlePress(email, password) }} />
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Not registered?</Text>
           <Link href='/auth/signup' asChild replace>
             <TouchableOpacity >
-              <Text style={styles.footerLink}>Sign up here!</Text>
+              <Text style={styles.footerLink}>新規会員登録はこちらをクリック</Text>
             </TouchableOpacity>
           </Link>
         </View>

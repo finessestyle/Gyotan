@@ -14,7 +14,7 @@ import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 
 const handlePress = async (
   title: string,
-  images: Array<{ uri: string }>,
+  images: string[],
   weather: string,
   content: string,
   length: number,
@@ -24,43 +24,36 @@ const handlePress = async (
   catchFish: number,
   fishArea: string
 ): Promise<void> => {
-  if (auth.currentUser === null) { return }
-  const userId = auth.currentUser.uid
-  const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
+  try {
+    if (auth.currentUser === null) { return }
+    const userId = auth.currentUser.uid
+    const postRef = collection(db, `users/${userId}/posts`)
 
-  // 画像のアップロードとダウンロード URL の取得
-  const uploadPromises = images.map(async (image) => {
-    const response = await fetch(image.uri)
-    const blob = await response.blob()
-    const storageRef = ref(storage, `images/${userId}/${Date.now()}_${image.uri.split('/').pop()}`)
-    await uploadBytes(storageRef, blob)
-    const downloadURL = await getDownloadURL(storageRef)
-    return downloadURL
-  })
+    const imageUrls = await Promise.all(images.map(async (image) => {
+      const response = await fetch(image)
+      const blob = await response.blob()
+      const storageRef = ref(storage, `users/${userId}/posts`)
+      await uploadBytes(storageRef, blob)
+      return await getDownloadURL(storageRef)
+    }))
 
-  const imageUrls = await Promise.all(uploadPromises)
-
-  addDoc(ref, {
-    title,
-    images: imageUrls,
-    weather,
-    content,
-    length,
-    weight,
-    lure,
-    lureColor,
-    catchFish,
-    fishArea,
-    userId,
-    updatedAt: Timestamp.fromDate(new Date())
-  })
-    .then((docRef) => {
-      console.log('success', docRef.id)
-      router.back()
+    const docRef = await addDoc(postRef, {
+      title,
+      images: imageUrls,
+      weather,
+      content,
+      length,
+      weight,
+      lure,
+      lureColor,
+      catchFish,
+      fishArea,
+      updatedAt: Timestamp.fromDate(new Date())
     })
-    .catch((error) => {
-      console.log(error)
-    })
+    router.back()
+  } catch (error) {
+    console.log('投稿に失敗しました')
+  }
 }
 
 const generateLengthOptions = () => {
@@ -87,17 +80,17 @@ const generateCatchFishOptions = () => {
   return options
 }
 
-const Create = async (): Promise<void> => {
+const Create = () => {
   const [title, setTitle] = useState('')
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
   const [fishArea, setFishArea] = useState('')
-  const [length, setLength] = useState('')
-  const [weight, setWeight] = useState('')
+  const [length, setLength] = useState<number | null>(null)
+  const [weight, setWeight] = useState<number | null>(null)
   const [lure, setLure] = useState('')
   const [lureColor, setLureColor] = useState('')
-  const [catchFish, setCatchFish] = useState('')
+  const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -163,7 +156,7 @@ const Create = async (): Promise<void> => {
         />
         <Text>サイズ</Text>
         <RNPickerSelect
-          onValueChange={(value: string | null) => {
+          onValueChange={(value) => {
             if (value !== null) {
               setLength(value)
             }

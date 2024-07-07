@@ -1,22 +1,26 @@
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
-import { router } from 'expo-router'
+import { Link } from 'expo-router'
+import { type User } from '../../types/user'
 
-const handlePress = (): void => {
-  router.push('/user/detail')
+interface Props {
+  user: User
 }
-const UserImageButton = (): JSX.Element => {
+
+const UserImageButton = (props: Props): JSX.Element => {
+  const { user } = props
+  const { image } = user
+  const imageUri = Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
   return (
-    <View style={styles.userImageButton}>
-      <TouchableOpacity onPress={handlePress}>
-        <Image style={styles.userImage} source={ require('../../assets/1.jpeg') } />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handlePress}>
-        <Image style={styles.userImage} source={ require('../../assets/1.jpeg') } />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handlePress}>
-        <Image style={styles.userImage} source={ require('../../assets/1.jpeg') } />
-      </TouchableOpacity>
-    </View>
+    <Link href={{ pathname: '/user/detail', params: { id: user.id } }} asChild>
+      <View style={styles.userImageButton}>
+        <TouchableOpacity >
+          <Image
+            style={styles.userImage}
+            source={{ uri: imageUri }}
+          />
+        </TouchableOpacity>
+      </View>
+    </ Link>
   )
 }
 

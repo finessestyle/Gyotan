@@ -4,7 +4,7 @@ interface User {
   id: string
   username: string
   profile: string
-  image?: string[]
+  image: string
   updatedAt: Timestamp
 }
 
