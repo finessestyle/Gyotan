@@ -37,7 +37,7 @@ const handlePress = async (
       return await getDownloadURL(storageRef)
     }))
 
-    const docRef = await addDoc(postRef, {
+    await addDoc(postRef, {
       title,
       images: imageUrls,
       weather,
@@ -80,7 +80,7 @@ const generateCatchFishOptions = () => {
   return options
 }
 
-const Create = () => {
+const Create = (): JSX.Element => {
   const [title, setTitle] = useState('')
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')

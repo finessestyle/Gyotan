@@ -19,16 +19,12 @@ const handlePress = async (email: string, password: string, username: string, pr
     console.log(userId)
 
     let imageUrl = ''
-    if (image === null) {
-      try {
-        const response = await fetch(image)
-        const blob = await response.blob()
-        const storageRef = ref(storage, `users/${userId}/profile.jpg`)
-        await uploadBytes(storageRef, blob)
-        imageUrl = await getDownloadURL(storageRef)
-      } catch (error) {
-        Alert.alert('写真を選択してください')
-      }
+    if (image !== null) {
+      const response = await fetch(image)
+      const blob = await response.blob()
+      const storageRef = ref(storage, `users/${userId}/profile.jpg`)
+      await uploadBytes(storageRef, blob)
+      imageUrl = await getDownloadURL(storageRef)
     }
 
     await setDoc(doc(db, 'users', userId), {
@@ -57,7 +53,7 @@ const SignUp = (): JSX.Element => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
-        alert('ギャラリーへのアクセス許可が必要です!')
+        alert('Permission to access gallery is required!')
         return
       }
     }

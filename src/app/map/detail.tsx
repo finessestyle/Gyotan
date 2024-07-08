@@ -71,7 +71,7 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishArea}>
             <Text>釣り場エリア: {map?.area}</Text>
           </View>
-          <Weather lat={} lon={} />
+          <Weather />
           <View>
             <Image
               style={styles.fishImage}
