@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#467FD3',
     borderRadius: 4,
     alignSelf: 'flex-start',
-    marginBottom: 24
+    width: 'auto'
   },
   buttonLabel: {
     fontSize: 16,
@@ -29,7 +29,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24
   }
 })
-
-
 
 export default Button

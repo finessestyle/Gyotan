@@ -115,7 +115,7 @@ const SignUp = (): JSX.Element => {
           <Text style={styles.imagePicker}>ユーザー写真を選択</Text>
         </TouchableOpacity>
         <View style={styles.imageBox}>
-          {image && <Image source={{ uri: image }} style={styles.image} />}
+        {image && <Image source={{ uri: image }} style={styles.image} />}
         </View>
 
         <Button label='会員登録' onPress={() => { handlePress(email, password, username, profile, image) }} />

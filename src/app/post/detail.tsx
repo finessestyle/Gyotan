@@ -4,12 +4,7 @@ import { useState, useEffect } from 'react'
 import { onSnapshot, doc, getDoc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type Post } from '../../../types/post'
-import { type User } from '../../../types/user'
-import ExifReader from 'exif-js'
-import CircleButton from '../../components/CircleButton'
-import Icon from '../../components/Icon'
-import Map from '../../components/Map'
-import Weather from '../../components/Weather'
+import Button from '../../components/Button'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: '/post/edit', params: { id } })
@@ -17,15 +12,16 @@ const handlePress = (id: string): void => {
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
-  console.log(id)
   const [post, setPost] = useState<Post | null>(null)
+  const [userName, setUserName] = useState<string>('ゲスト')
   const postImageUri = post !== null && Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
+
   useEffect(() => {
     if (auth.currentUser === null) { return }
+
     const postRef = doc(db, `users/${auth.currentUser.uid}/posts`, id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
       const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
-      console.log(postDoc.data())
       setPost({
         id: postDoc.id,
         title,
@@ -44,54 +40,23 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [])
 
-  const [user, setUser] = useState<User | null>(null)
-  const userImageUri = user !== null && Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
-
   useEffect(() => {
-    if (auth.currentUser === null) { return }
-    const userRef = doc(db, `users/${auth.currentUser.uid}/users`, id)
-    const unsubscribe = onSnapshot(userRef, (userDoc) => {
-      const { username, profile, image, updatedAt } = userDoc.data() as User
-      console.log(userDoc.data())
-      setUser({
-        id: userDoc.id,
-        username,
-        profile,
-        image,
-        updatedAt
-      })
-    })
-
-    return unsubscribe
-  }, [auth.currentUser, id])
-
-  const [imageUri, setImageUri] = useState('')
-  const [exifData, setExifData] = useState(null)
-
-  useEffect(() => {
-    const fetchImageData = async () => {
+    const fetchUserName = async (): Promise<void> => {
       try {
-        const docRef = doc(db, 'images', id)
-        const snapshot = await getDoc(docRef)
-        const { imageUrl } = snapshot.data()
-        setImageUri(imageUrl)
-
-        // Exifデータを取得してstateにセットする例
-        const response = await fetch(imageUrl)
-        const blob = await response.blob()
-        ExifReader.load(blob, (exifData) => {
-          setExifData(exifData)
-        })
+        const userId = auth.currentUser?.uid
+        if (userId === null) {
+          const userDoc = await getDoc(doc(db, 'users', userId))
+          if (userDoc.exists()) {
+            const userData = userDoc.data() as { username?: string }
+            setUserName(userData.username ?? 'ゲスト')
+          }
+        }
       } catch (error) {
-        console.error('Error fetching image data:', error)
+        console.error('Error fetching user name:', error)
       }
     }
-
-    fetchImageData()
-  }, [id])
-
-  const lat = 35.6895
-  const lon = 139.6917
+    void fetchUserName()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -99,11 +64,11 @@ const Detail = (): JSX.Element => {
         <Link href='/user/detail'>
           <TouchableOpacity>
             <View style={styles.userInfo} >
-              <Image
+              {/* <Image
                 style={styles.userImage}
-                source={{ uri: userImageUri }}
-              />
-              <Text style={styles.userName}>{user?.username}さん</Text>
+                source={{ uri: ImageUri }}
+              /> */}
+              <Text style={styles.userName}>{userName}さん</Text>
             </View>
           </TouchableOpacity>
         </Link>
@@ -111,7 +76,6 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishArea}>
             <Text>釣果エリア: {post?.fishArea}</Text>
           </View>
-          <Map />
           <View style={styles.fishTime}>
             <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>
           </View>
@@ -125,7 +89,6 @@ const Detail = (): JSX.Element => {
             <View style={styles.leftInfo}>
               <Text>天気: {post?.weather}</Text>
             </View>
-            <Weather lat={lat} lon={lon} />
             <View style={styles.rightInfo}>
               <Text>釣果数: {post?.catchFish}</Text>
             </View>
@@ -153,9 +116,7 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        <CircleButton onPress={() => { handlePress(id) }} style={{ bottom: 60 }}>
-          <Icon name='pencil' size={40} color='#ffffff' />
-        </CircleButton>
+        <Button label='編集' onPress={() => { handlePress(id) }} />
       </ScrollView>
     </View>
   )
@@ -167,8 +128,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff'
   },
   inner: {
-    marginVertical: 30,
-    marginHorizontal: 4
+    marginVertical: 24,
+    marginHorizontal: 8
   },
   userInfo: {
     height: 80,

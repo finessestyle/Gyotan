@@ -1,5 +1,6 @@
 import {
-  View, ScrollView, Text, TextInput, Button, Image, StyleSheet
+  View, ScrollView, Text, TextInput, Image, StyleSheet,
+  Alert
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -8,11 +9,10 @@ import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import CircleButton from '../../components/CircleButton'
-import Icon from '../../components/Icon'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
+import Button from '../../components/Button'
 
-const handlePress = async (
+const handlePress = async /* 非同期処理 */ (
   title: string,
   images: string[],
   weather: string,
@@ -25,21 +25,23 @@ const handlePress = async (
   fishArea: string
 ): Promise<void> => {
   try {
-    if (auth.currentUser === null) { return }
-    const userId = auth.currentUser.uid
-    const postRef = collection(db, `users/${userId}/posts`)
+    if (auth.currentUser === null) { return } // ユーザーがログインしていない場合、関数を終了
 
-    const imageUrls = await Promise.all(images.map(async (image) => {
-      const response = await fetch(image)
-      const blob = await response.blob()
-      const storageRef = ref(storage, `users/${userId}/posts`)
-      await uploadBytes(storageRef, blob)
-      return await getDownloadURL(storageRef)
+    const userId = auth.currentUser.uid
+    const postRef = collection(db, `users/${userId}/posts`) // Firestoreのコレクション参照を取得
+
+    const imageUrls = await Promise.all(images.map(async (image) => { // 画像の非同期処理
+      const response = await fetch(image) // 画像をフェッチ
+      const blob = await response.blob() // フェッチした画像をBlobに変換
+      const storageRef = ref(storage, `users/${userId}/posts`) // ストレージの参照を取得
+      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
+      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
     }))
 
-    await addDoc(postRef, {
+    await addDoc(postRef, { // Firestoreにドキュメントを追加
+      userId,
       title,
-      images: imageUrls,
+      images: imageUrls, // 取得した画像のURLを保存
       weather,
       content,
       length,
@@ -48,23 +50,24 @@ const handlePress = async (
       lureColor,
       catchFish,
       fishArea,
-      updatedAt: Timestamp.fromDate(new Date())
+      updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
-    router.back()
+
+    router.back() // 成功したら前のページに戻る
   } catch (error) {
-    console.log('投稿に失敗しました')
+    Alert.alert('投稿に失敗しました') // エラーハンドリング
   }
 }
 
-const generateLengthOptions = () => {
-  const options = []
-  for (let i = 20; i <= 80; i += 0.5) {
-    options.push({ label: `${i} cm`, value: i })
+const generateLengthOptions = (): Array<{ label: string, value: number }> /* Arrayは配列の型を示す */ => {
+  const options = [] // 空の配列を初期化
+  for (let i = 20; i <= 80; i += 0.5) { // 20から80まで0.5刻みでループ
+    options.push({ label: `${i} cm`, value: i }) // 各値についてオブジェクトを作成し、配列に追加
   }
-  return options
+  return options // 配列を返す
 }
 
-const generateWeightOptions = () => {
+const generateWeightOptions = (): Array<{ label: string, value: number }> => {
   const options = []
   for (let i = 300; i <= 6000; i += 5) {
     options.push({ label: `${i} g`, value: i })
@@ -72,7 +75,7 @@ const generateWeightOptions = () => {
   return options
 }
 
-const generateCatchFishOptions = () => {
+const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
   const options = []
   for (let i = 1; i <= 20; i += 1) {
     options.push({ label: `${i} `, value: i })
@@ -109,19 +112,21 @@ const Create = (): JSX.Element => {
     <KeyboardAvoidingView style={styles.container}>
       <ScrollView style={styles.inner}>
         <Text style={styles.title}>釣果投稿</Text>
-        <Text>タイトル</Text>
+        <Text style={styles.textTitle}>タイトル</Text>
         <TextInput
           style={styles.input}
           onChangeText={(text) => { setTitle(text) }}
+          placeholder='タイトルを入力'
+          returnKeyType='next'
         />
-        <Text>ファイルを選択</Text>
-        <Button title="釣果画像を選択" onPress={pickImage} />
+        <Text style={styles.textTitle}>ファイルを選択</Text>
+        <Button label="釣果画像を選択" onPress={pickImage} />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />
           ))}
         </View>
-        <Text>天気を選択</Text>
+        <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -137,7 +142,7 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '天気を選択してください', value: null }}
         />
-        <Text>釣果エリア</Text>
+        <Text style={styles.textTitle}>釣果エリア</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -154,10 +159,10 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
-        <Text>サイズ</Text>
+        <Text style={styles.textTitle}>サイズ</Text>
         <RNPickerSelect
           onValueChange={(value) => {
-            if (value !== null) {
+            if (value === null) {
               setLength(value)
             }
           }}
@@ -165,7 +170,7 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '長さを選択してください', value: null }}
         />
-        <Text>重さ</Text>
+        <Text style={styles.textTitle}>重さ</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -176,7 +181,7 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '重さを選択してください', value: null }}
         />
-        <Text>ルアーを選択</Text>
+        <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -218,7 +223,7 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: 'ルアーを選択してください', value: null }}
         />
-        <Text>ルアーカラー</Text>
+        <Text style={styles.textTitle}>ルアーカラー</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -249,7 +254,7 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
-        <Text>釣果数</Text>
+        <Text style={styles.textTitle}>釣果数</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
             if (value !== null) {
@@ -260,41 +265,41 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果数を選択してください', value: null }}
         />
-        <Text>釣果内容</Text>
+        <Text style={styles.textTitle}>釣果内容</Text>
         <TextInput
           multiline style={styles.input}
           value={content}
           onChangeText={(text) => { setContent(text) }}
+          placeholder='釣果内容を入力してください'
+          returnKeyType='next'
         />
+        <Button label='投稿' onPress={() => {
+          handlePress(
+            title,
+            images.map(img => img.uri),
+            weather,
+            content,
+            parseFloat(length),
+            parseFloat(weight),
+            lure,
+            lureColor,
+            parseInt(catchFish, 10),
+            fishArea
+          )
+        }} />
       </ScrollView>
-      <CircleButton onPress={() => {
-        handlePress(
-          title,
-          images.map(img => img.uri),
-          weather,
-          content,
-          parseFloat(length),
-          parseFloat(weight),
-          lure,
-          lureColor,
-          parseInt(catchFish, 10),
-          fishArea
-        )
-      }}>
-        <Icon name='check' size={40} color='#ffffff' />
-      </CircleButton>
     </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#ffffff'
   },
   inner: {
     marginVertical: 30,
-    marginHorizontal: 19,
-    flex: 1
+    marginHorizontal: 19
   },
   title: {
     fontSize: 24,
@@ -303,14 +308,17 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   input: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 4,
     height: 32,
-    marginVertical: 8,
+    marginVertical: 4,
     alignItems: 'flex-start',
     justifyContent: 'center',
     paddingLeft: 10
+  },
+  textTitle: {
+    paddingVertical: 4
   },
   imageContainer: {
     borderWidth: 1,
@@ -330,19 +338,20 @@ const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
     paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
+    paddingHorizontal: 19,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D0D0D0',
     borderRadius: 4,
     color: 'black',
-    paddingRight: 30
+    paddingRight: 30,
+    marginVertical: 4
   },
   inputAndroid: {
     fontSize: 16,
-    paddingHorizontal: 10,
+    paddingHorizontal: 19,
     paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: '#D0D0D0',
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#D0D0D0',
     borderRadius: 8,
     color: 'black',
     paddingRight: 30

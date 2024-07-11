@@ -29,7 +29,6 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        console.log('post', doc.data())
         const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
