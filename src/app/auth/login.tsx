@@ -35,7 +35,7 @@ const LogIn = (): JSX.Element => {
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
-          returnKeyType='next'
+          returnKeyType='done'
         />
         <TextInput
           style={styles.input}
@@ -45,7 +45,7 @@ const LogIn = (): JSX.Element => {
           secureTextEntry
           placeholder='パスワードを入力'
           textContentType='password'
-          returnKeyType='next'
+          returnKeyType='done'
         />
         <Button label='ログイン' onPress={() => { handlePress(email, password) }} />
         <View style={styles.footer}>

@@ -97,7 +97,7 @@ const Edit = (): JSX.Element => {
       })
   }, [id])
 
-  const generateLengthOptions = () => {
+  const generateLengthOptions = (): Array<{ label: string, value: number }> => {
     const options = []
     for (let i = 20; i <= 80; i += 0.5) {
       options.push({ label: `${i} cm`, value: i })
@@ -105,7 +105,7 @@ const Edit = (): JSX.Element => {
     return options
   }
 
-  const generateWeightOptions = () => {
+  const generateWeightOptions = (): Array<{ label: string, value: number }> => {
     const options = []
     for (let i = 300; i <= 6000; i += 5) {
       options.push({ label: `${i} g`, value: i })
@@ -113,7 +113,7 @@ const Edit = (): JSX.Element => {
     return options
   }
 
-  const generateCatchFishOptions = () => {
+  const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
     const options = []
     for (let i = 1; i <= 20; i += 1) {
       options.push({ label: `${i} `, value: i })
@@ -129,12 +129,13 @@ const Edit = (): JSX.Element => {
         <TextInput
           style={styles.input}
           onChangeText={(text) => { setTitle(text) }}
+          value={title}
           placeholder='タイトルを入力'
           returnKeyType='next'
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button label="釣果画像を選択" onPress={pickImage} />
-        <View style={styles.imageContainer}>
+        <View style={styles.imageContainer} >
           {images.map((image, index) => (
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />
           ))}
@@ -174,7 +175,7 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>サイズ</Text>
         <RNPickerSelect
-          onValueChange={(value) => {
+          onValueChange={(value: string | null) => {
             if (value !== null) {
               setLength(value)
             }
@@ -288,6 +289,7 @@ const Edit = (): JSX.Element => {
         />
         <Button label='投稿' onPress={() => {
           handlePress(
+            id,
             title,
             images.map(img => img.uri),
             weather,

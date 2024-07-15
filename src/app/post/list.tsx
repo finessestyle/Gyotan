@@ -7,21 +7,23 @@ import { type Post } from '../../../types/post'
 
 import ListItem from '../../components/ListItem'
 import CircleButton from '../../components/CircleButton'
-import Nav from '../../components/Nav'
 import Icon from '../../components/Icon'
 import LogOutButton from '../../components/LogOutButton'
 
 const handlePress = (): void => {
   router.push('/post/create')
 }
+
 const List = (): JSX.Element => {
   const [posts, setPosts] = useState<Post[]>([])
   const navigation = useNavigation()
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => { return <LogOutButton /> }
     })
   }, [])
+
   useEffect(() => {
     if (auth.currentUser === null) { return }
     const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
@@ -29,9 +31,12 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = doc.data()
+        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
+          userId,
+          userName,
+          userImage,
           title,
           images,
           weather,
@@ -52,7 +57,6 @@ const List = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Nav />
       <FlatList
         data={posts}
         renderItem={({ item }) => <ListItem post={item} /> }

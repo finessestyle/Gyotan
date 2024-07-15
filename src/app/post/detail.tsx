@@ -1,7 +1,7 @@
 import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity } from 'react-native'
 import { router, useLocalSearchParams, Link } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { onSnapshot, doc, getDoc } from 'firebase/firestore'
+import { onSnapshot, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type Post } from '../../../types/post'
 import Button from '../../components/Button'
@@ -13,7 +13,6 @@ const handlePress = (id: string): void => {
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [post, setPost] = useState<Post | null>(null)
-  const [userName, setUserName] = useState<string>('ゲスト')
   const postImageUri = post !== null && Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
 
   useEffect(() => {
@@ -21,9 +20,12 @@ const Detail = (): JSX.Element => {
 
     const postRef = doc(db, `users/${auth.currentUser.uid}/posts`, id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
       setPost({
         id: postDoc.id,
+        userId,
+        userName,
+        userImage,
         title,
         images,
         weather,
@@ -40,35 +42,14 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [])
 
-  useEffect(() => {
-    const fetchUserName = async (): Promise<void> => {
-      try {
-        const userId = auth.currentUser?.uid
-        if (userId === null) {
-          const userDoc = await getDoc(doc(db, 'users', userId))
-          if (userDoc.exists()) {
-            const userData = userDoc.data() as { username?: string }
-            setUserName(userData.username ?? 'ゲスト')
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching user name:', error)
-      }
-    }
-    void fetchUserName()
-  }, [])
-
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
-        <Link href='/user/detail'>
+        <Link href='/user/detail' asChild>
           <TouchableOpacity>
             <View style={styles.userInfo} >
-              {/* <Image
-                style={styles.userImage}
-                source={{ uri: ImageUri }}
-              /> */}
-              <Text style={styles.userName}>{userName}さん</Text>
+              {post?.userImage && <Image source={{ uri: post.userImage }} style={styles.userImage} />}
+              <Text style={styles.userName}>{post?.userName}さん</Text>
             </View>
           </TouchableOpacity>
         </Link>
@@ -81,8 +62,8 @@ const Detail = (): JSX.Element => {
           </View>
           <View>
             <Image
-              style={styles.fishImage}
               source={{ uri: postImageUri }}
+              style={styles.fishImage}
             />
           </View>
           <View style={styles.fishingInfomation}>
@@ -90,15 +71,15 @@ const Detail = (): JSX.Element => {
               <Text>天気: {post?.weather}</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>釣果数: {post?.catchFish}</Text>
+              <Text>釣果数: {post?.catchFish}匹</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>サイズ: {post?.length}</Text>
+              <Text>サイズ: {post?.length}cm</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>重さ: {post?.weight}</Text>
+              <Text>重さ: {post?.weight}g</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>

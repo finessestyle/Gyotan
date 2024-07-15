@@ -2,6 +2,9 @@ import { type Timestamp } from 'firebase/firestore'
 
 interface Post {
   id: string
+  userId: string
+  userName: string
+  userImage: string
   title: string
   images: string[]
   weather: string

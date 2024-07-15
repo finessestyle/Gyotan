@@ -2,9 +2,9 @@ import { type Timestamp } from 'firebase/firestore'
 
 interface User {
   id: string
-  username: string
+  userName: string
   profile: string
-  image: string
+  userImage: string
   updatedAt: Timestamp
 }
 

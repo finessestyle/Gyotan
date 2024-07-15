@@ -1,10 +1,9 @@
 import {
-  View, ScrollView, Text, TextInput, Image, StyleSheet,
-  Alert
+  View, ScrollView, Text, TextInput, Image, StyleSheet, Platform, Alert
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, addDoc, Timestamp } from 'firebase/firestore'
+import { collection, addDoc, Timestamp, getDoc, doc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
@@ -12,7 +11,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 import Button from '../../components/Button'
 
-const handlePress = async /* 非同期処理 */ (
+const handlePress = async/* 非同期処理 */ (
   title: string,
   images: string[],
   weather: string,
@@ -28,18 +27,25 @@ const handlePress = async /* 非同期処理 */ (
     if (auth.currentUser === null) { return } // ユーザーがログインしていない場合、関数を終了
 
     const userId = auth.currentUser.uid
+    const userDoc = await getDoc(doc(db, 'users', userId))
+    const userData = userDoc.data()
+    const userName = userData?.userName ?? 'ゲスト'
+    const userImage = userData?.imageUrl ?? ''
     const postRef = collection(db, `users/${userId}/posts`) // Firestoreのコレクション参照を取得
 
-    const imageUrls = await Promise.all(images.map(async (image) => { // 画像の非同期処理
-      const response = await fetch(image) // 画像をフェッチ
-      const blob = await response.blob() // フェッチした画像をBlobに変換
-      const storageRef = ref(storage, `users/${userId}/posts`) // ストレージの参照を取得
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image) // 画像をfetch
+      const blob = await response.blob() // fetchした画像をblobに変換
+      const imageName = `image_${index}`
+      const storageRef = ref(storage, `posts/${userId}/${imageName}`)
       await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
       return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
     }))
 
     await addDoc(postRef, { // Firestoreにドキュメントを追加
       userId,
+      userName,
+      userImage,
       title,
       images: imageUrls, // 取得した画像のURLを保存
       weather,
@@ -55,24 +61,9 @@ const handlePress = async /* 非同期処理 */ (
 
     router.back() // 成功したら前のページに戻る
   } catch (error) {
-    Alert.alert('投稿に失敗しました') // エラーハンドリング
+    console.log(error)
+    Alert.alert('投稿に失敗しました')
   }
-}
-
-const generateLengthOptions = (): Array<{ label: string, value: number }> /* Arrayは配列の型を示す */ => {
-  const options = [] // 空の配列を初期化
-  for (let i = 20; i <= 80; i += 0.5) { // 20から80まで0.5刻みでループ
-    options.push({ label: `${i} cm`, value: i }) // 各値についてオブジェクトを作成し、配列に追加
-  }
-  return options // 配列を返す
-}
-
-const generateWeightOptions = (): Array<{ label: string, value: number }> => {
-  const options = []
-  for (let i = 300; i <= 6000; i += 5) {
-    options.push({ label: `${i} g`, value: i })
-  }
-  return options
 }
 
 const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
@@ -96,6 +87,12 @@ const Create = (): JSX.Element => {
   const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+      if (status !== 'granted') {
+        return
+      }
+    }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
@@ -117,7 +114,8 @@ const Create = (): JSX.Element => {
           style={styles.input}
           onChangeText={(text) => { setTitle(text) }}
           placeholder='タイトルを入力'
-          returnKeyType='next'
+          keyboardType='default'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button label="釣果画像を選択" onPress={pickImage} />
@@ -126,6 +124,14 @@ const Create = (): JSX.Element => {
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />
           ))}
         </View>
+        <Text style={styles.textTitle}>釣果内容</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setContent(text) }}
+          placeholder='釣果内容を入力してください'
+          keyboardType='default'
+          returnKeyType='done'
+        />
         <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
           onValueChange={(value: string | null) => {
@@ -159,27 +165,22 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
+
         <Text style={styles.textTitle}>サイズ</Text>
-        <RNPickerSelect
-          onValueChange={(value) => {
-            if (value === null) {
-              setLength(value)
-            }
-          }}
-          items={generateLengthOptions()}
-          style={pickerSelectStyles}
-          placeholder={{ label: '長さを選択してください', value: null }}
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setLength(Number(text)) }}
+          placeholder='長さを入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>重さ</Text>
-        <RNPickerSelect
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setWeight(value)
-            }
-          }}
-          items={generateWeightOptions()}
-          style={pickerSelectStyles}
-          placeholder={{ label: '重さを選択してください', value: null }}
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setWeight(Number(text)) }}
+          placeholder='重さを入力してください'
+          keyboardType='number-pad'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
@@ -256,7 +257,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果数</Text>
         <RNPickerSelect
-          onValueChange={(value: string | null) => {
+          onValueChange={(value: number | null) => {
             if (value !== null) {
               setCatchFish(value)
             }
@@ -265,25 +266,17 @@ const Create = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果数を選択してください', value: null }}
         />
-        <Text style={styles.textTitle}>釣果内容</Text>
-        <TextInput
-          multiline style={styles.input}
-          value={content}
-          onChangeText={(text) => { setContent(text) }}
-          placeholder='釣果内容を入力してください'
-          returnKeyType='next'
-        />
         <Button label='投稿' onPress={() => {
-          handlePress(
+          void handlePress(
             title,
             images.map(img => img.uri),
             weather,
             content,
-            parseFloat(length),
-            parseFloat(weight),
+            length ?? 0,
+            weight ?? 0,
             lure,
             lureColor,
-            parseInt(catchFish, 10),
+            catchFish ?? 10,
             fishArea
           )
         }} />

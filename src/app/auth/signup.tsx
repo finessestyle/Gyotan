@@ -11,26 +11,25 @@ import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 
-const handlePress = async (email: string, password: string, username: string, profile: string, image: string): Promise<void> => {
+const handlePress = async (email: string, password: string, userName: string, profile: string, userImage: string | null): Promise<void> => {
   try {
-    console.log(email, password, username, profile, image)
+    console.log(email, password, userName, profile, userImage)
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const userId = userCredential.user.uid
     console.log(userId)
 
     let imageUrl = ''
-    if (image !== null) {
-      const response = await fetch(image)
+    if (userImage !== null) {
+      const response = await fetch(userImage)
       const blob = await response.blob()
-      const storageRef = ref(storage, `users/${userId}/profile.jpg`)
+      const storageRef = ref(storage, `users/${userId}/userImage.jpg`)
       await uploadBytes(storageRef, blob)
       imageUrl = await getDownloadURL(storageRef)
     }
 
     await setDoc(doc(db, 'users', userId), {
-      username,
+      userName,
       email,
-      password,
       profile,
       imageUrl
     })
@@ -45,9 +44,9 @@ const handlePress = async (email: string, password: string, username: string, pr
 const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
+  const [userName, setUsername] = useState('')
   const [profile, setProfile] = useState('')
-  const [image, setImage] = useState<string | null>(null)
+  const [userImage, setImage] = useState<string | null>(null)
 
   const pickImage = async (): Promise<void> => {
     if (Platform.OS !== 'web') {
@@ -72,7 +71,7 @@ const SignUp = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.innner}>
+      <View style={styles.inner}>
         <Text style={styles.title}>会員登録</Text>
         <TextInput
           style={styles.input}
@@ -82,7 +81,7 @@ const SignUp = (): JSX.Element => {
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
-          returnKeyType='next'
+          returnKeyType='done'
         />
         <TextInput
           style={styles.input}
@@ -92,15 +91,16 @@ const SignUp = (): JSX.Element => {
           secureTextEntry
           placeholder='パスワードを入力※６文字以上'
           textContentType='password'
-          returnKeyType='next'
+          returnKeyType='done'
         />
         <TextInput
           style={styles.input}
-          value={username}
+          value={userName}
           onChangeText={(text) => { setUsername(text) }}
           autoCapitalize='none'
           placeholder='ユーザーネームを入力'
-          returnKeyType='next'
+          keyboardType='default'
+          returnKeyType='done'
         />
         <TextInput
           style={styles.input}
@@ -108,17 +108,18 @@ const SignUp = (): JSX.Element => {
           onChangeText={(text) => { setProfile(text) }}
           autoCapitalize='none'
           placeholder='プロフィールを入力'
-          returnKeyType='next'
+          keyboardType='default'
+          returnKeyType='done'
         />
 
         <TouchableOpacity onPress={pickImage} >
           <Text style={styles.imagePicker}>ユーザー写真を選択</Text>
         </TouchableOpacity>
         <View style={styles.imageBox}>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
+        {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}
         </View>
 
-        <Button label='会員登録' onPress={() => { handlePress(email, password, username, profile, image) }} />
+        <Button label='会員登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
         <View style={styles.footer}>
           <Link href='/auth/login' asChild replace>
             <TouchableOpacity>
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F0F4F8'
   },
-  innner: {
+  inner: {
     paddingVertical: 24,
     paddingHorizontal: 27
   },
