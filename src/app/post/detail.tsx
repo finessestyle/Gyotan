@@ -61,7 +61,7 @@ const Detail = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
-        <Link href='/user/detail' asChild>
+        <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
           <TouchableOpacity>
             <View style={styles.userInfo} >
               {post?.userImage && <Image source={{ uri: post.userImage }} style={styles.userImage} />}

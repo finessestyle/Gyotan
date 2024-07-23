@@ -1,5 +1,5 @@
 import {
-  View, ScrollView, Text, TextInput, Image, StyleSheet, Platform, Alert, KeyboardAvoidingView
+  View, ScrollView, Text, TextInput, Image, StyleSheet, Alert, KeyboardAvoidingView
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -23,6 +23,46 @@ const handlePress = async/* 非同期処理 */ (
   fishArea: string
 ): Promise<void> => {
   try {
+    if (title === '') {
+      Alert.alert('エラー', 'タイトルを入力してください')
+      return
+    }
+    if (images.length === 0) {
+      Alert.alert('エラー', '釣果画像を選択してください')
+      return
+    }
+    if (weather === '') {
+      Alert.alert('エラー', '天気を選択してください')
+      return
+    }
+    if (content === '') {
+      Alert.alert('エラー', '釣果内容を入力してください')
+      return
+    }
+    if (fishArea === '') {
+      Alert.alert('エラー', '釣果エリアを選択してください')
+      return
+    }
+    if (length === null) {
+      Alert.alert('エラー', '長さを入力してください')
+      return
+    }
+    if (weight === null) {
+      Alert.alert('エラー', '重さを入力してください')
+      return
+    }
+    if (lure === '') {
+      Alert.alert('エラー', 'ルアーを選択してください')
+      return
+    }
+    if (lureColor === '') {
+      Alert.alert('エラー', 'ルアーカラーを選択してください')
+      return
+    }
+    if (catchFish === null) {
+      Alert.alert('エラー', '釣果数を選択してください')
+      return
+    }
     if (auth.currentUser === null) { return } // ユーザーがログインしていない場合、関数を終了
 
     const userId = auth.currentUser.uid
@@ -86,11 +126,9 @@ const Create = (): JSX.Element => {
   const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-      if (status !== 'granted') {
-        return
-      }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      return
     }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -117,7 +155,12 @@ const Create = (): JSX.Element => {
           returnKeyType='done'
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button label="釣果画像を選択" onPress={pickImage} buttonStyle={{ height: 28, backgroundColor: '#ffffff' }} labelStyle={{ lineHeight: 16, color: '#467FD3' }}/>
+        <Button
+          label="釣果画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#ffffff' }}
+          labelStyle={{ lineHeight: 16, color: '#467FD3' }}
+          onPress={pickImage}
+        />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />

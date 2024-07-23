@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, onSnapshot, query } from 'firebase/firestore'
+import { onSnapshot, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type User } from '../../../types/user'
 import Button from '../../components/Button'
@@ -13,44 +13,35 @@ const handlePress = (id: string): void => {
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
-  const imageUri = user !== null && Array.isArray(user.userImage)
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = collection(db, `users/${auth.currentUser.uid}/users`, id)
-    const q = query(ref)
-    const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remotUsers: User[] = []
-      snapShot.forEach((doc) => {
-        const { userName, profile, userImage, updatedAt } = doc.data()
-        remoteUsers.push({
-          id: userDoc.id,
-          userName,
-          profile,
-          userImage,
-          updatedAt
-        })
+
+    const userRef = doc(db, 'users', id)
+    const unsubscribe = onSnapshot(userRef, (userDoc) => {
+      const data = userDoc.data() as User
+      setUser({
+        id: userDoc.id,
+        userName: data.userName,
+        profile: data.profile,
+        imageUrl: data.imageUrl,
+        updatedAt: data.updatedAt
       })
-      setUsers(remoteUsers)
     })
     return unsubscribe
   }, [id])
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
-        <View style={styles.userImageTop}>
+        <View style={styles.userTop}>
           <Image
+            source={{ uri: user?.imageUrl }}
             style={styles.userImage}
-            source={{ uri: imageUri }}
           />
-        </View>
-        <View>
-          <Text>{user?.userName}さん</Text>
-        </View>
-        <View>
-          <Text>{user?.profile}</Text>
+          <Text style={styles.userName}>{user?.userName}さん</Text>
+          <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
       </View>
       <Button label='編集' onPress={() => { handlePress(id) }} />
@@ -72,13 +63,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 24
   },
-  userImageTop: {
-    alignItems: 'center'
+  userTop: {
+    alignItems: 'center',
+    marginBottom: 8
   },
   userImage: {
     width: 200,
     height: 200,
-    borderRadius: 100
+    borderRadius: 100,
+    marginBottom: 8
+  },
+  userName: {
+    fontSize: 24,
+    marginBottom: 8
+  },
+  userProfile: {
+    fontSize: 16
   }
 })
 export default Detail

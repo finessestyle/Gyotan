@@ -1,6 +1,6 @@
 import {
   View, Text, TextInput, Alert,
-  StyleSheet, TouchableOpacity, Image, Platform
+  StyleSheet, TouchableOpacity, Image
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -13,6 +13,26 @@ import Button from '../../components/Button'
 
 const handlePress = async (email: string, password: string, userName: string, profile: string, userImage: string | null): Promise<void> => {
   try {
+    if (email === '') {
+      Alert.alert('エラー', 'メールアドレスを入力してください')
+      return
+    }
+    if (password === '') {
+      Alert.alert('エラー', 'パスワードを入力してください')
+      return
+    }
+    if (password === '') {
+      Alert.alert('エラー', 'ユーザーネームを入力してください')
+      return
+    }
+    if (password === '') {
+      Alert.alert('エラー', 'プロフィールを入力してください')
+      return
+    }
+    if (userImage === null) {
+      Alert.alert('エラー', 'ユーザー画像を選択してください')
+      return
+    }
     console.log(email, password, userName, profile, userImage)
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const userId = userCredential.user.uid
@@ -49,13 +69,11 @@ const SignUp = (): JSX.Element => {
   const [userImage, setImage] = useState<string | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    if (Platform.OS !== 'web') {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-      if (status !== 'granted') {
-        alert('Permission to access gallery is required!')
-        return
-      }
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      return
     }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -113,7 +131,7 @@ const SignUp = (): JSX.Element => {
         />
 
         <TouchableOpacity onPress={pickImage} >
-          <Text style={styles.imagePicker}>ユーザー写真を選択</Text>
+          <Text style={styles.imagePicker}>ユーザー画像を選択</Text>
         </TouchableOpacity>
         <View style={styles.imageBox}>
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}
