@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native'
 import { Link } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
+import { ref, deleteObject } from 'firebase/storage'
 import { type Post } from '../../types/post'
-import { auth, db } from '../config'
+import { auth, db, storage } from '../config'
 import Icon from './Icon'
 
 interface Props {
@@ -11,7 +12,8 @@ interface Props {
 
 const handlePress = (id: string): void => {
   if (auth.currentUser === null) { return }
-  const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+  const postRef = doc(db, 'posts', id)
+  const storageRef = ref(storage, 'posts')
   Alert.alert('投稿を削除します', 'よろしいですか？', [
     {
       text: 'キャンセル'
@@ -19,9 +21,14 @@ const handlePress = (id: string): void => {
     {
       text: '削除する',
       style: 'destructive',
-      onPress: () => {
-        deleteDoc(ref)
-          .catch(() => { Alert.alert('削除に失敗しました') })
+      onPress: async (): Promise<void> => {
+        try {
+          await deleteDoc(postRef)
+          await deleteObject(storageRef)
+          Alert.alert('削除が完了しました')
+        } catch (error) {
+          Alert.alert('削除に失敗しました')
+        }
       }
     }
   ])

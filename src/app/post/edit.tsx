@@ -24,7 +24,7 @@ const handlePress = (
   fishArea: string
 ): void => {
   if (auth.currentUser === null) { return }
-  const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+  const ref = doc(db, `posts/${auth.currentUser.uid}/posts`, id)
   setDoc(ref, {
     title,
     images,

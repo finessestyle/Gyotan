@@ -1,10 +1,15 @@
 import { View, StyleSheet } from 'react-native'
 import MapView, { Circle, UrlTile } from 'react-native-maps'
 
-const Map = ({ exifData }): JSX.Element => {
+interface Props {
+  latitude: number
+  longitude: number
+}
+
+const Map = ({ latitude, longitude }: Props): JSX.Element => {
   const nRadiusHalfKm = 300
-  const latitude = exifData.gps.GPSLatitude
-  const longitude = exifData.gps.GPSLongitude
+  // const latitude = exifData.gps.GPSLatitude
+  // const longitude = exifData.gps.GPSLongitude
 
   return (
     <View style={styles.container}>
@@ -12,8 +17,8 @@ const Map = ({ exifData }): JSX.Element => {
         style={styles.map}
         mapType='none'
         initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
+          latitude,
+          longitude,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01
         }}

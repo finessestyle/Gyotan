@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { onSnapshot, doc } from 'firebase/firestore'
+import { collection, onSnapshot, query } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type User } from '../../../types/user'
 import Button from '../../components/Button'
@@ -17,16 +17,21 @@ const Detail = (): JSX.Element => {
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
-    const unsubscribe = onSnapshot(ref, (userDoc) => {
-      const { userName, profile, userImage, updatedAt } = userDoc.data() as User
-      setUser({
-        id: userDoc.id,
-        userName,
-        profile,
-        userImage,
-        updatedAt
+    const ref = collection(db, `users/${auth.currentUser.uid}/users`, id)
+    const q = query(ref)
+    const unsubscribe = onSnapshot(q, (snapShot) => {
+      const remotUsers: User[] = []
+      snapShot.forEach((doc) => {
+        const { userName, profile, userImage, updatedAt } = doc.data()
+        remoteUsers.push({
+          id: userDoc.id,
+          userName,
+          profile,
+          userImage,
+          updatedAt
+        })
       })
+      setUsers(remoteUsers)
     })
     return unsubscribe
   }, [id])

@@ -1,24 +1,24 @@
 import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native'
 import { useNavigation } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { collectionGroup, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
 
-import UserImageButton from '../../components/UsreImageButton'
+import UserImageButton from '../../components/UserImageButton'
 import LogOutButton from '../../components/LogOutButton'
 
 const List = (): JSX.Element => {
-  const [ users, setUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const navigation = useNavigation()
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => { return <LogOutButton />}
+      headerRight: () => { return <LogOutButton /> }
     })
   }, [])
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = collectionGroup(db, 'users')
+    const ref = collection(db, 'users')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteUsers: User[] = []
@@ -36,18 +36,16 @@ const List = (): JSX.Element => {
     })
     return unsubscribe
   }, [])
-
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.inner}>
-          <Text style={styles.title}>ユーザー一覧</Text>
-          <FlatList
-            data={users}
-            renderItem={({ item }) => <UserImageButton user={item} />}
-          />
-        </View>
-      </ScrollView>
+      <View style={styles.inner}>
+        <Text style={styles.title}>ユーザー一覧</Text>
+        <FlatList
+          data={users}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <UserImageButton user={item} />}
+        />
+      </View>
     </View>
   )
 }

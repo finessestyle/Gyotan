@@ -1,5 +1,5 @@
 import {
-  View, ScrollView, Text, TextInput, Image, StyleSheet, Platform, Alert
+  View, ScrollView, Text, TextInput, Image, StyleSheet, Platform, Alert, KeyboardAvoidingView
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -8,7 +8,6 @@ import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 import Button from '../../components/Button'
 
 const handlePress = async/* 非同期処理 */ (
@@ -16,32 +15,32 @@ const handlePress = async/* 非同期処理 */ (
   images: string[],
   weather: string,
   content: string,
-  length: number,
-  weight: number,
+  length: number | null,
+  weight: number | null,
   lure: string,
   lureColor: string,
-  catchFish: number,
+  catchFish: number | null,
   fishArea: string
 ): Promise<void> => {
   try {
     if (auth.currentUser === null) { return } // ユーザーがログインしていない場合、関数を終了
 
     const userId = auth.currentUser.uid
-    const userDoc = await getDoc(doc(db, 'users', userId))
+    const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
     const userImage = userData?.imageUrl ?? ''
-    const postRef = collection(db, `users/${userId}/posts`) // Firestoreのコレクション参照を取得
+    const postRef = collection(db, 'posts')
+    const postId = postRef.id
 
     const imageUrls = await Promise.all(images.map(async (image, index) => {
       const response = await fetch(image) // 画像をfetch
       const blob = await response.blob() // fetchした画像をblobに変換
       const imageName = `image_${index}`
-      const storageRef = ref(storage, `posts/${userId}/${imageName}`)
+      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
       await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
       return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
     }))
-
     await addDoc(postRef, { // Firestoreにドキュメントを追加
       userId,
       userName,
@@ -50,11 +49,11 @@ const handlePress = async/* 非同期処理 */ (
       images: imageUrls, // 取得した画像のURLを保存
       weather,
       content,
-      length,
-      weight,
+      length: length ?? 0,
+      weight: weight ?? 0,
       lure,
       lureColor,
-      catchFish,
+      catchFish: catchFish ?? 0,
       fishArea,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
@@ -118,7 +117,7 @@ const Create = (): JSX.Element => {
           returnKeyType='done'
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button label="釣果画像を選択" onPress={pickImage} />
+        <Button label="釣果画像を選択" onPress={pickImage} buttonStyle={{ height: 28, backgroundColor: '#ffffff' }} labelStyle={{ lineHeight: 16, color: '#467FD3' }}/>
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />
@@ -272,14 +271,14 @@ const Create = (): JSX.Element => {
             images.map(img => img.uri),
             weather,
             content,
-            length ?? 0,
-            weight ?? 0,
+            length,
+            weight,
             lure,
             lureColor,
-            catchFish ?? 10,
+            catchFish,
             fishArea
           )
-        }} />
+        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center' }} labelStyle={{ fontSize: 24 }} />
       </ScrollView>
     </KeyboardAvoidingView>
   )
@@ -303,12 +302,11 @@ const styles = StyleSheet.create({
   input: {
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
-    borderRadius: 4,
     height: 32,
     marginVertical: 4,
     alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
+    paddingLeft: 18,
+    fontSize: 16
   },
   textTitle: {
     paddingVertical: 4

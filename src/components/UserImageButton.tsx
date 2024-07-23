@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
 import { Link } from 'expo-router'
 import { type User } from '../../types/user'
 
@@ -8,8 +8,11 @@ interface Props {
 
 const UserImageButton = (props: Props): JSX.Element => {
   const { user } = props
-  const { image } = user
-  const imageUri = Array.isArray(user.image) && user.image.length > 0 ? user.image[0] : undefined
+  const { userName, userImage } = user
+  const imageUri = Array.isArray(user.userImage) && user.userImage.length > 0 ? user.userImage[0] : undefined
+
+  console.log('UserImageButton imageUrl:', imageUri)
+
   return (
     <Link href={{ pathname: '/user/detail', params: { id: user.id } }} asChild>
       <View style={styles.userImageButton}>
@@ -18,6 +21,7 @@ const UserImageButton = (props: Props): JSX.Element => {
             style={styles.userImage}
             source={{ uri: imageUri }}
           />
+          <Text>{user.userName}</Text>
         </TouchableOpacity>
       </View>
     </ Link>

@@ -2,9 +2,11 @@ import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity } from 'rea
 import { router, useLocalSearchParams, Link } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
+import Exif from 'react-native-exif'
 import Button from '../../components/Button'
+import Map from '../../components/Map'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: '/post/edit', params: { id } })
@@ -18,7 +20,7 @@ const Detail = (): JSX.Element => {
   useEffect(() => {
     if (auth.currentUser === null) { return }
 
-    const postRef = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+    const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
       const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
       setPost({
@@ -42,6 +44,20 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    const fetchExifData = async (): Promise<void> => {
+      try {
+        if (postImageUri === null) return
+        const exifData = await Exif.getExif(postImageUri)
+        console.log(exifData)
+      } catch (error) {
+        console.log('Error fetching EXIF data:', error)
+      }
+    }
+
+    void fetchExifData()
+  }, [postImageUri])
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
@@ -57,6 +73,7 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishArea}>
             <Text>釣果エリア: {post?.fishArea}</Text>
           </View>
+          <Map latitude={35.284384374460465} longitude={136.24385162899472} />
           <View style={styles.fishTime}>
             <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>
           </View>

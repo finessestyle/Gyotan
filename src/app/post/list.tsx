@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet } from 'react-native'
 import { router, useNavigation } from 'expo-router' // Correct import
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
-import { db, auth } from '../../config'
+import { db } from '../../config'
 import { type Post } from '../../../types/post'
 
 import ListItem from '../../components/ListItem'
@@ -25,8 +25,7 @@ const List = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    if (auth.currentUser === null) { return }
-    const ref = collection(db, `users/${auth.currentUser.uid}/posts`)
+    const ref = collection(db, 'posts')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
