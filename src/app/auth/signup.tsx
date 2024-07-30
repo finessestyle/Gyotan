@@ -21,11 +21,11 @@ const handlePress = async (email: string, password: string, userName: string, pr
       Alert.alert('エラー', 'パスワードを入力してください')
       return
     }
-    if (password === '') {
+    if (userName === '') {
       Alert.alert('エラー', 'ユーザーネームを入力してください')
       return
     }
-    if (password === '') {
+    if (profile === '') {
       Alert.alert('エラー', 'プロフィールを入力してください')
       return
     }
@@ -93,6 +93,15 @@ const SignUp = (): JSX.Element => {
         <Text style={styles.title}>会員登録</Text>
         <TextInput
           style={styles.input}
+          value={userName}
+          onChangeText={(text) => { setUsername(text) }}
+          autoCapitalize='none'
+          placeholder='ユーザーネームを入力'
+          keyboardType='default'
+          returnKeyType='done'
+        />
+        <TextInput
+          style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text) }}
           autoCapitalize='none'
@@ -113,15 +122,6 @@ const SignUp = (): JSX.Element => {
         />
         <TextInput
           style={styles.input}
-          value={userName}
-          onChangeText={(text) => { setUsername(text) }}
-          autoCapitalize='none'
-          placeholder='ユーザーネームを入力'
-          keyboardType='default'
-          returnKeyType='done'
-        />
-        <TextInput
-          style={styles.input}
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
           autoCapitalize='none'
@@ -129,10 +129,12 @@ const SignUp = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-
-        <TouchableOpacity onPress={pickImage} >
-          <Text style={styles.imagePicker}>ユーザー画像を選択</Text>
-        </TouchableOpacity>
+        <Button
+          label="釣果画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          onPress={pickImage}
+        />
         <View style={styles.imageBox}>
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}
         </View>

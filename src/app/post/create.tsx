@@ -1,5 +1,5 @@
 import {
-  View, ScrollView, Text, TextInput, Image, StyleSheet, Alert, KeyboardAvoidingView
+  View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
@@ -9,6 +9,7 @@ import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const handlePress = async/* 非同期処理 */ (
   title: string,
@@ -76,7 +77,7 @@ const handlePress = async/* 非同期処理 */ (
     const imageUrls = await Promise.all(images.map(async (image, index) => {
       const response = await fetch(image) // 画像をfetch
       const blob = await response.blob() // fetchした画像をblobに変換
-      const imageName = `image_${index}`
+      const imageName = `image_${Date.now()}_${index}`
       const storageRef = ref(storage, `posts/${postId}/${imageName}`)
       await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
       return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
@@ -143,7 +144,7 @@ const Create = (): JSX.Element => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
       <ScrollView style={styles.inner}>
         <Text style={styles.title}>釣果投稿</Text>
         <Text style={styles.textTitle}>タイトル</Text>
@@ -157,8 +158,8 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
           label="釣果画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#ffffff' }}
-          labelStyle={{ lineHeight: 16, color: '#467FD3' }}
+          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
           onPress={pickImage}
         />
         <View style={styles.imageContainer}>
@@ -321,16 +322,16 @@ const Create = (): JSX.Element => {
             catchFish,
             fishArea
           )
-        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center' }} labelStyle={{ fontSize: 24 }} />
+        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }} labelStyle={{ fontSize: 24, lineHeight: 21 }} />
       </ScrollView>
-    </KeyboardAvoidingView>
+      </KeyboardAwareScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollContainer: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#f8f8f8'
   },
   inner: {
     marginVertical: 30,

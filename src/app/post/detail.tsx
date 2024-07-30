@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
-import Exif from 'react-native-exif'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
 
@@ -43,20 +42,6 @@ const Detail = (): JSX.Element => {
     })
     return unsubscribe
   }, [])
-
-  useEffect(() => {
-    const fetchExifData = async (): Promise<void> => {
-      try {
-        if (postImageUri === null) return
-        const exifData = await Exif.getExif(postImageUri)
-        console.log(exifData)
-      } catch (error) {
-        console.log('Error fetching EXIF data:', error)
-      }
-    }
-
-    void fetchExifData()
-  }, [postImageUri])
 
   return (
     <View style={styles.container}>
@@ -114,7 +99,9 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        <Button label='編集' onPress={() => { handlePress(id) }} />
+        {auth.currentUser?.uid === post?.userId && (
+          <Button label='編集' onPress={() => { handlePress(id) }} />
+        )}
       </ScrollView>
     </View>
   )
@@ -130,16 +117,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 8
   },
   userInfo: {
-    height: 80,
+    borderWidth: 1,
+    height: 60,
     flexDirection: 'row',
-    paddingVertical: 8,
-    paddingHorizontal: 19,
-    alignItems: 'center'
+    paddingHorizontal: 8,
+    marginHorizontal: 19,
+    alignItems: 'center',
+    borderColor: '#B0B0B0',
+    borderBottomWidth: 0
   },
   userImage: {
-    width: 64,
-    height: 64,
-    borderRadius: 32
+    width: 48,
+    height: 48,
+    borderRadius: 20
   },
   userName: {
     paddingLeft: 16,

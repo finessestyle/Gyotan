@@ -9,7 +9,6 @@ import ListItem from '../../components/ListItem'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 import LogOutButton from '../../components/LogOutButton'
-
 const handlePress = (): void => {
   router.push('/post/create')
 }
