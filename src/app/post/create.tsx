@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, addDoc, Timestamp, getDoc, doc } from 'firebase/firestore'
+import { collection, addDoc, Timestamp, getDoc, doc, setDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
@@ -11,7 +11,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-const handlePress = async/* 非同期処理 */ (
+const handlePress = async (
   title: string,
   images: string[],
   weather: string,
@@ -64,15 +64,16 @@ const handlePress = async/* 非同期処理 */ (
       Alert.alert('エラー', '釣果数を選択してください')
       return
     }
-    if (auth.currentUser === null) { return } // ユーザーがログインしていない場合、関数を終了
 
+    if (auth.currentUser === null) return // ユーザーがログインしていない場合、関数を終了
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
     const userImage = userData?.imageUrl ?? ''
     const postRef = collection(db, 'posts')
-    const postId = postRef.id
+    const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
+    const postId = newPostRef.id
 
     const imageUrls = await Promise.all(images.map(async (image, index) => {
       const response = await fetch(image) // 画像をfetch
@@ -82,19 +83,19 @@ const handlePress = async/* 非同期処理 */ (
       await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
       return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
     }))
-    await addDoc(postRef, { // Firestoreにドキュメントを追加
+    await setDoc(doc(postRef, postId), { // Firestoreにドキュメントを追加
       userId,
       userName,
       userImage,
       title,
-      images: imageUrls, // 取得した画像のURLを保存
+      images: imageUrls,
       weather,
       content,
-      length: length ?? 0,
-      weight: weight ?? 0,
+      length,
+      weight,
       lure,
       lureColor,
-      catchFish: catchFish ?? 0,
+      catchFish,
       fishArea,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
@@ -127,19 +128,14 @@ const Create = (): JSX.Element => {
   const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      return
-    }
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
       quality: 1
     })
-
-    if (!result.canceled && result.assets.length > 0) {
-      setImages(result.assets.map(asset => ({ uri: asset.uri })))
+    if (!result.canceled) {
+      setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
     }
   }
 
@@ -322,9 +318,12 @@ const Create = (): JSX.Element => {
             catchFish,
             fishArea
           )
-        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }} labelStyle={{ fontSize: 24, lineHeight: 21 }} />
+        }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+        />
       </ScrollView>
-      </KeyboardAwareScrollView>
+    </KeyboardAwareScrollView>
   )
 }
 
@@ -334,8 +333,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 30,
-    marginHorizontal: 19
+    marginVertical: 24,
+    marginHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -365,7 +364,7 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    margin: 5
+    margin: 6.5
   }
 })
 

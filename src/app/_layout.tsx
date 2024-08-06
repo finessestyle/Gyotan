@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router'
-import FontAwesome from '@expo/vector-icons/FontAwesome'
+import { FontAwesome } from '@expo/vector-icons'
 import { View, StyleSheet } from 'react-native'
 
 const Layout = (): JSX.Element => {
@@ -22,14 +22,14 @@ const Layout = (): JSX.Element => {
           name="post/list"
           options={{
             title: '釣果',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="pencil" color={color} />
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="pencil" color={color} />
           }}
         />
         <Tabs.Screen
-          name="user/list"
+          name="user/detail"
           options={{
             title: 'ユーザー',
-            tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />
+            tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />
           }}
         />
         <Tabs.Screen
@@ -72,7 +72,7 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
-          name="user/detail"
+          name="user/list"
           options={{
             href: null
           }}

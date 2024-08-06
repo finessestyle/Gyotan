@@ -3,48 +3,109 @@ import {
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { collection, addDoc, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
+import { auth, db, storage } from '../../config'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
-import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
+
 import Button from '../../components/Button'
 
-const handlePress = (
+const handlePress = async (
   id: string,
   title: string,
   images: string[],
   weather: string,
   content: string,
-  length: number,
-  weight: number,
+  length: number | null,
+  weight: number | null,
   lure: string,
   lureColor: string,
-  catchFish: number,
+  catchFish: number | null,
   fishArea: string
-): void => {
-  if (auth.currentUser === null) { return }
-  const ref = doc(db, `posts/${auth.currentUser.uid}/posts`, id)
-  setDoc(ref, {
-    title,
-    images,
-    weather,
-    content,
-    length,
-    weight,
-    lure,
-    lureColor,
-    catchFish,
-    fishArea,
-    updatedAt: Timestamp.fromDate(new Date())
-  })
-    .then(() => {
-      router.back()
+): Promise<void> => {
+  try {
+    if (title === '') {
+      Alert.alert('エラー', 'タイトルを入力してください')
+      return
+    }
+    if (images.length === 0) {
+      Alert.alert('エラー', '釣果画像を選択してください')
+      return
+    }
+    if (weather === '') {
+      Alert.alert('エラー', '天気を選択してください')
+      return
+    }
+    if (content === '') {
+      Alert.alert('エラー', '釣果内容を入力してください')
+      return
+    }
+    if (fishArea === '') {
+      Alert.alert('エラー', '釣果エリアを選択してください')
+      return
+    }
+    if (length === null) {
+      Alert.alert('エラー', '長さを入力してください')
+      return
+    }
+    if (weight === null) {
+      Alert.alert('エラー', '重さを入力してください')
+      return
+    }
+    if (lure === '') {
+      Alert.alert('エラー', 'ルアーを選択してください')
+      return
+    }
+    if (lureColor === '') {
+      Alert.alert('エラー', 'ルアーカラーを選択してください')
+      return
+    }
+    if (catchFish === null) {
+      Alert.alert('エラー', '釣果数を選択してください')
+      return
+    }
+    if (auth.currentUser === null) return
+
+    const userId = auth.currentUser.uid
+    const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
+    const userData = userDoc.data()
+    const userName = userData?.userName ?? 'ゲスト'
+    const userImage = userData?.imageUrl ?? ''
+    const postRef = collection(db, 'posts')
+    const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
+    const postId = newPostRef.id
+
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image) // 画像をfetch
+      const blob = await response.blob() // fetchした画像をblobに変換
+      const imageName = `image_${Date.now()}_${index}`
+      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
+      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
+      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
+    }))
+
+    await setDoc(doc(postRef, postId), {
+      userName,
+      userImage,
+      title,
+      images: imageUrls,
+      weather,
+      content,
+      length,
+      weight,
+      lure,
+      lureColor,
+      catchFish,
+      fishArea,
+      updatedAt: Timestamp.fromDate(new Date())
     })
-    .catch((error) => {
-      console.log(error)
-      Alert.alert('更新に失敗しました')
-    })
+    router.back()
+  } catch (error) {
+    console.log(error)
+    Alert.alert('更新に失敗しました')
+  }
 }
 
 const Edit = (): JSX.Element => {
@@ -74,7 +135,7 @@ const Edit = (): JSX.Element => {
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
-    const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+    const ref = doc(db, 'posts', id)
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
@@ -97,22 +158,6 @@ const Edit = (): JSX.Element => {
       })
   }, [id])
 
-  const generateLengthOptions = (): Array<{ label: string, value: number }> => {
-    const options = []
-    for (let i = 20; i <= 80; i += 0.5) {
-      options.push({ label: `${i} cm`, value: i })
-    }
-    return options
-  }
-
-  const generateWeightOptions = (): Array<{ label: string, value: number }> => {
-    const options = []
-    for (let i = 300; i <= 6000; i += 5) {
-      options.push({ label: `${i} g`, value: i })
-    }
-    return options
-  }
-
   const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
     const options = []
     for (let i = 1; i <= 20; i += 1) {
@@ -122,26 +167,42 @@ const Edit = (): JSX.Element => {
   }
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
       <ScrollView style={styles.inner}>
-        <Text style={styles.title}>釣果投稿</Text>
+        <Text style={styles.title}>釣果編集</Text>
         <Text style={styles.textTitle}>タイトル</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => { setTitle(text) }}
           value={title}
+          onChangeText={(text) => { setTitle(text) }}
           placeholder='タイトルを入力'
-          returnKeyType='next'
+          keyboardType='default'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button label="釣果画像を選択" onPress={pickImage} />
-        <View style={styles.imageContainer} >
+        <Button
+          label="釣果画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          onPress={pickImage}
+        />
+        <View style={styles.imageContainer}>
           {images.map((image, index) => (
             <Image key={index} source={{ uri: image.uri }} style={styles.image} />
           ))}
         </View>
+        <Text style={styles.textTitle}>釣果内容</Text>
+        <TextInput
+          value={content}
+          style={styles.input}
+          onChangeText={(text) => { setContent(text) }}
+          placeholder='釣果内容を入力してください'
+          keyboardType='default'
+          returnKeyType='done'
+        />
         <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
+          value={weather}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setWeather(value)
@@ -158,6 +219,7 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果エリア</Text>
         <RNPickerSelect
+          value={fishArea}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setFishArea(value)
@@ -173,30 +235,28 @@ const Edit = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
+
         <Text style={styles.textTitle}>サイズ</Text>
-        <RNPickerSelect
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setLength(value)
-            }
-          }}
-          items={generateLengthOptions()}
-          style={pickerSelectStyles}
-          placeholder={{ label: '長さを選択してください', value: null }}
+        <TextInput
+          value={length}
+          style={styles.input}
+          onChangeText={(text) => { setLength((text)) }}
+          placeholder='長さを入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>重さ</Text>
-        <RNPickerSelect
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setWeight(value)
-            }
-          }}
-          items={generateWeightOptions()}
-          style={pickerSelectStyles}
-          placeholder={{ label: '重さを選択してください', value: null }}
+        <TextInput
+          value={weight}
+          style={styles.input}
+          onChangeText={(text) => { setWeight((text)) }}
+          placeholder='重さを入力してください'
+          keyboardType='number-pad'
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
+          value={lure}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setLure(value)
@@ -239,6 +299,7 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>ルアーカラー</Text>
         <RNPickerSelect
+          value={lureColor}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setLureColor(value)
@@ -270,7 +331,8 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果数</Text>
         <RNPickerSelect
-          onValueChange={(value: string | null) => {
+          value={catchFish}
+          onValueChange={(value: number | null) => {
             if (value !== null) {
               setCatchFish(value)
             }
@@ -279,41 +341,33 @@ const Edit = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果数を選択してください', value: null }}
         />
-        <Text style={styles.textTitle}>釣果内容</Text>
-        <TextInput
-          multiline style={styles.input}
-          value={content}
-          onChangeText={(text) => { setContent(text) }}
-          placeholder='釣果内容を入力してください'
-          returnKeyType='next'
-        />
         <Button label='投稿' onPress={() => {
-          handlePress(
+          void handlePress(
             id,
             title,
             images.map(img => img.uri),
             weather,
             content,
-            parseFloat(length),
-            parseFloat(weight),
+            length,
+            weight,
             lure,
             lureColor,
-            parseInt(catchFish, 10),
+            catchFish,
             fishArea
           )
-        }} />
+        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }} labelStyle={{ fontSize: 24, lineHeight: 21 }} />
       </ScrollView>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
+  scrollContainer: {
+    flex: 1,
+    backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 30,
-    marginHorizontal: 19
+    marginVertical: 24
   },
   title: {
     fontSize: 24,
@@ -335,7 +389,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4
   },
   imageContainer: {
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 4,
     flexDirection: 'row',

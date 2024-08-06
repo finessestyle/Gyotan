@@ -1,5 +1,5 @@
 import {
-  View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image
+  View, Text, TextInput, StyleSheet, Alert, Image
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -9,29 +9,28 @@ import * as ImagePicker from 'expo-image-picker'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 import Button from '../../components/Button'
 
-const handlePress = (
+const handlePress = async (
   id: string,
-  title: string,
+  email: string,
   userImage: string,
   userName: string,
   profile: string
-): void => {
-  if (auth.currentUser === null) { return }
-  const ref = doc(db, `users/${auth.currentUser.uid}/users`, id)
-  setDoc(ref, {
-    title,
-    userImage,
-    userName,
-    profile,
-    updatedAt: Timestamp.fromDate(new Date())
-  })
-    .then(() => {
-      router.back()
-    })
-    .catch((error) => {
-      console.log(error)
-      Alert.alert('更新に失敗しました')
-    })
+): Promise<void> => {
+  if (auth.currentUser === null) return
+  const userRef = doc(db, 'users', id)
+  try {
+    await setDoc(userRef, {
+      email,
+      imageUrl: userImage,
+      userName,
+      profile,
+      updatedAt: Timestamp.fromDate(new Date())
+    }, { merge: true })
+    router.back()
+  } catch (error) {
+    console.log(error)
+    Alert.alert('更新に失敗しました')
+  }
 }
 
 const Edit = (): JSX.Element => {
@@ -55,8 +54,8 @@ const Edit = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (auth.currentUser === null) { return }
-    const ref = doc(db, `users/${auth.currentUser.uid}/posts`, id)
+    if (auth.currentUser === null) return
+    const ref = doc(db, 'users', id)
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
@@ -76,7 +75,7 @@ const Edit = (): JSX.Element => {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>会員登録</Text>
+        <Text style={styles.title}>ユーザー編集</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -105,14 +104,38 @@ const Edit = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-        <TouchableOpacity onPress={pickImage} >
-          <Text style={styles.imagePicker}>ユーザー写真を選択</Text>
-        </TouchableOpacity>
+        <Button
+          label="ユーザー画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          onPress={pickImage}
+        />
         <View style={styles.imageBox}>
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
         </View>
 
-        <Button label='編集' onPress={() => { void handlePress(id, email, userName, profile, userImage) }} />
+        <Button
+          label='編集'
+          onPress={() => {
+            void handlePress(
+              id,
+              email,
+              userImage,
+              userName,
+              profile
+            )
+          }}
+          buttonStyle={{
+            width: '100%',
+            marginTop: 8,
+            alignItems: 'center',
+            height: 30
+          }}
+          labelStyle={{
+            fontSize: 24,
+            lineHeight: 21
+          }}
+        />
       </View>
     </KeyboardAvoidingView>
   )
@@ -123,8 +146,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   inner: {
-    marginVertical: 30,
-    marginHorizontal: 19
+    marginVertical: 24,
+    marginHorizontal: 27
   },
   title: {
     fontSize: 24,
@@ -167,30 +190,6 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: 'auto',
     marginBottom: 16
-  }
-})
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 19,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D0D0D0',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    marginVertical: 4
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 19,
-    paddingVertical: 8,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#D0D0D0',
-    borderRadius: 8,
-    color: 'black',
-    paddingRight: 30
   }
 })
 

@@ -15,9 +15,9 @@ const Detail = (): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    if (auth.currentUser === null) { return }
-
-    const userRef = doc(db, 'users', id)
+    if (auth.currentUser === null) return
+    const userId = auth.currentUser.uid
+    const userRef = doc(db, 'users', userId)
     const unsubscribe = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
       setUser({
@@ -44,7 +44,13 @@ const Detail = (): JSX.Element => {
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
       </View>
-      <Button label='編集' onPress={() => { handlePress(id) }} />
+      {auth.currentUser?.uid === user?.id && (
+        <Button
+        label='編集'
+        buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 40 }}
+        labelStyle={{ fontSize: 24, lineHeight: 26 }} onPress={() => { handlePress(id) }}
+      />
+      )}
     </ScrollView>
   )
 }

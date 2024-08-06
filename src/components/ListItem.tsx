@@ -10,28 +10,33 @@ interface Props {
   post: Post
 }
 
-const handlePress = (id: string): void => {
-  if (auth.currentUser === null) { return }
-  const postRef = doc(db, 'posts', id)
-  const storageRef = ref(storage, 'posts')
-  Alert.alert('投稿を削除します', 'よろしいですか？', [
-    {
-      text: 'キャンセル'
-    },
-    {
-      text: '削除する',
-      style: 'destructive',
-      onPress: async (): Promise<void> => {
-        try {
-          await deleteDoc(postRef)
-          await deleteObject(storageRef)
-          Alert.alert('削除が完了しました')
-        } catch (error) {
-          Alert.alert('削除に失敗しました')
+const handlePress = (id: string, post: { userId: string }): void => {
+  if (auth.currentUser?.uid === post?.userId) {
+    const postRef = doc(db, 'posts', id)
+    const storageRef = ref(storage, `posts/${id}`)
+
+    Alert.alert('投稿を削除します', 'よろしいですか？', [
+      {
+        text: 'キャンセル'
+      },
+      {
+        text: '削除する',
+        style: 'destructive',
+        onPress: () => {
+          const deletePost = async (): Promise<void> => {
+            try {
+              await deleteDoc(postRef)
+              await deleteObject(storageRef)
+              Alert.alert('削除が完了しました')
+            } catch (error) {
+              Alert.alert('削除に失敗しました')
+            }
+          }
+          void deletePost()
         }
       }
-    }
-  ])
+    ])
+  }
 }
 
 const ListItem = (props: Props): JSX.Element | null => {
@@ -52,11 +57,11 @@ const ListItem = (props: Props): JSX.Element | null => {
             source={{ uri: imageUri }}
           />
         </View>
-        <View >
+        <View>
           <Text style={styles.listItemTitle}>{post.title}</Text>
           <Text style={styles.listItemDate}>{dateString}</Text>
         </View>
-        <TouchableOpacity style={styles.deliteButton} onPress={() => { handlePress(post.id) }}>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => { handlePress(post.id, post) }}>
           <Icon name='delete' size={32} color='#B0B0B0' />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     color: '#848484'
   },
-  deliteButton: {
+  deleteButton: {
     position: 'absolute',
     right: 19
   }

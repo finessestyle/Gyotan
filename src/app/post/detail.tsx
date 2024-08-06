@@ -100,7 +100,11 @@ const Detail = (): JSX.Element => {
           </View>
         </View>
         {auth.currentUser?.uid === post?.userId && (
-          <Button label='編集' onPress={() => { handlePress(id) }} />
+          <Button
+            label='編集'
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 40 }}
+            labelStyle={{ fontSize: 24, lineHeight: 26 }} onPress={() => { handlePress(id) }}
+          />
         )}
       </ScrollView>
     </View>
@@ -110,7 +114,7 @@ const Detail = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#f8f8f8'
   },
   inner: {
     marginVertical: 24,
@@ -118,13 +122,15 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     borderWidth: 1,
+    borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderBottomWidth: 0,
     height: 60,
     flexDirection: 'row',
     paddingHorizontal: 8,
     marginHorizontal: 19,
     alignItems: 'center',
-    borderColor: '#B0B0B0',
-    borderBottomWidth: 0
+    borderColor: '#B0B0B0'
   },
   userImage: {
     width: 48,
