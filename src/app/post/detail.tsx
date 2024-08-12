@@ -6,15 +6,16 @@ import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
+import Swiper from 'react-native-swiper'
 
 const handlePress = (id: string): void => {
-  router.push({ pathname: '/post/edit', params: { id } })
+  router.push({ pathname: 'post/edit', params: { id } })
 }
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [post, setPost] = useState<Post | null>(null)
-  const postImageUri = post !== null && Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
+  const postImages = post !== null && Array.isArray(post.images) ? post.images : []
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
@@ -49,7 +50,7 @@ const Detail = (): JSX.Element => {
         <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
           <TouchableOpacity>
             <View style={styles.userInfo} >
-              {post?.userImage && <Image source={{ uri: post.userImage }} style={styles.userImage} />}
+              {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
               <Text style={styles.userName}>{post?.userName}さん</Text>
             </View>
           </TouchableOpacity>
@@ -62,12 +63,11 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishTime}>
             <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>
           </View>
-          <View>
-            <Image
-              source={{ uri: postImageUri }}
-              style={styles.fishImage}
-            />
-          </View>
+          <Swiper style={styles.swiper} showsButtons={true}>
+            {postImages.map((uri, index) => (
+              <Image key={index} source={{ uri }} style={styles.fishImage} />
+            ))}
+          </Swiper>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
               <Text>天気: {post?.weather}</Text>
@@ -102,8 +102,9 @@ const Detail = (): JSX.Element => {
         {auth.currentUser?.uid === post?.userId && (
           <Button
             label='編集'
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 40 }}
-            labelStyle={{ fontSize: 24, lineHeight: 26 }} onPress={() => { handlePress(id) }}
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            onPress={() => { handlePress(id) }}
           />
         )}
       </ScrollView>
@@ -118,7 +119,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 8
+    marginHorizontal: 16
   },
   userInfo: {
     borderWidth: 1,
@@ -128,7 +129,6 @@ const styles = StyleSheet.create({
     height: 60,
     flexDirection: 'row',
     paddingHorizontal: 8,
-    marginHorizontal: 19,
     alignItems: 'center',
     borderColor: '#B0B0B0'
   },
@@ -146,9 +146,10 @@ const styles = StyleSheet.create({
   postBody: {
     borderWidth: 1,
     borderColor: '#B0B0B0',
-    marginHorizontal: 19,
     marginBottom: 10,
-    height: 'auto'
+    height: 'auto',
+    borderBottomRightRadius: 8,
+    borderBottomLeftRadius: 8
   },
   fishArea: {
     height: 32,
@@ -203,6 +204,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#000000'
+  },
+  swiper: {
+    height: 322
   }
 })
 

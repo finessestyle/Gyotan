@@ -8,8 +8,7 @@ import { auth, db, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
-import * as ImagePicker from 'expo-image-picker'
-
+import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 
 const handlePress = async (
@@ -69,24 +68,28 @@ const handlePress = async (
     if (auth.currentUser === null) return
 
     const userId = auth.currentUser.uid
-    const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
+    const userDoc = await getDoc(doc(db, 'users', userId))
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
     const userImage = userData?.imageUrl ?? ''
     const postRef = collection(db, 'posts')
-    const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
-    const postId = newPostRef.id
+    const postId = postRef.id
 
-    const imageUrls = await Promise.all(images.map(async (image, index) => {
-      const response = await fetch(image) // 画像をfetch
-      const blob = await response.blob() // fetchした画像をblobに変換
-      const imageName = `image_${Date.now()}_${index}`
-      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
-      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
-      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
-    }))
+    let imageUrls = ''
+    if (images === null) {
+      try {
+        const response = await fetch(images)
+        const blob = await response.blob()
+        const storageRef = ref(storage, `posts/${postId}/postImage.jpg`)
+        await uploadBytes(storageRef, blob)
+        imageUrls = await getDownloadURL(storageRef)
+      } catch (error) {
+        Alert.alert('写真を選択してください')
+      }
+    }
 
     await setDoc(doc(postRef, postId), {
+      userId,
       userName,
       userImage,
       title,
@@ -115,15 +118,15 @@ const Edit = (): JSX.Element => {
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
   const [fishArea, setFishArea] = useState('')
-  const [length, setLength] = useState('')
-  const [weight, setWeight] = useState('')
+  const [length, setLength] = useState<number | null>(null)
+  const [weight, setWeight] = useState<number | null>(null)
   const [lure, setLure] = useState('')
   const [lureColor, setLureColor] = useState('')
-  const [catchFish, setCatchFish] = useState('')
+  const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    const result = await ImageMultiplePicker.launchImageLibraryAsync({
+      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
       quality: 1
@@ -184,7 +187,12 @@ const Edit = (): JSX.Element => {
           label="釣果画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={pickImage}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
         />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
@@ -240,7 +248,7 @@ const Edit = (): JSX.Element => {
         <TextInput
           value={length}
           style={styles.input}
-          onChangeText={(text) => { setLength((text)) }}
+          onChangeText={(text) => { setLength(Number(text)) }}
           placeholder='長さを入力してください'
           keyboardType='numeric'
           returnKeyType='done'
@@ -249,7 +257,7 @@ const Edit = (): JSX.Element => {
         <TextInput
           value={weight}
           style={styles.input}
-          onChangeText={(text) => { setWeight((text)) }}
+          onChangeText={(text) => { setWeight(Number(text)) }}
           placeholder='重さを入力してください'
           keyboardType='number-pad'
           returnKeyType='done'
@@ -355,7 +363,10 @@ const Edit = (): JSX.Element => {
             catchFish,
             fishArea
           )
-        }} buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }} labelStyle={{ fontSize: 24, lineHeight: 21 }} />
+        }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+        />
       </ScrollView>
     </KeyboardAwareScrollView>
   )
@@ -367,7 +378,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 24
+    marginVertical: 24,
+    marginHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -378,18 +390,17 @@ const styles = StyleSheet.create({
   input: {
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
-    borderRadius: 4,
     height: 32,
     marginVertical: 4,
     alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
+    paddingLeft: 18,
+    fontSize: 16
   },
   textTitle: {
     paddingVertical: 4
   },
   imageContainer: {
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 4,
     flexDirection: 'row',
@@ -398,7 +409,7 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    margin: 5
+    margin: 6.5
   }
 })
 

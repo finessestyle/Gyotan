@@ -8,29 +8,29 @@ interface Props {
 
 const UserImageButton = (props: Props): JSX.Element => {
   const { user } = props
-  const { userName, userImage } = user
-  const imageUri = Array.isArray(user.userImage) && user.userImage.length > 0 ? user.userImage[0] : undefined
-
-  console.log('UserImageButton imageUrl:', imageUri)
+  const { userName, imageUrl } = user // 修正点：重複していた `userName` を修正
+  const imageUri = imageUrl || 'https://example.com/default-avatar.png' // 画像がない場合のデフォルト画像
 
   return (
     <Link href={{ pathname: '/user/detail', params: { id: user.id } }} asChild>
       <View style={styles.userImageButton}>
-        <TouchableOpacity >
+        <TouchableOpacity>
           <Image
             style={styles.userImage}
             source={{ uri: imageUri }}
           />
-          <Text>{user.userName}</Text>
+          <Text>{userName}</Text>
         </TouchableOpacity>
       </View>
-    </ Link>
+    </Link>
   )
 }
 
 const styles = StyleSheet.create({
   userImageButton: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignItems: 'center', // 縦方向の中央揃え
+    marginVertical: 8 // 上下の余白を追加
   },
   userImage: {
     width: 102,

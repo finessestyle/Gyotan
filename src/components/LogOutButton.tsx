@@ -15,7 +15,7 @@ const handlePress = (): void => {
 
 const LogOutButton = (): JSX.Element => {
   return (
-    <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity style={{ marginRight: 16 }} onPress={handlePress}>
       <Text style={styles.text}>ログアウト</Text>
     </TouchableOpacity>
   )

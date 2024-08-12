@@ -12,20 +12,38 @@ import Button from '../../components/Button'
 const handlePress = async (
   id: string,
   email: string,
-  userImage: string,
+  imageUrl: string | null,
   userName: string,
   profile: string
 ): Promise<void> => {
-  if (auth.currentUser === null) return
-  const userRef = doc(db, 'users', id)
   try {
+    if (email === '') {
+      Alert.alert('エラー', 'メールアドレスを入力してください')
+      return
+    }
+    if (userName === '') {
+      Alert.alert('エラー', 'ユーザーネームを入力してください')
+      return
+    }
+    if (profile === '') {
+      Alert.alert('エラー', 'プロフィールを入力してください')
+      return
+    }
+    if (imageUrl === null) {
+      Alert.alert('エラー', 'ユーザー画像を選択してください')
+      return
+    }
+    if (auth.currentUser === null) return
+
+    const userRef = doc(db, 'users', id)  // 修正された部分
     await setDoc(userRef, {
       email,
-      imageUrl: userImage,
+      imageUrl,
       userName,
       profile,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
+
     router.back()
   } catch (error) {
     console.log(error)
@@ -36,7 +54,7 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [email, setEmail] = useState('')
-  const [userImage, setImage] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
 
@@ -49,7 +67,7 @@ const Edit = (): JSX.Element => {
     })
     if (!result.canceled) {
       const selectedAsset = result.assets[0]
-      setImage(selectedAsset.uri)
+      setImageUrl(selectedAsset.uri)
     }
   }
 
@@ -59,9 +77,9 @@ const Edit = (): JSX.Element => {
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
-        if (data === null) {
+        if (data) { // データが存在する場合のみ更新
           setEmail(data.email || '')
-          setImage(data.image || '')
+          setImageUrl(data.imageUrl || null)  // null を許容
           setUserName(data.userName || '')
           setProfile(data.profile || '')
         }
@@ -80,7 +98,6 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text) }}
-          autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
@@ -90,7 +107,6 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           value={userName}
           onChangeText={(text) => { setUserName(text) }}
-          autoCapitalize='none'
           placeholder='ユーザーネームを入力'
           keyboardType='default'
           returnKeyType='done'
@@ -99,19 +115,23 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
-          autoCapitalize='none'
           placeholder='プロフィールを入力'
           keyboardType='default'
           returnKeyType='done'
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={pickImage}
+          buttonStyle={{ height: 48, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 24, color: '#000000' }}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
         />
         <View style={styles.imageBox}>
-        {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
+          {imageUrl !== null && <Image source={{ uri: imageUrl }} style={styles.userImage} />}
         </View>
 
         <Button
@@ -120,7 +140,7 @@ const Edit = (): JSX.Element => {
             void handlePress(
               id,
               email,
-              userImage,
+              imageUrl,
               userName,
               profile
             )
@@ -159,29 +179,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 4,
-    height: 32,
+    height: 48,
     marginVertical: 4,
     alignItems: 'flex-start',
     justifyContent: 'center',
     paddingLeft: 10
-  },
-  textTitle: {
-    paddingVertical: 4
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  userImage: {
-    width: 100,
-    height: 100,
-    margin: 5
-  },
-  imagePicker: {
-    fontSize: 16
   },
   imageBox: {
     borderWidth: 1,
@@ -190,6 +192,11 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: 'auto',
     marginBottom: 16
+  },
+  userImage: {
+    width: 100,
+    height: 100,
+    margin: 5
   }
 })
 

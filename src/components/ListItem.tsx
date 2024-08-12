@@ -76,9 +76,12 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 19,
     alignItems: 'center',
-    borderBottomWidth: 1,
+    borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.15)',
-    height: 80
+    height: 80,
+    marginBottom: 8,
+    marginHorizontal: 16,
+    borderRadius: 8
   },
   listItemImage: {
     width: 80,

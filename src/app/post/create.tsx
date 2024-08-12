@@ -1,12 +1,13 @@
 import {
   View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
+import { Asset } from 'expo-asset'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, addDoc, Timestamp, getDoc, doc, setDoc } from 'firebase/firestore'
+import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
-import * as ImagePicker from 'expo-image-picker'
+import * as ImageMultiplePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -64,8 +65,8 @@ const handlePress = async (
       Alert.alert('エラー', '釣果数を選択してください')
       return
     }
+    if (auth.currentUser === null) return
 
-    if (auth.currentUser === null) return // ユーザーがログインしていない場合、関数を終了
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
     const userData = userDoc.data()
@@ -75,20 +76,21 @@ const handlePress = async (
     const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
     const postId = newPostRef.id
 
-    const imageUrls = await Promise.all(images.map(async (image, index) => {
-      const response = await fetch(image) // 画像をfetch
-      const blob = await response.blob() // fetchした画像をblobに変換
-      const imageName = `image_${Date.now()}_${index}`
-      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
-      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
-      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
-    }))
-    await setDoc(doc(postRef, postId), { // Firestoreにドキュメントを追加
+    let imageUrls = ''
+    if (images !== null) {
+      const response = await fetch(images)
+      const blob = await response.blob()
+      const storageRef = ref(storage, `posts/${postId}/postImage.jpg`)
+      await uploadBytes(storageRef, blob)
+      imageUrls = await getDownloadURL(storageRef)
+    }
+
+    await setDoc(doc(db, 'posts', postId), { // Firestoreにドキュメントを追加
       userId,
       userName,
       userImage,
       title,
-      images: imageUrls,
+      images,
       weather,
       content,
       length,
@@ -102,17 +104,9 @@ const handlePress = async (
 
     router.back() // 成功したら前のページに戻る
   } catch (error) {
-    console.log(error)
+    console.log('Error: ', error)
     Alert.alert('投稿に失敗しました')
   }
-}
-
-const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
-  const options = []
-  for (let i = 1; i <= 20; i += 1) {
-    options.push({ label: `${i} `, value: i })
-  }
-  return options
 }
 
 const Create = (): JSX.Element => {
@@ -128,15 +122,27 @@ const Create = (): JSX.Element => {
   const [catchFish, setCatchFish] = useState<number | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    const result = await ImageMultiplePicker.launchImageLibraryAsync({
+      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
-      quality: 1
+      quality: 1,
+      exif: true
     })
     if (!result.canceled) {
-      setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
+      const uri = result.assets[0].uri
+      const asset = Asset.fromModule(uri)
+      await asset.downloadAsync() // これでファイルがダウンロードされ、asset.localUri が使用可能になります
+      console.log('Asset URI:', asset.localUri)
     }
+  }
+
+  const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
+    const options = []
+    for (let i = 1; i <= 20; i += 1) {
+      options.push({ label: `${i} `, value: i })
+    }
+    return options
   }
 
   return (
@@ -156,7 +162,12 @@ const Create = (): JSX.Element => {
           label="釣果画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={pickImage}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
         />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (

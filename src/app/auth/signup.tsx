@@ -11,7 +11,13 @@ import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 
-const handlePress = async (email: string, password: string, userName: string, profile: string, userImage: string | null): Promise<void> => {
+const handlePress = async (
+  email: string,
+  password: string,
+  userName: string,
+  profile: string,
+  userImage: string | null
+): Promise<void> => {
   try {
     if (email === '') {
       Alert.alert('エラー', 'メールアドレスを入力してください')
@@ -33,10 +39,9 @@ const handlePress = async (email: string, password: string, userName: string, pr
       Alert.alert('エラー', 'ユーザー画像を選択してください')
       return
     }
-    console.log(email, password, userName, profile, userImage)
+
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const userId = userCredential.user.uid
-    console.log(userId)
 
     let imageUrl = ''
     if (userImage !== null) {
@@ -133,7 +138,12 @@ const SignUp = (): JSX.Element => {
           label="釣果画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={pickImage}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
         />
         <View style={styles.imageBox}>
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}

@@ -11,13 +11,13 @@ const Top = (): JSX.Element => {
       <View style={styles.nav}>
         <View style={styles.leftNav}>
           <TouchableOpacity>
-            <Link href='/auth/login' asChild replace>
+            <Link href='auth/login' asChild replace>
               <Text style={styles.navText}>ログイン</Text>
             </Link>
           </TouchableOpacity>
         </View>
         <View style={styles.rightNav}>
-          <Link href='/auth/signup' asChild replace>
+          <Link href='auth/signup' asChild replace>
             <TouchableOpacity>
               <Text style={styles.navText}>新規登録</Text>
             </TouchableOpacity>

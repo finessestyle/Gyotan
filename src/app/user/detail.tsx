@@ -1,18 +1,20 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type User } from '../../../types/user'
 import Button from '../../components/Button'
+import LogOutButton from '../../components/LogOutButton'
 
 const handlePress = (id: string): void => {
-  router.push({ pathname: '/user/edit', params: { id } })
+  router.push({ pathname: 'user/edit', params: { id } })
 }
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
+  const navigation = useNavigation()
 
   useEffect(() => {
     if (auth.currentUser === null) return
@@ -31,6 +33,12 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [id])
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => { return <LogOutButton /> }
+    })
+  }, [])
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
@@ -45,10 +53,11 @@ const Detail = (): JSX.Element => {
         </View>
       </View>
       {auth.currentUser?.uid === user?.id && (
-        <Button
+      <Button
         label='編集'
-        buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 40 }}
-        labelStyle={{ fontSize: 24, lineHeight: 26 }} onPress={() => { handlePress(id) }}
+        buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+        labelStyle={{ fontSize: 24, lineHeight: 21 }}
+        onPress={() => { handlePress(id) }}
       />
       )}
     </ScrollView>

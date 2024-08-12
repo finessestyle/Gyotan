@@ -8,9 +8,9 @@ const Index = (): JSX.Element => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        router.replace('/post/list')
+        router.replace('post/list')
       } else {
-        router.replace('/auth/top')
+        router.replace('auth/top')
       }
     })
 
@@ -19,7 +19,7 @@ const Index = (): JSX.Element => {
     }
   }, [])
 
-  return <Redirect href="/auth/top" />
+  return <Redirect href="auth/top" />
 }
 
 export default Index
