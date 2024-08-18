@@ -1,7 +1,6 @@
 import {
   View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
-import { Asset } from 'expo-asset'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
@@ -14,7 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const handlePress = async (
   title: string,
-  images: string[],
+  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>,
   weather: string,
   content: string,
   length: number | null,
@@ -76,21 +75,26 @@ const handlePress = async (
     const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
     const postId = newPostRef.id
 
-    let imageUrls = ''
-    if (images !== null) {
-      const response = await fetch(images)
-      const blob = await response.blob()
-      const storageRef = ref(storage, `posts/${postId}/postImage.jpg`)
-      await uploadBytes(storageRef, blob)
-      imageUrls = await getDownloadURL(storageRef)
-    }
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image.uri) // 画像をfetch
+      const blob = await response.blob() // fetchした画像をblobに変換
+      const imageName = `image_${Date.now()}_${index}`
+      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
+      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
+      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
+    }))
+
+    const exifData = images.map(image => ({
+      latitude: image.exif?.GPSLatitude ?? null,
+      longitude: image.exif?.GPSLongitude ?? null
+    }))
 
     await setDoc(doc(db, 'posts', postId), { // Firestoreにドキュメントを追加
       userId,
       userName,
       userImage,
       title,
-      images,
+      images: imageUrls,
       weather,
       content,
       length,
@@ -99,6 +103,7 @@ const handlePress = async (
       lureColor,
       catchFish,
       fishArea,
+      exifData: exifData.length > 0 ? exifData : null,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
 
@@ -111,7 +116,7 @@ const handlePress = async (
 
 const Create = (): JSX.Element => {
   const [title, setTitle] = useState('')
-  const [images, setImages] = useState<Array<{ uri: string }>>([])
+  const [images, setImages] = useState<Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>>([])
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
   const [fishArea, setFishArea] = useState('')
@@ -129,11 +134,12 @@ const Create = (): JSX.Element => {
       quality: 1,
       exif: true
     })
-    if (!result.canceled) {
-      const uri = result.assets[0].uri
-      const asset = Asset.fromModule(uri)
-      await asset.downloadAsync() // これでファイルがダウンロードされ、asset.localUri が使用可能になります
-      console.log('Asset URI:', asset.localUri)
+    if (!result.canceled && result.assets.length > 0) {
+      const processedAssets = result.assets.map(asset => ({
+        uri: asset.uri,
+        exif: asset.exif ?? undefined
+      }))
+      setImages(processedAssets)
     }
   }
 
@@ -153,6 +159,7 @@ const Create = (): JSX.Element => {
         <TextInput
           style={styles.input}
           onChangeText={(text) => { setTitle(text) }}
+          value={title}
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
@@ -171,12 +178,16 @@ const Create = (): JSX.Element => {
         />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
-            <Image key={index} source={{ uri: image.uri }} style={styles.image} />
+            <View key={index} style={styles.imageWrapper}>
+              <Image source={{ uri: image.uri }} style={styles.image} />
+              <Text style={styles.imageNumber}>{index + 1}</Text>
+            </View>
           ))}
         </View>
         <Text style={styles.textTitle}>釣果内容</Text>
         <TextInput
           style={styles.input}
+          value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣果内容を入力してください'
           keyboardType='default'
@@ -184,6 +195,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
+          value={weather}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setWeather(value)
@@ -200,6 +212,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果エリア</Text>
         <RNPickerSelect
+          value={fishArea}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setFishArea(value)
@@ -234,6 +247,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
+          value={lure}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setLure(value)
@@ -276,6 +290,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>ルアーカラー</Text>
         <RNPickerSelect
+          value={lureColor}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setLureColor(value)
@@ -307,6 +322,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果数</Text>
         <RNPickerSelect
+          value={catchFish}
           onValueChange={(value: number | null) => {
             if (value !== null) {
               setCatchFish(value)
@@ -319,7 +335,7 @@ const Create = (): JSX.Element => {
         <Button label='投稿' onPress={() => {
           void handlePress(
             title,
-            images.map(img => img.uri),
+            images,
             weather,
             content,
             length,
@@ -368,14 +384,24 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
-    borderRadius: 4,
-    flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexDirection: 'row'
+  },
+  imageWrapper: {
+    position: 'relative',
+    margin: 6
   },
   image: {
     width: 100,
-    height: 100,
-    margin: 6.5
+    height: 100
+  },
+  imageNumber: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    padding: 4,
+    fontSize: 8
   }
 })
 

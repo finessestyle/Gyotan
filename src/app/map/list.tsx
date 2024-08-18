@@ -3,18 +3,18 @@ import { useEffect, useState } from 'react'
 import { useNavigation, router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
-import { type Post } from '../../../types/post'
+import { type Map } from '../../../types/post'
 import ListItem from '../../components/ListItem'
-import CircleButton from '../../components/CircleButton'
 import LogOutButton from '../../components/LogOutButton'
 import Icon from '../../components/Icon'
+import CircleButton from '../../components/CircleButton'
 
 const handlePress = (): void => {
-  router.push('/post/create')
+  router.push('/map/create')
 }
 
 const List = (): JSX.Element => {
-  const [posts, setPosts] = useState<Post[]>([])
+  const [maps, setMaps] = useState<Map[]>([])
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -24,33 +24,25 @@ const List = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    const ref = collection(db, 'posts')
+    const ref = collection(db, 'maps')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remotePosts: Post[] = []
+      const remoteMaps: Map[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = doc.data()
+        const { userId, title, images, content, updatedAt } = doc.data()
         console.log(doc.data())
-        remotePosts.push({
+        remoteMaps.push({
           id: doc.id,
           userId,
-          userName,
-          userImage,
           title,
           images,
-          weather,
           content,
           length,
-          weight,
-          lure,
-          lureColor,
-          catchFish,
-          fishArea,
           updatedAt
         })
       })
-      setPosts(remotePosts)
-      console.log(remotePosts)
+      setMaps(remoteMaps)
+      console.log(remoteMaps)
     })
     return unsubscribe
   }, [])
@@ -58,14 +50,14 @@ const List = (): JSX.Element => {
   return (
     <View style={styles.outerContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>釣果一覧</Text>
+        <Text style={styles.title}>釣り場一覧</Text>
         <FlatList
-          data={posts}
+          data={maps}
           renderItem={({ item }) => <ListItem post={item} /> }
         />
         <CircleButton onPress={handlePress}>
-        <Icon name='plus' size={40} color='#ffffff' />
-      </CircleButton>
+          <Icon name='plus' size={40} color='#ffffff' />
+        </CircleButton>
       </View>
     </View>
   )

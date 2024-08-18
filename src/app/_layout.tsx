@@ -25,10 +25,10 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
-          name="post/create"
+          name="map/list"
           options={{
-            title: '釣果投稿',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
+            title: '釣り場一覧',
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="map" color={color} />
           }}
         />
         <Tabs.Screen
@@ -67,6 +67,12 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
+          name="post/create"
+          options={{
+            href: null
+          }}
+        />
+        <Tabs.Screen
           name="post/detail"
           options={{
             href: null
@@ -74,6 +80,24 @@ const Layout = (): JSX.Element => {
         />
         <Tabs.Screen
           name="post/edit"
+          options={{
+            href: null
+          }}
+        />
+        <Tabs.Screen
+          name="map/create"
+          options={{
+            href: null
+          }}
+        />
+        <Tabs.Screen
+          name="map/detail"
+          options={{
+            href: null
+          }}
+        />
+        <Tabs.Screen
+          name="map/edit"
           options={{
             href: null
           }}

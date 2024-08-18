@@ -12,7 +12,7 @@ import Button from '../../components/Button'
 const handlePress = async (
   id: string,
   email: string,
-  imageUrl: string | null,
+  userImage: string | null,
   userName: string,
   profile: string
 ): Promise<void> => {
@@ -29,16 +29,16 @@ const handlePress = async (
       Alert.alert('エラー', 'プロフィールを入力してください')
       return
     }
-    if (imageUrl === null) {
+    if (userImage === null) {
       Alert.alert('エラー', 'ユーザー画像を選択してください')
       return
     }
     if (auth.currentUser === null) return
 
-    const userRef = doc(db, 'users', id)  // 修正された部分
+    const userRef = doc(db, 'users', id) // 修正された部分
     await setDoc(userRef, {
       email,
-      imageUrl,
+      userImage,
       userName,
       profile,
       updatedAt: Timestamp.fromDate(new Date())
@@ -54,9 +54,10 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [email, setEmail] = useState('')
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [userImage, setUserImage] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -67,7 +68,7 @@ const Edit = (): JSX.Element => {
     })
     if (!result.canceled) {
       const selectedAsset = result.assets[0]
-      setImageUrl(selectedAsset.uri)
+      setUserImage(selectedAsset.uri)
     }
   }
 
@@ -77,9 +78,9 @@ const Edit = (): JSX.Element => {
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
-        if (data) { // データが存在する場合のみ更新
+        if (data === null) {
           setEmail(data.email || '')
-          setImageUrl(data.imageUrl || null)  // null を許容
+          setUserImage(data.userImage || null)
           setUserName(data.userName || '')
           setProfile(data.profile || '')
         }
@@ -88,7 +89,14 @@ const Edit = (): JSX.Element => {
         console.log(error)
         Alert.alert('データの取得に失敗しました')
       })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [id])
+
+  if (loading) {
+    return <Text>読み込み中...</Text>
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -96,19 +104,19 @@ const Edit = (): JSX.Element => {
         <Text style={styles.title}>ユーザー編集</Text>
         <TextInput
           style={styles.input}
+          value={userName}
+          onChangeText={(text) => { setUserName(text) }}
+          placeholder='ユーザーネームを入力'
+          keyboardType='default'
+          returnKeyType='done'
+        />
+        <TextInput
+          style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text) }}
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
-          returnKeyType='done'
-        />
-        <TextInput
-          style={styles.input}
-          value={userName}
-          onChangeText={(text) => { setUserName(text) }}
-          placeholder='ユーザーネームを入力'
-          keyboardType='default'
           returnKeyType='done'
         />
         <TextInput
@@ -131,7 +139,7 @@ const Edit = (): JSX.Element => {
           }}
         />
         <View style={styles.imageBox}>
-          {imageUrl !== null && <Image source={{ uri: imageUrl }} style={styles.userImage} />}
+          {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
         </View>
 
         <Button
@@ -140,7 +148,7 @@ const Edit = (): JSX.Element => {
             void handlePress(
               id,
               email,
-              imageUrl,
+              userImage,
               userName,
               profile
             )

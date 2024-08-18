@@ -7,17 +7,15 @@ import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../config'
 import Button from '../../components/Button'
 
-const handlePress = (email: string, password: string): void => {
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      console.log(userCredential.user.uid)
-      router.replace('post/list')
-    })
-    .catch((error) => {
-      const { code, message } = error
-      console.log(code, message)
-      Alert.alert('ログインに失敗しました')
-    })
+const handlePress = async (email: string, password: string): Promise<void> => {
+  try {
+    await auth.signOut() // 以前のユーザーを明示的にログアウト
+    const userCredential = await signInWithEmailAndPassword(auth, email, password)
+    console.log(userCredential.user.uid)
+    router.replace('post/list')
+  } catch (error) {
+    Alert.alert('ログインに失敗しました')
+  }
 }
 
 const LogIn = (): JSX.Element => {

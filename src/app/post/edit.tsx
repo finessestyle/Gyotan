@@ -71,7 +71,7 @@ const handlePress = async (
     const userDoc = await getDoc(doc(db, 'users', userId))
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
-    const userImage = userData?.imageUrl ?? ''
+    const userImage = userData?.userImage ?? ''
     const postRef = collection(db, 'posts')
     const postId = postRef.id
 
@@ -88,7 +88,7 @@ const handlePress = async (
       }
     }
 
-    await setDoc(doc(postRef, postId), {
+    await addDoc(doc(postRef, postId), {
       userId,
       userName,
       userImage,
@@ -142,7 +142,7 @@ const Edit = (): JSX.Element => {
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
-        if (data === null) {
+        if (data !== null) {
           setTitle(data.title || '')
           setImages(data.images?.map((uri: string) => ({ uri })) || [])
           setWeather(data.weather || '')

@@ -43,20 +43,19 @@ const handlePress = async (
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const userId = userCredential.user.uid
 
-    let imageUrl = ''
     if (userImage !== null) {
       const response = await fetch(userImage)
       const blob = await response.blob()
       const storageRef = ref(storage, `users/${userId}/userImage.jpg`)
       await uploadBytes(storageRef, blob)
-      imageUrl = await getDownloadURL(storageRef)
+      userImage = await getDownloadURL(storageRef)
     }
 
     await setDoc(doc(db, 'users', userId), {
       userName,
       email,
       profile,
-      imageUrl
+      userImage
     })
 
     router.replace('/post/list')
@@ -69,26 +68,20 @@ const handlePress = async (
 const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [userName, setUsername] = useState('')
+  const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
-  const [userImage, setImage] = useState<string | null>(null)
+  const [userImage, setUserImage] = useState<string | null>(null)
 
   const pickImage = async (): Promise<void> => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      return
-    }
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1
     })
-
     if (!result.canceled) {
       const selectedAsset = result.assets[0]
-      setImage(selectedAsset.uri)
+      setUserImage(selectedAsset.uri)
     }
   }
 
@@ -99,7 +92,7 @@ const SignUp = (): JSX.Element => {
         <TextInput
           style={styles.input}
           value={userName}
-          onChangeText={(text) => { setUsername(text) }}
+          onChangeText={(text) => { setUserName(text) }}
           autoCapitalize='none'
           placeholder='ユーザーネームを入力'
           keyboardType='default'
@@ -135,7 +128,7 @@ const SignUp = (): JSX.Element => {
           returnKeyType='done'
         />
         <Button
-          label="釣果画像を選択"
+          label="ユーザー画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
           onPress={() => {

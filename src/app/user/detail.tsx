@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type User } from '../../../types/user'
 import Button from '../../components/Button'
-import LogOutButton from '../../components/LogOutButton'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'user/edit', params: { id } })
@@ -14,7 +13,6 @@ const handlePress = (id: string): void => {
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
-  const navigation = useNavigation()
 
   useEffect(() => {
     if (auth.currentUser === null) return
@@ -26,18 +24,12 @@ const Detail = (): JSX.Element => {
         id: userDoc.id,
         userName: data.userName,
         profile: data.profile,
-        imageUrl: data.imageUrl,
+        userImage: data.userImage,
         updatedAt: data.updatedAt
       })
     })
     return unsubscribe
   }, [id])
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => { return <LogOutButton /> }
-    })
-  }, [])
 
   return (
     <ScrollView style={styles.container}>
@@ -45,21 +37,21 @@ const Detail = (): JSX.Element => {
         <Text style={styles.title}>ユーザー情報</Text>
         <View style={styles.userTop}>
           <Image
-            source={{ uri: user?.imageUrl }}
+            source={{ uri: user?.userImage }}
             style={styles.userImage}
           />
           <Text style={styles.userName}>{user?.userName}さん</Text>
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
+        {auth.currentUser?.uid === user?.id && (
+          <Button
+            label='編集'
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            onPress={() => { handlePress(id) }}
+          />
+        )}
       </View>
-      {auth.currentUser?.uid === user?.id && (
-      <Button
-        label='編集'
-        buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-        labelStyle={{ fontSize: 24, lineHeight: 21 }}
-        onPress={() => { handlePress(id) }}
-      />
-      )}
     </ScrollView>
   )
 }

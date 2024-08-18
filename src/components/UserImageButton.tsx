@@ -8,21 +8,24 @@ interface Props {
 
 const UserImageButton = (props: Props): JSX.Element => {
   const { user } = props
-  const { userName, imageUrl } = user // 修正点：重複していた `userName` を修正
-  const imageUri = imageUrl || 'https://example.com/default-avatar.png' // 画像がない場合のデフォルト画像
+  const imageUri = (user.userImage)
+  console.log('UserImageButton imageUrl:', imageUri)
 
   return (
-    <Link href={{ pathname: '/user/detail', params: { id: user.id } }} asChild>
-      <View style={styles.userImageButton}>
-        <TouchableOpacity>
+    <Link
+      href={{ pathname: '/user/detail', params: { id: user.id } }}
+      asChild
+    >
+      <TouchableOpacity style={styles.userImageButton}>
+        <View>
           <Image
             style={styles.userImage}
             source={{ uri: imageUri }}
           />
-          <Text>{userName}</Text>
-        </TouchableOpacity>
-      </View>
-    </Link>
+          <Text>{user.userName}</Text>
+        </View>
+      </TouchableOpacity>
+    </ Link>
   )
 }
 
