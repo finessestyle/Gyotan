@@ -1,18 +1,21 @@
 import {
-  View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
+  ScrollView, Text, TextInput, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { collection, Timestamp, doc, setDoc, addDoc } from 'firebase/firestore'
-import { db, auth, storage } from '../../config'
-import * as ImagePicker from 'expo-image-picker'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { db, auth } from '../../config'
+import RNPickerSelect from 'react-native-picker-select'
 import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const handlePress = async (
   title: string,
-  mapImage: string,
+  area: string,
+  season: string,
+  latitude: number | null,
+  longitude: number | null,
+  url: string,
   content: string
 ): Promise<void> => {
   try {
@@ -20,8 +23,24 @@ const handlePress = async (
       Alert.alert('エラー', 'タイトルを入力してください')
       return
     }
-    if (mapImage === null) {
-      Alert.alert('エラー', '釣り場画像を選択してください')
+    if (area === '') {
+      Alert.alert('エラー', 'エリアを入力してください')
+      return
+    }
+    if (season === '') {
+      Alert.alert('エラー', '季節を入力してください')
+      return
+    }
+    if (latitude === null) {
+      Alert.alert('エラー', '緯度を入力してください')
+      return
+    }
+    if (longitude === null) {
+      Alert.alert('エラー', '経度を入力してください')
+      return
+    }
+    if (url === '') {
+      Alert.alert('エラー', 'URLを入力してください')
       return
     }
     if (content === '') {
@@ -30,27 +49,20 @@ const handlePress = async (
     }
     if (auth.currentUser === null) return
 
-    const userId = auth.currentUser.uid
     const mapRef = collection(db, 'maps')
     const newMapRef = await addDoc(mapRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
     const mapId = newMapRef.id
 
-    if (mapImage !== null) {
-      const response = await fetch(mapImage)
-      const blob = await response.blob()
-      const storageRef = ref(storage, `maps/${mapId}/mapImage.jpg`)
-      await uploadBytes(storageRef, blob)
-      mapImage = await getDownloadURL(storageRef)
-    }
-
     await setDoc(doc(db, 'maps', mapId), { // Firestoreにドキュメントを追加
-      userId,
       title,
-      mapImage,
+      area,
+      season,
+      latitude,
+      longitude,
+      url,
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
-
     router.back() // 成功したら前のページに戻る
   } catch (error) {
     console.log('Error: ', error)
@@ -60,21 +72,13 @@ const handlePress = async (
 
 const Create = (): JSX.Element => {
   const [title, setTitle] = useState('')
-  const [mapImage, setMapImage] = useState('')
+  const [area, setArea] = useState('')
+  const [season, setSeason] = useState('')
+  const [latitude, setLatitude] = useState<number | null>(null)
+  const [longitude, setLongitude] = useState<number | null>(null)
+  const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
 
-  const pickImage = async (): Promise<void> => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      selectionLimit: 1,
-      quality: 1
-    })
-    if (!result.canceled) {
-      const selectedAsset = result.assets[0]
-      setMapImage(selectedAsset.uri)
-    }
-  }
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
       <ScrollView style={styles.inner}>
@@ -88,21 +92,66 @@ const Create = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button
-          label="釣り場画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={() => {
-            pickImage().then(() => {
-            }).catch((error) => {
-              console.error('Error picking image:', error)
-            })
+        <Text style={styles.textTitle}>エリアを選択</Text>
+        <RNPickerSelect
+          value={area}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setArea(value)
+            }
           }}
+          items={[
+            { label: '北湖北', value: '北湖北' },
+            { label: '北湖東', value: '北湖東' },
+            { label: '北湖西', value: '北湖西' },
+            { label: '南湖東', value: '南湖東' },
+            { label: '南湖西', value: '南湖西' }
+          ]}
+          style={pickerSelectStyles}
+          placeholder={{ label: 'エリアを選択してください', value: null }}
         />
-        <View style={styles.imageBox}>
-        {mapImage !== null && <Image source={{ uri: mapImage }} style={styles.image} />}
-        </View>
+        <Text style={styles.textTitle}>季節を選択</Text>
+        <RNPickerSelect
+          value={season}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setSeason(value)
+            }
+          }}
+          items={[
+            { label: '春', value: '春' },
+            { label: '夏', value: '夏' },
+            { label: '秋', value: '秋' },
+            { label: '冬', value: '冬' }
+          ]}
+          style={pickerSelectStyles}
+          placeholder={{ label: '季節を選択してください', value: null }}
+        />
+        <Text style={styles.textTitle}>緯度</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setLatitude(Number(text)) }}
+          placeholder='緯度を入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>経度</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setLongitude(Number(text)) }}
+          placeholder='経度を入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>地理院地図URL</Text>
+        <TextInput
+          style={styles.input}
+          value={url}
+          onChangeText={(text) => { setUrl(text) }}
+          placeholder='地理院地図URLを入力してください'
+          keyboardType='ascii-capable'
+          returnKeyType='done'
+        />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
           style={styles.input}
@@ -115,7 +164,11 @@ const Create = (): JSX.Element => {
         <Button label='投稿' onPress={() => {
           void handlePress(
             title,
-            mapImage,
+            area,
+            season,
+            latitude,
+            longitude,
+            url,
             content
           )
         }}
@@ -166,6 +219,30 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100
+  }
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 4,
+    paddingHorizontal: 19,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D0D0D0',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    marginVertical: 4
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 19,
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#D0D0D0',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30
   }
 })
 

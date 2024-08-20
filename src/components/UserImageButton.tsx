@@ -16,31 +16,35 @@ const UserImageButton = (props: Props): JSX.Element => {
       href={{ pathname: '/user/detail', params: { id: user.id } }}
       asChild
     >
-      <TouchableOpacity style={styles.userImageButton}>
-        <View>
-          <Image
-            style={styles.userImage}
-            source={{ uri: imageUri }}
-          />
-          <Text>{user.userName}</Text>
-        </View>
-      </TouchableOpacity>
+    <TouchableOpacity style={styles.userImageButton}>
+      <View style={styles.userImageContainer}>
+        <Image
+          style={styles.userImage}
+          source={{ uri: user.userImage }}
+        />
+        <Text style={styles.userName}>{user.userName}</Text>
+      </View>
+    </TouchableOpacity>
     </ Link>
   )
 }
 
 const styles = StyleSheet.create({
   userImageButton: {
-    flexDirection: 'row',
-    alignItems: 'center', // 縦方向の中央揃え
-    marginVertical: 8 // 上下の余白を追加
+    flex: 1,
+    margin: 8 // 上下の余白を追加
+  },
+  userImageContainer: {
+    alignItems: 'center'
   },
   userImage: {
-    width: 102,
-    height: 102,
-    borderRadius: 51,
-    marginHorizontal: 5,
-    marginVertical: 12
+    width: 150,
+    height: 150,
+    borderRadius: 40
+  },
+  userName: {
+    fontSize: 16,
+    marginTop: 8
   }
 })
 

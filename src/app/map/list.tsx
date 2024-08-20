@@ -1,20 +1,23 @@
-import { View, FlatList, StyleSheet, Text } from 'react-native'
+import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react'
 import { useNavigation, router } from 'expo-router'
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
-import { type Map } from '../../../types/post'
-import ListItem from '../../components/ListItem'
+import { type FishMap } from '../../../types/fishmap'
+import MapListItem from '../../components/MapListItem'
 import LogOutButton from '../../components/LogOutButton'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
+
+const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
 
 const handlePress = (): void => {
   router.push('/map/create')
 }
 
 const List = (): JSX.Element => {
-  const [maps, setMaps] = useState<Map[]>([])
+  const [maps, setMaps] = useState<FishMap[]>([])
+  const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -25,19 +28,21 @@ const List = (): JSX.Element => {
 
   useEffect(() => {
     const ref = collection(db, 'maps')
-    const q = query(ref, orderBy('updatedAt', 'desc'))
+    const q = query(ref, where('area', '==', selectedArea), orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remoteMaps: Map[] = []
+      const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
-        const { userId, title, images, content, updatedAt } = doc.data()
+        const { title, area, season, latitude, longitude, url, content, updatedAt } = doc.data()
         console.log(doc.data())
         remoteMaps.push({
           id: doc.id,
-          userId,
           title,
-          images,
+          area,
+          season,
+          latitude,
+          longitude,
+          url,
           content,
-          length,
           updatedAt
         })
       })
@@ -45,15 +50,27 @@ const List = (): JSX.Element => {
       console.log(remoteMaps)
     })
     return unsubscribe
-  }, [])
+  }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行
 
   return (
     <View style={styles.outerContainer}>
       <View style={styles.container}>
         <Text style={styles.title}>釣り場一覧</Text>
+        <View style={styles.tabs}>
+          {areas.map((area) => (
+            <TouchableOpacity
+              key={area}
+              style={[styles.tab, selectedArea === area && styles.selectedTab]}
+              onPress={() => setSelectedArea(area)}
+            >
+              <Text style={styles.tabText}>{area}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
         <FlatList
           data={maps}
-          renderItem={({ item }) => <ListItem post={item} /> }
+          renderItem={({ item }) => <MapListItem map={item} /> }
+          keyExtractor={(item) => item.id}
         />
         <CircleButton onPress={handlePress}>
           <Icon name='plus' size={40} color='#ffffff' />
@@ -78,6 +95,23 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginVertical: 24,
     marginHorizontal: 16
+  },
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16
+  },
+  tab: {
+    padding: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent'
+  },
+  selectedTab: {
+    borderBottomColor: '#467FD3'
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#467FD3'
   }
 })
 

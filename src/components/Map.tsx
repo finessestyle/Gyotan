@@ -7,15 +7,15 @@ interface Props {
 }
 
 const Map = ({ latitude, longitude }: Props): JSX.Element => {
-  const nRadiusHalfKm = 300
-  // const latitude = exifData.gps.GPSLatitude
-  // const longitude = exifData.gps.GPSLongitude
+  const nRadiusHalfKm = 100
 
   return (
     <View style={styles.container}>
+      {latitude !== 0 && longitude !== 0 && (
       <MapView
+        key={`${latitude}-${longitude}`}
         style={styles.map}
-        mapType='none'
+        mapType='standard'
         initialRegion={{
           latitude,
           longitude,
@@ -35,6 +35,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
           fillColor="rgba(51, 51, 255, 0.2)"
         />
       </MapView>
+      )}
     </View>
   )
 }
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: 'auto',
-    height: 174
+    height: 350
   }
 })
 

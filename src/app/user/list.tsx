@@ -12,8 +12,10 @@ const List = (): JSX.Element => {
     const ref = collection(db, 'users')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
+      console.log('Snapshot size:', snapShot.size)
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
+        console.log('Document data:', doc.data())
         const { userName, profile, userImage, updatedAt } = doc.data()
         remoteUsers.push({
           id: doc.id,
@@ -34,6 +36,10 @@ const List = (): JSX.Element => {
       <FlatList
         data={users}
         renderItem={({ item }) => <UserImageButton user={item} />}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        columnWrapperStyle={styles.columnWrapper}
+        ListEmptyComponent={<Text>No users found</Text>}
       />
     </View>
   )
@@ -41,18 +47,18 @@ const List = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 19,
-    paddingVertical: 30
+    flex: 1
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginBottom: 24,
+    marginVertical: 24,
+    marginHorizontal: 16
   },
-  listContent: {
-    paddingBottom: 30
+  columnWrapper: {
+    justifyContent: 'space-between' // 列間のアイテムを均等に配置
   }
 })
 

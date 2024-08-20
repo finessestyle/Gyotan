@@ -3,7 +3,7 @@ import {
   StyleSheet, TouchableOpacity, Image
 } from 'react-native'
 import { Link, router } from 'expo-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import { doc, setDoc } from 'firebase/firestore'
@@ -55,7 +55,8 @@ const handlePress = async (
       userName,
       email,
       profile,
-      userImage
+      userImage,
+      updatedAt: new Date()
     })
 
     router.replace('/post/list')
@@ -71,6 +72,14 @@ const SignUp = (): JSX.Element => {
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
+
+  useEffect(() => {
+    setEmail('')
+    setPassword('')
+    setUserName('')
+    setProfile('')
+    setUserImage(null)
+  }, [])
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({

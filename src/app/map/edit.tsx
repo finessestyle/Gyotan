@@ -1,19 +1,22 @@
 import {
-  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image
+  Text, TextInput, StyleSheet, ScrollView, Alert
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, addDoc, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
-import { auth, db, storage } from '../../config'
+import { collection, addDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
+import { auth, db } from '../../config'
+import RNPickerSelect from 'react-native-picker-select'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 
 const handlePress = async (
   id: string,
   title: string,
-  images: string[],
+  area: string,
+  season: string,
+  latitude: number | null,
+  longitude: number | null,
+  url: string,
   content: string
 ): Promise<void> => {
   try {
@@ -21,12 +24,28 @@ const handlePress = async (
       Alert.alert('エラー', 'タイトルを入力してください')
       return
     }
-    if (images.length === 0) {
-      Alert.alert('エラー', '釣果画像を選択してください')
+    if (area === '') {
+      Alert.alert('エラー', 'エリアを入力してください')
+      return
+    }
+    if (season === '') {
+      Alert.alert('エラー', '季節を入力してください')
+      return
+    }
+    if (latitude === null) {
+      Alert.alert('エラー', '緯度を入力してください')
+      return
+    }
+    if (longitude === null) {
+      Alert.alert('エラー', '経度を入力してください')
+      return
+    }
+    if (url === '') {
+      Alert.alert('エラー', 'URLを入力してください')
       return
     }
     if (content === '') {
-      Alert.alert('エラー', '釣果内容を入力してください')
+      Alert.alert('エラー', '釣り場内容を入力してください')
       return
     }
     if (auth.currentUser === null) return
@@ -35,23 +54,14 @@ const handlePress = async (
     const mapRef = collection(db, 'maps')
     const mapId = mapRef.id
 
-    let imageUrls = ''
-    if (images === null) {
-      try {
-        const response = await fetch(images)
-        const blob = await response.blob()
-        const storageRef = ref(storage, `maps/${mapId}/mapImage.jpg`)
-        await uploadBytes(storageRef, blob)
-        imageUrls = await getDownloadURL(storageRef)
-      } catch (error) {
-        Alert.alert('写真を選択してください')
-      }
-    }
-
     await addDoc(doc(mapRef, mapId), {
       userId,
       title,
-      images: imageUrls,
+      area,
+      season,
+      latitude,
+      longitude,
+      url,
       content,
       updatedAt: Timestamp.fromDate(new Date())
     })
@@ -65,20 +75,12 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [title, setTitle] = useState('')
-  const [images, setImages] = useState<Array<{ uri: string }>>([])
+  const [area, setArea] = useState('')
+  const [season, setSeason] = useState('')
+  const [latitude, setLatitude] = useState<number | null>(null)
+  const [longitude, setLongitude] = useState<number | null>(null)
+  const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
-
-  const pickImage = async (): Promise<void> => {
-    const result = await ImageMultiplePicker.launchImageLibraryAsync({
-      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
-      allowsMultipleSelection: true,
-      selectionLimit: 3,
-      quality: 1
-    })
-    if (!result.canceled) {
-      setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
-    }
-  }
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
@@ -88,7 +90,11 @@ const Edit = (): JSX.Element => {
         const data = docRef.data()
         if (data !== null) {
           setTitle(data.title || '')
-          setImages(data.images?.map((uri: string) => ({ uri })) || [])
+          setArea(data.area || '')
+          setSeason(data.season || '')
+          setLatitude(data.latitude || null)
+          setLongitude(data.logitude || null)
+          setUrl(data.url || '')
           setContent(data.content || '')
         }
       })
@@ -105,33 +111,76 @@ const Edit = (): JSX.Element => {
         <Text style={styles.textTitle}>タイトル</Text>
         <TextInput
           style={styles.input}
-          value={title}
           onChangeText={(text) => { setTitle(text) }}
+          value={title}
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button
-          label="釣り場画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={() => {
-            pickImage().then(() => {
-            }).catch((error) => {
-              console.error('Error picking image:', error)
-            })
+        <Text style={styles.textTitle}>エリアを選択</Text>
+        <RNPickerSelect
+          value={area}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setArea(value)
+            }
           }}
+          items={[
+            { label: '北湖北', value: '北湖北' },
+            { label: '北湖東', value: '北湖東' },
+            { label: '北湖西', value: '北湖西' },
+            { label: '南湖東', value: '南湖東' },
+            { label: '南湖西', value: '南湖西' }
+          ]}
+          style={pickerSelectStyles}
+          placeholder={{ label: 'エリアを選択してください', value: null }}
         />
-        <View style={styles.imageContainer}>
-          {images.map((image, index) => (
-            <Image key={index} source={{ uri: image.uri }} style={styles.image} />
-          ))}
-        </View>
+        <Text style={styles.textTitle}>季節を選択</Text>
+        <RNPickerSelect
+          value={season}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setSeason(value)
+            }
+          }}
+          items={[
+            { label: '春', value: '春' },
+            { label: '夏', value: '夏' },
+            { label: '秋', value: '秋' },
+            { label: '冬', value: '冬' }
+          ]}
+          style={pickerSelectStyles}
+          placeholder={{ label: '季節を選択してください', value: null }}
+        />
+        <Text style={styles.textTitle}>緯度</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setLatitude(Number(text)) }}
+          placeholder='緯度を入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>経度</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => { setLongitude(Number(text)) }}
+          placeholder='経度を入力してください'
+          keyboardType='numeric'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>地理院地図URL</Text>
+        <TextInput
+          style={styles.input}
+          value={url}
+          onChangeText={(text) => { setUrl(text) }}
+          placeholder='地理院地図URLを入力してください'
+          keyboardType='ascii-capable'
+          returnKeyType='done'
+        />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
-          value={content}
           style={styles.input}
+          value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣り場内容を入力してください'
           keyboardType='default'
@@ -141,7 +190,11 @@ const Edit = (): JSX.Element => {
           void handlePress(
             id,
             title,
-            images.map(img => img.uri),
+            area,
+            season,
+            latitude,
+            longitude,
+            url,
             content
           )
         }}

@@ -219,11 +219,11 @@ const Create = (): JSX.Element => {
             }
           }}
           items={[
-            { label: '北湖北エリア', value: '北湖北エリア' },
-            { label: '北湖東エリア', value: '北湖東エリア' },
-            { label: '北湖西エリア', value: '北湖西エリア' },
-            { label: '南湖東エリア', value: '南湖東エリア' },
-            { label: '南湖西エリア', value: '南湖西エリア' }
+            { label: '北湖北', value: '北湖北' },
+            { label: '北湖東', value: '北湖東' },
+            { label: '北湖西', value: '北湖西' },
+            { label: '南湖東', value: '南湖東' },
+            { label: '南湖西', value: '南湖西' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}

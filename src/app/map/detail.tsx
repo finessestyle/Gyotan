@@ -1,12 +1,12 @@
-import { View, StyleSheet, Image, Text, ScrollView } from 'react-native'
+import { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { router, useLocalSearchParams, Link } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db, auth } from '../../config'
-import { type Post } from '../../../types/post'
+import { type FishMap } from '../../../types/fishmap'
 import Button from '../../components/Button'
+import Weather from '../../components/Weather'
 import Map from '../../components/Map'
-import Swiper from 'react-native-swiper'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'map/edit', params: { id } })
@@ -14,20 +14,22 @@ const handlePress = (id: string): void => {
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
-  const [map, setMap] = useState<Post | null>(null)
-  const mapImages = map !== null && Array.isArray(map.images) ? map.images : []
+  const [map, setMap] = useState<FishMap | null>(null)
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
 
     const mapRef = doc(db, 'maps', id)
-    const unsubscribe = onSnapshot(postRef, (mapDoc) => {
-      const { userId, title, images, content, updatedAt } = mapDoc.data() as Map
+    const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
+      const { title, area, season, latitude, longitude, url, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
-        userId,
         title,
-        images,
+        area,
+        season,
+        latitude,
+        longitude,
+        url,
         content,
         updatedAt
       })
@@ -40,14 +42,11 @@ const Detail = (): JSX.Element => {
       <ScrollView style={styles.inner}>
         <View style={styles.postBody}>
           <View style={styles.fishArea}>
-            <Text>釣り場エリア: {map?.fishArea}</Text>
+            <Text>釣り場エリア: {map?.area}</Text>
+            <Text>[{map?.season}]</Text>
           </View>
-          <Map latitude={35.284384374460465} longitude={136.24385162899472} />
-          <Swiper style={styles.swiper} showsButtons={true}>
-            {mapImages.map((uri, index) => (
-              <Image key={index} source={{ uri }} style={styles.fishImage} />
-            ))}
-          </Swiper>
+          <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
+          <Weather lat={map?.latitude ?? 0} lon={map?.longitude ?? 0} />
           <View style={styles.fishInfo}>
             <Text>-釣り場情報-</Text>
             <Text style={styles.fishText}>
@@ -55,14 +54,12 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        {auth.currentUser?.uid === map?.userId && (
-          <Button
-            label='編集'
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
-            onPress={() => { handlePress(id) }}
-          />
-        )}
+        <Button
+          label='編集'
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+          onPress={() => { handlePress(id) }}
+        />
       </ScrollView>
     </View>
   )
