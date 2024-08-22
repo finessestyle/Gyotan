@@ -2,7 +2,7 @@ import {
   View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
@@ -76,12 +76,12 @@ const handlePress = async (
     const postId = newPostRef.id
 
     const imageUrls = await Promise.all(images.map(async (image, index) => {
-      const response = await fetch(image.uri) // 画像をfetch
-      const blob = await response.blob() // fetchした画像をblobに変換
+      const response = await fetch(image.uri)
+      const blob = await response.blob()
       const imageName = `image_${Date.now()}_${index}`
       const storageRef = ref(storage, `posts/${postId}/${imageName}`)
-      await uploadBytes(storageRef, blob) // 画像をストレージにアップロード
-      return await getDownloadURL(storageRef) // アップロードした画像のダウンロードURLを取得
+      await uploadBytes(storageRef, blob)
+      return await getDownloadURL(storageRef)
     }))
 
     const exifData = images.map(image => ({
@@ -126,12 +126,24 @@ const Create = (): JSX.Element => {
   const [lureColor, setLureColor] = useState('')
   const [catchFish, setCatchFish] = useState<number | null>(null)
 
+  useEffect(() => {
+    setTitle('')
+    setImages([])
+    setWeather('')
+    setFishArea('')
+    setLength(null)
+    setWeight(null)
+    setLure('')
+    setLureColor('')
+    setCatchFish(null)
+  }, [])
+
   const pickImage = async (): Promise<void> => {
     const result = await ImageMultiplePicker.launchImageLibraryAsync({
       mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
-      quality: 1,
+      quality: 0.5,
       exif: true
     })
     if (!result.canceled && result.assets.length > 0) {

@@ -64,7 +64,7 @@ const Edit = (): JSX.Element => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1
+      quality: 0.3
     })
     if (!result.canceled) {
       const selectedAsset = result.assets[0]

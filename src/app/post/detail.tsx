@@ -22,7 +22,7 @@ const Detail = (): JSX.Element => {
 
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = postDoc.data() as Post
       setPost({
         id: postDoc.id,
         userId,
@@ -38,11 +38,14 @@ const Detail = (): JSX.Element => {
         lureColor,
         catchFish,
         fishArea,
+        exifData,
         updatedAt
       })
     })
     return unsubscribe
   }, [])
+
+  console.log(post?.exifData.latitude)
 
   return (
     <View style={styles.container}>
@@ -59,7 +62,10 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishArea}>
             <Text>釣果エリア: {post?.fishArea}</Text>
           </View>
-          <Map latitude={35.284384374460465} longitude={136.24385162899472} />
+          <Map
+            latitude = {Number(post?.exifData.latitude)}
+            longitude = {Number(post?.exifData.longitude)}
+          />
           <View style={styles.fishTime}>
             <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>
           </View>

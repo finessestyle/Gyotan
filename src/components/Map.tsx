@@ -13,7 +13,6 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
     <View style={styles.container}>
       {latitude !== 0 && longitude !== 0 && (
       <MapView
-        key={`${latitude}-${longitude}`}
         style={styles.map}
         mapType='standard'
         initialRegion={{

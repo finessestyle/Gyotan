@@ -1,5 +1,10 @@
 import { type Timestamp } from 'firebase/firestore'
 
+interface ExifData {
+  latitude: number
+  longitude: number
+}
+
 interface Post {
   id: string
   userId: string
@@ -15,6 +20,7 @@ interface Post {
   lureColor: string
   catchFish: number
   fishArea: string
+  exifData: ExifData
   updatedAt: Timestamp
 }
 

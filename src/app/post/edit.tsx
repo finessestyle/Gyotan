@@ -129,7 +129,7 @@ const Edit = (): JSX.Element => {
       mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
-      quality: 1
+      quality: 0.3
     })
     if (!result.canceled) {
       setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
