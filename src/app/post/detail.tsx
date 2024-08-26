@@ -43,9 +43,7 @@ const Detail = (): JSX.Element => {
       })
     })
     return unsubscribe
-  }, [])
-
-  console.log(post?.exifData.latitude)
+  }, [id])
 
   return (
     <View style={styles.container}>
@@ -63,8 +61,8 @@ const Detail = (): JSX.Element => {
             <Text>釣果エリア: {post?.fishArea}</Text>
           </View>
           <Map
-            latitude = {Number(post?.exifData.latitude)}
-            longitude = {Number(post?.exifData.longitude)}
+            latitude={post?.exifData[0]?.latitude ?? 0}
+            longitude={post?.exifData[0]?.longitude ?? 0}
           />
           <View style={styles.fishTime}>
             <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>

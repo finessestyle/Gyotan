@@ -20,7 +20,7 @@ interface Post {
   lureColor: string
   catchFish: number
   fishArea: string
-  exifData: ExifData
+  exifData: ExifData[]
   updatedAt: Timestamp
 }
 

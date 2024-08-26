@@ -33,7 +33,6 @@ const List = (): JSX.Element => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
         const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = doc.data()
-        console.log(doc.data())
         remotePosts.push({
           id: doc.id,
           userId,
@@ -54,7 +53,6 @@ const List = (): JSX.Element => {
         })
       })
       setPosts(remotePosts)
-      console.log(remotePosts)
     })
     return unsubscribe
   }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行

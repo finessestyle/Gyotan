@@ -12,12 +12,10 @@ const handlePress = (id: string): void => {
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
-  console.log(id)
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     const userRef = doc(db, 'users', id)
-    console.log(userRef)
     const unsubscribe = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
       setUser({

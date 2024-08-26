@@ -39,9 +39,9 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
-          name="user/detail"
+          name="user/mypage"
           options={{
-            title: 'ユーザー',
+            title: 'マイページ',
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="user" color={color} />
           }}
         />
@@ -98,6 +98,12 @@ const Layout = (): JSX.Element => {
         />
         <Tabs.Screen
           name="map/edit"
+          options={{
+            href: null
+          }}
+        />
+        <Tabs.Screen
+          name="user/detail"
           options={{
             href: null
           }}
