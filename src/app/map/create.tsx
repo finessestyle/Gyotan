@@ -15,7 +15,6 @@ const handlePress = async (
   season: string,
   latitude: number | null,
   longitude: number | null,
-  url: string,
   content: string
 ): Promise<void> => {
   try {
@@ -39,10 +38,6 @@ const handlePress = async (
       Alert.alert('エラー', '経度を入力してください')
       return
     }
-    if (url === '') {
-      Alert.alert('エラー', 'URLを入力してください')
-      return
-    }
     if (content === '') {
       Alert.alert('エラー', '釣り場内容を入力してください')
       return
@@ -59,7 +54,6 @@ const handlePress = async (
       season,
       latitude,
       longitude,
-      url,
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
@@ -76,7 +70,6 @@ const Create = (): JSX.Element => {
   const [season, setSeason] = useState('')
   const [latitude, setLatitude] = useState<number | null>(null)
   const [longitude, setLongitude] = useState<number | null>(null)
-  const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
 
   return (
@@ -143,15 +136,6 @@ const Create = (): JSX.Element => {
           keyboardType='numeric'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>地理院地図URL</Text>
-        <TextInput
-          style={styles.input}
-          value={url}
-          onChangeText={(text) => { setUrl(text) }}
-          placeholder='地理院地図URLを入力してください'
-          keyboardType='ascii-capable'
-          returnKeyType='done'
-        />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
           style={styles.input}
@@ -168,7 +152,6 @@ const Create = (): JSX.Element => {
             season,
             latitude,
             longitude,
-            url,
             content
           )
         }}

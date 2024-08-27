@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
@@ -7,8 +7,7 @@ import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
 import Button from '../../components/Button'
-
-const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
+import LogOutButton from '../../components/LogOutButton'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'user/edit', params: { id } })
@@ -16,12 +15,21 @@ const handlePress = (id: string): void => {
 
 const Mypage = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
+  const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <LogOutButton />
+    })
+  }, [navigation])
 
   useEffect(() => {
     if (auth.currentUser === null) return
+
     const userRef = doc(db, 'users', auth.currentUser.uid)
     const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
@@ -35,11 +43,14 @@ const Mypage = (): JSX.Element => {
     })
 
     const postRef = collection(db, 'posts')
-    const q = query(postRef, where('userId', '==', auth.currentUser.uid), orderBy('updatedAt', 'desc'))
+    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', auth.currentUser.uid), orderBy('updatedAt', 'desc'))
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = doc.data()
+        const {
+          userId, userName, userImage, title, images, weather, content, length,
+          weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt
+        } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -66,7 +77,7 @@ const Mypage = (): JSX.Element => {
       unsubscribeUser()
       unsubscribePost()
     }
-  }, [])
+  }, [selectedArea])
 
   return (
     <ScrollView style={styles.container}>
@@ -88,6 +99,8 @@ const Mypage = (): JSX.Element => {
             onPress={() => { handlePress(id) }}
           />
         )}
+      </View>
+      <View style={styles.inner}>
         <Text style={styles.title}>あなたの釣果</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
@@ -102,11 +115,10 @@ const Mypage = (): JSX.Element => {
         </View>
         <FlatList
           data={posts}
-          renderItem={({ item }) => <ListItem post={item} /> }
+          renderItem={({ item }) => <ListItem post={item} />}
           keyExtractor={(item) => item.id}
         />
       </View>
-
     </ScrollView>
   )
 }
@@ -160,4 +172,5 @@ const styles = StyleSheet.create({
     color: '#467FD3'
   }
 })
+
 export default Mypage

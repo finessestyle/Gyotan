@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Map = ({ latitude, longitude }: Props): JSX.Element => {
-  const nRadiusHalfKm = 100
+  const nRadiusHalfKm = 400
 
   return (
     <View style={styles.container}>
@@ -15,7 +15,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
       <MapView
         style={styles.map}
         mapType='standard'
-        initialRegion={{
+        region={{
           latitude,
           longitude,
           latitudeDelta: 0.01,
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: 'auto',
-    height: 350
+    height: 200
   }
 })
 

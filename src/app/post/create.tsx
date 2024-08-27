@@ -13,7 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 const handlePress = async (
   title: string,
-  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>,
+  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
   weather: string,
   content: string,
   length: number | null,
@@ -64,13 +64,13 @@ const handlePress = async (
       Alert.alert('エラー', '釣果数を選択してください')
       return
     }
-    if (auth.currentUser === null) return
 
+    if (auth.currentUser === null) return
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId)) // ドキュメントのデータを取得
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
-    const userImage = userData?.imageUrl ?? ''
+    const userImage = userData?.userImage ?? ''
     const postRef = collection(db, 'posts')
     const newPostRef = await addDoc(postRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
     const postId = newPostRef.id
@@ -86,7 +86,8 @@ const handlePress = async (
 
     const exifData = images.map(image => ({
       latitude: image.exif?.GPSLatitude ?? null,
-      longitude: image.exif?.GPSLongitude ?? null
+      longitude: image.exif?.GPSLongitude ?? null,
+      dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
     await setDoc(doc(db, 'posts', postId), { // Firestoreにドキュメントを追加
@@ -143,7 +144,7 @@ const Create = (): JSX.Element => {
       mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
-      quality: 0.5,
+      quality: 0.3,
       exif: true
     })
     if (!result.canceled && result.assets.length > 0) {

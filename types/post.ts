@@ -3,6 +3,7 @@ import { type Timestamp } from 'firebase/firestore'
 interface ExifData {
   latitude: number
   longitude: number
+  dateTime: string
 }
 
 interface Post {

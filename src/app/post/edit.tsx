@@ -88,7 +88,7 @@ const handlePress = async (
       }
     }
 
-    await addDoc(doc(postRef, postId), {
+    await setDoc(doc(db, 'posts', postId), {
       userId,
       userName,
       userImage,

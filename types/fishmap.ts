@@ -7,7 +7,6 @@ interface FishMap {
   season: string
   latitude: number
   longitude: number
-  url: string
   content: string
   updatedAt: Timestamp
 }

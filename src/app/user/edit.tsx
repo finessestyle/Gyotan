@@ -35,7 +35,7 @@ const handlePress = async (
     }
     if (auth.currentUser === null) return
 
-    const userRef = doc(db, 'users', id) // 修正された部分
+    const userRef = doc(db, 'users', auth.currentUser.uid)
     await setDoc(userRef, {
       email,
       userImage,

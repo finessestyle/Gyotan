@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, ScrollView, Image } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { onSnapshot, doc } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type User } from '../../../types/user'
+import { type Post } from '../../../types/post'
 import Button from '../../components/Button'
+import ListItem from '../../components/ListItem'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'user/edit', params: { id } })
@@ -13,10 +15,13 @@ const handlePress = (id: string): void => {
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
+  const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
+  const [posts, setPosts] = useState<Post[]>([])
+  const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
 
   useEffect(() => {
     const userRef = doc(db, 'users', id)
-    const unsubscribe = onSnapshot(userRef, (userDoc) => {
+    const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
       setUser({
         id: userDoc.id,
@@ -26,8 +31,40 @@ const Detail = (): JSX.Element => {
         updatedAt: data.updatedAt
       })
     })
-    return unsubscribe
-  }, [id])
+
+    const postRef = collection(db, 'posts')
+    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', id), orderBy('updatedAt', 'desc'))
+    const unsubscribePost = onSnapshot(q, (snapshot) => {
+      const userPost: Post[] = []
+      snapshot.forEach((doc) => {
+        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = doc.data()
+        userPost.push({
+          id: doc.id,
+          userId,
+          userName,
+          userImage,
+          title,
+          images,
+          weather,
+          content,
+          length,
+          weight,
+          lure,
+          lureColor,
+          catchFish,
+          fishArea,
+          updatedAt,
+          exifData
+        })
+      })
+      setPosts(userPost)
+    })
+
+    return () => {
+      unsubscribeUser()
+      unsubscribePost()
+    }
+  }, [selectedArea, id])
 
   return (
     <ScrollView style={styles.container}>
@@ -49,6 +86,25 @@ const Detail = (): JSX.Element => {
             onPress={() => { handlePress(id) }}
           />
         )}
+      </View>
+      <View style={styles.inner}>
+        <Text style={styles.title}>あなたの釣果</Text>
+        <View style={styles.tabs}>
+          {areas.map((area) => (
+            <TouchableOpacity
+              key={area}
+              style={[styles.tab, selectedArea === area && styles.selectedTab]}
+              onPress={() => { setSelectedArea(area) }}
+            >
+              <Text style={styles.tabText}>{area}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <FlatList
+          data={posts}
+          renderItem={({ item }) => <ListItem post={item} /> }
+          keyExtractor={(item) => item.id}
+        />
       </View>
     </ScrollView>
   )
@@ -84,6 +140,23 @@ const styles = StyleSheet.create({
   },
   userProfile: {
     fontSize: 16
+  },
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16
+  },
+  tab: {
+    padding: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent'
+  },
+  selectedTab: {
+    borderBottomColor: '#467FD3'
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#467FD3'
   }
 })
 export default Detail

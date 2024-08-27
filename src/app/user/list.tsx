@@ -12,10 +12,8 @@ const List = (): JSX.Element => {
     const ref = collection(db, 'users')
     const q = query(ref, orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      console.log('Snapshot size:', snapShot.size)
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
-        console.log('Document data:', doc.data())
         const { userName, profile, userImage, updatedAt } = doc.data()
         remoteUsers.push({
           id: doc.id,

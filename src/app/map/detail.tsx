@@ -21,7 +21,7 @@ const Detail = (): JSX.Element => {
 
     const mapRef = doc(db, 'maps', id)
     const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
-      const { title, area, season, latitude, longitude, url, content, updatedAt } = mapDoc.data() as FishMap
+      const { title, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
         title,
@@ -29,20 +29,19 @@ const Detail = (): JSX.Element => {
         season,
         latitude,
         longitude,
-        url,
         content,
         updatedAt
       })
     })
     return unsubscribe
-  }, [])
+  }, [id])
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
         <View style={styles.postBody}>
           <View style={styles.fishArea}>
-            <Text>釣り場エリア: {map?.area}</Text>
+            <Text>{map?.title}</Text>
             <Text>[{map?.season}]</Text>
           </View>
           <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />

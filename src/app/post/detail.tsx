@@ -18,8 +18,7 @@ const Detail = (): JSX.Element => {
   const postImages = post !== null && Array.isArray(post.images) ? post.images : []
 
   useEffect(() => {
-    if (auth.currentUser === null) { return }
-
+    if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
       const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = postDoc.data() as Post
@@ -65,7 +64,9 @@ const Detail = (): JSX.Element => {
             longitude={post?.exifData[0]?.longitude ?? 0}
           />
           <View style={styles.fishTime}>
-            <Text>釣果日時: {post?.updatedAt.toDate().toLocaleString('ja-JP')}</Text>
+            <Text>
+              釣果日時: {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
+            </Text>
           </View>
           <Swiper style={styles.swiper} showsButtons={true}>
             {postImages.map((uri, index) => (

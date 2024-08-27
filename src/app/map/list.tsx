@@ -1,11 +1,10 @@
 import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react'
-import { useNavigation, router } from 'expo-router'
+import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
 import MapListItem from '../../components/MapListItem'
-import LogOutButton from '../../components/LogOutButton'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
 
@@ -18,13 +17,6 @@ const handlePress = (): void => {
 const List = (): JSX.Element => {
   const [maps, setMaps] = useState<FishMap[]>([])
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => { return <LogOutButton /> }
-    })
-  }, [])
 
   useEffect(() => {
     const ref = collection(db, 'maps')
@@ -32,8 +24,7 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
-        const { title, area, season, latitude, longitude, url, content, updatedAt } = doc.data()
-        console.log(doc.data())
+        const { title, area, season, latitude, longitude, content, updatedAt } = doc.data()
         remoteMaps.push({
           id: doc.id,
           title,
@@ -41,13 +32,11 @@ const List = (): JSX.Element => {
           season,
           latitude,
           longitude,
-          url,
           content,
           updatedAt
         })
       })
       setMaps(remoteMaps)
-      console.log(remoteMaps)
     })
     return unsubscribe
   }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行
@@ -61,7 +50,7 @@ const List = (): JSX.Element => {
             <TouchableOpacity
               key={area}
               style={[styles.tab, selectedArea === area && styles.selectedTab]}
-              onPress={() => setSelectedArea(area)}
+              onPress={() => { setSelectedArea(area) }}
             >
               <Text style={styles.tabText}>{area}</Text>
             </TouchableOpacity>

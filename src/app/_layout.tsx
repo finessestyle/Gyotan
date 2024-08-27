@@ -1,8 +1,21 @@
 import { Tabs } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 const Layout = (): JSX.Element => {
+  const navigation = useNavigation()
+
+  const renderBackButton = (): JSX.Element => {
+    return (
+      <TouchableOpacity onPress={() => {
+        navigation.goBack() // 中括弧で囲んで処理を明示的にする
+      }}>
+        <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+      </TouchableOpacity>
+    )
+  }
+
   return (
     <View style={styles.container}>
       <Tabs screenOptions={{
@@ -69,55 +82,64 @@ const Layout = (): JSX.Element => {
         <Tabs.Screen
           name="post/create"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="post/detail"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="post/edit"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="map/create"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="map/detail"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="map/edit"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="user/detail"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="user/edit"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
         <Tabs.Screen
           name="index"
           options={{
-            href: null
+            href: null,
+            headerLeft: () => { return renderBackButton() }
           }}
         />
       </Tabs>

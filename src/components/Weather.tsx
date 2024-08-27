@@ -63,10 +63,10 @@ const Weather = ({ lat, lon }) => {
   return (
     <View style={styles.container}>
       {weather ? (
-        <>
+        <View style={styles.horizontalContainer}>
           {renderWeather(weather, 0)}
           {renderWeather(weather, 1)}
-        </>
+        </View>
       ) : (
         <Text>天気予報を取得中...</Text>
       )}
@@ -78,8 +78,14 @@ const styles = StyleSheet.create({
   container: {
     padding: 20
   },
+  horizontalContainer: {
+    flexDirection: 'row', // 横並びに配置
+    justifyContent: 'space-between', // コンテンツを均等に配置
+    borderBottomWidth: 1
+  },
   weatherReport: {
-    marginBottom: 20
+    marginBottom: 20,
+    alignItems: 'center'
   },
   date: {
     fontSize: 16,

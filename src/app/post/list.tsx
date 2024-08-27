@@ -1,12 +1,11 @@
 import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useEffect, useState } from 'react'
-import { useNavigation, router } from 'expo-router'
+import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
 import CircleButton from '../../components/CircleButton'
-import LogOutButton from '../../components/LogOutButton'
 import Icon from '../../components/Icon'
 
 const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
@@ -18,13 +17,6 @@ const handlePress = (): void => {
 const List = (): JSX.Element => {
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => { return <LogOutButton /> }
-    })
-  }, [])
 
   useEffect(() => {
     const ref = collection(db, 'posts')
@@ -66,7 +58,7 @@ const List = (): JSX.Element => {
             <TouchableOpacity
               key={area}
               style={[styles.tab, selectedArea === area && styles.selectedTab]}
-              onPress={() => setSelectedArea(area)}
+              onPress={() => { setSelectedArea(area) }}
             >
               <Text style={styles.tabText}>{area}</Text>
             </TouchableOpacity>
