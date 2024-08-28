@@ -1,11 +1,12 @@
 import {
   View, Text, TextInput, StyleSheet, Alert, Image
 } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
+import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 import Button from '../../components/Button'
 
@@ -29,21 +30,29 @@ const handlePress = async (
       Alert.alert('エラー', 'プロフィールを入力してください')
       return
     }
-    if (userImage === null) {
+    if (userImage === '') {
       Alert.alert('エラー', 'ユーザー画像を選択してください')
       return
     }
-    if (auth.currentUser === null) return
 
-    const userRef = doc(db, 'users', auth.currentUser.uid)
-    await setDoc(userRef, {
+    if (auth.currentUser === null) return
+    const userId = auth.currentUser.uid
+
+    if (userImage !== null) {
+      const response = await fetch(userImage)
+      const blob = await response.blob()
+      const storageRef = ref(storage, `users/${userId}/userImage.jpg`)
+      await uploadBytes(storageRef, blob)
+      userImage = await getDownloadURL(storageRef)
+    }
+
+    await setDoc(doc(db, 'users', id), {
       email,
       userImage,
       userName,
       profile,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
-
     router.back()
   } catch (error) {
     console.log(error)
@@ -52,12 +61,10 @@ const handlePress = async (
 }
 
 const Edit = (): JSX.Element => {
-  const id = String(useLocalSearchParams().id)
   const [email, setEmail] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
-  const [loading, setLoading] = useState(true)
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -74,11 +81,12 @@ const Edit = (): JSX.Element => {
 
   useEffect(() => {
     if (auth.currentUser === null) return
-    const ref = doc(db, 'users', id)
+    const userId = auth.currentUser.uid
+    const ref = doc(db, 'users', userId)
     getDoc(ref)
       .then((docRef) => {
         const data = docRef.data()
-        if (data === null) {
+        if (data !== null) { // データが存在する場合にセット
           setEmail(data.email || '')
           setUserImage(data.userImage || null)
           setUserName(data.userName || '')
@@ -89,14 +97,7 @@ const Edit = (): JSX.Element => {
         console.log(error)
         Alert.alert('データの取得に失敗しました')
       })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [id])
-
-  if (loading) {
-    return <Text>読み込み中...</Text>
-  }
+  }, [])
 
   return (
     <KeyboardAvoidingView style={styles.container}>
@@ -145,13 +146,15 @@ const Edit = (): JSX.Element => {
         <Button
           label='編集'
           onPress={() => {
-            void handlePress(
-              id,
-              email,
-              userImage,
-              userName,
-              profile
-            )
+            if (auth.currentUser !== null) {
+              void handlePress(
+                auth.currentUser.uid,
+                email,
+                userImage,
+                userName,
+                profile
+              )
+            }
           }}
           buttonStyle={{
             width: '100%',

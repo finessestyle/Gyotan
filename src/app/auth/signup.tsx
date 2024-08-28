@@ -212,6 +212,7 @@ const styles = StyleSheet.create({
     marginRight: 8
   },
   footerLink: {
+    marginTop: 8,
     fontSize: 14,
     lineHeight: 24,
     color: '#467FD3'

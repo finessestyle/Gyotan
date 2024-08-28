@@ -9,7 +9,7 @@ import Button from '../../components/Button'
 
 const handlePress = async (email: string, password: string): Promise<void> => {
   try {
-    await auth.signOut() // 以前のユーザーを明示的にログアウト
+    await auth.signOut()
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     console.log(userCredential.user.uid)
     router.replace('post/list')
@@ -45,7 +45,7 @@ const LogIn = (): JSX.Element => {
           textContentType='password'
           returnKeyType='done'
         />
-        <Button label='ログイン' onPress={() => { handlePress(email, password) }} />
+        <Button label='ログイン' onPress={() => { void handlePress(email, password) }} />
         <View style={styles.footer}>
           <Link href='/auth/signup' asChild replace>
             <TouchableOpacity >
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
     color: '#000000'
   },
   footerLink: {
+    marginTop: 8,
     fontSize: 14,
     lineHeight: 24,
     color: '#467FD3'

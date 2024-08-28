@@ -9,20 +9,17 @@ const Top = (): JSX.Element => {
         <Text style={styles.topText} >釣果を投稿・共有して琵琶湖にバス釣りに行こう🎣</Text>
       </View>
       <View style={styles.nav}>
-        <View style={styles.leftNav}>
-          <TouchableOpacity>
-            <Link href='auth/login' asChild replace>
-              <Text style={styles.navText}>ログイン</Text>
-            </Link>
+        <Link href="auth/login" asChild replace>
+          <TouchableOpacity style={styles.leftNav}>
+            <Text style={styles.navText}>ログイン</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.rightNav}>
-          <Link href='auth/signup' asChild replace>
-            <TouchableOpacity>
-              <Text style={styles.navText}>新規登録</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
+        </Link>
+        <View style={styles.separator} />
+        <Link href="auth/signup" asChild replace>
+          <TouchableOpacity style={styles.rightNav}>
+            <Text style={styles.navText}>新規登録</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </View>
   )
@@ -51,7 +48,7 @@ const styles = StyleSheet.create({
   nav: {
     position: 'absolute',
     bottom: 0,
-    width: 'auto',
+    width: '100%',
     borderWidth: 1,
     borderColor: '#D0D0D0',
     flexDirection: 'row',
@@ -61,15 +58,17 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#D0D0D0'
+    alignItems: 'center'
   },
   rightNav: {
     flex: 1,
     height: 40,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  separator: {
+    width: 1,
+    backgroundColor: '#D0D0D0'
   },
   navText: {
     color: '#ffffff',

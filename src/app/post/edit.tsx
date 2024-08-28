@@ -1,9 +1,9 @@
 import {
-  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image
+  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image, TouchableOpacity
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, addDoc, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
+import { collection, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
@@ -14,7 +14,7 @@ import Button from '../../components/Button'
 const handlePress = async (
   id: string,
   title: string,
-  images: string[],
+  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
   weather: string,
   content: string,
   length: number | null,
@@ -66,7 +66,6 @@ const handlePress = async (
       return
     }
     if (auth.currentUser === null) return
-
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId))
     const userData = userDoc.data()
@@ -75,18 +74,14 @@ const handlePress = async (
     const postRef = collection(db, 'posts')
     const postId = postRef.id
 
-    let imageUrls = ''
-    if (images === null) {
-      try {
-        const response = await fetch(images)
-        const blob = await response.blob()
-        const storageRef = ref(storage, `posts/${postId}/postImage.jpg`)
-        await uploadBytes(storageRef, blob)
-        imageUrls = await getDownloadURL(storageRef)
-      } catch (error) {
-        Alert.alert('写真を選択してください')
-      }
-    }
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image.uri)
+      const blob = await response.blob()
+      const imageName = `image_${Date.now()}_${index}`
+      const storageRef = ref(storage, `posts/${postId}/${imageName}`)
+      await uploadBytes(storageRef, blob)
+      return await getDownloadURL(storageRef)
+    }))
 
     await setDoc(doc(db, 'posts', postId), {
       userId,
@@ -134,6 +129,10 @@ const Edit = (): JSX.Element => {
     if (!result.canceled) {
       setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
     }
+  }
+
+  const removeImage = (index: number) => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index))
   }
 
   useEffect(() => {
@@ -196,7 +195,15 @@ const Edit = (): JSX.Element => {
         />
         <View style={styles.imageContainer}>
           {images.map((image, index) => (
-            <Image key={index} source={{ uri: image.uri }} style={styles.image} />
+            <View key={index} style={styles.imageWrapper}>
+              <Image source={{ uri: image.uri }} style={styles.image} />
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => removeImage(index)}
+              >
+                <Text style={styles.removeButtonText}>×</Text>
+              </TouchableOpacity>
+            </View>
           ))}
         </View>
         <Text style={styles.textTitle}>釣果内容</Text>
@@ -406,10 +413,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
+  imageWrapper: {
+    position: 'relative',
+    margin: 4,
+    marginBottom: 4
+  },
   image: {
     width: 100,
     height: 100,
-    margin: 6.5
+    margin: 2
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: 'silver',
+    borderRadius: 20,
+    width: 24,
+    height: 24,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  removeButtonText: {
+    color: 'white',
+    fontSize: 16,
+    lineHeight: 20
   }
 })
 

@@ -9,7 +9,7 @@ const Layout = (): JSX.Element => {
   const renderBackButton = (): JSX.Element => {
     return (
       <TouchableOpacity onPress={() => {
-        navigation.goBack() // 中括弧で囲んで処理を明示的にする
+        navigation.goBack()
       }}>
         <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
       </TouchableOpacity>

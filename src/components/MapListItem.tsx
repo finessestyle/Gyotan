@@ -33,6 +33,8 @@ const handlePress = (id: string, map: { userId: string }): void => {
         }
       }
     ])
+  } else {
+    Alert.alert('削除権限がありません')
   }
 }
 
@@ -72,10 +74,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     marginHorizontal: 16,
     borderRadius: 8
-  },
-  listItemImage: {
-    width: 80,
-    height: 64
   },
   listItemTitle: {
     paddingLeft: 16,

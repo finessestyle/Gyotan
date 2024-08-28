@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, addDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
+import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -46,10 +46,8 @@ const handlePress = async (
     if (auth.currentUser === null) return
 
     const userId = auth.currentUser.uid
-    const mapRef = collection(db, 'maps')
-    const mapId = mapRef.id
 
-    await addDoc(doc(mapRef, mapId), {
+    await setDoc(doc(db, 'maps', id), {
       userId,
       title,
       area,
@@ -227,6 +225,30 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     margin: 6.5
+  }
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 4,
+    paddingHorizontal: 19,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D0D0D0',
+    borderRadius: 4,
+    color: 'black',
+    paddingRight: 30,
+    marginVertical: 4
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 19,
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#D0D0D0',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30
   }
 })
 

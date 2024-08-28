@@ -29,7 +29,6 @@ const handlePress = (id: string, post?: Post): void => {
               await deleteObject(storageRef)
               Alert.alert('削除が完了しました')
             } catch (error) {
-              console.log('ファイルが存在しません:', error)
               Alert.alert('削除に失敗しました')
             }
           }

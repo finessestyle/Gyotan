@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
-import { db } from '../../config'
+import { auth, db } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
 import MapListItem from '../../components/MapListItem'
 import Icon from '../../components/Icon'

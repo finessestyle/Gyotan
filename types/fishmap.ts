@@ -2,6 +2,7 @@ import { type Timestamp } from 'firebase/firestore'
 
 interface FishMap {
   id: string
+  userId: string
   title: string
   area: string
   season: string
