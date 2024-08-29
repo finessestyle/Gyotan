@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, Alert } from 'react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc } from 'firebase/firestore'
+import { ref, deleteObject, listAll } from 'firebase/storage'
+import { auth, db, storage } from '../../config'
 import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
@@ -11,6 +12,49 @@ import LogOutButton from '../../components/LogOutButton'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'user/edit', params: { id } })
+}
+
+const handleWithdraw = async (userId: string): Promise<void> => {
+  Alert.alert(
+    '退会確認',
+    '本当に退会しますか？この操作は元に戻せません。',
+    [
+      {
+        text: 'キャンセル',
+        style: 'cancel'
+      },
+      {
+        text: '退会する',
+        style: 'destructive',
+        onPress: async (): Promise<void> => {
+          try {
+            // ユーザー情報の削除
+            const userRef = doc(db, 'users', userId)
+            await deleteDoc(userRef)
+
+            // ストレージ内のユーザー関連ファイルの削除
+            const userRefInStorage = ref(storage, `users/${userId}`)
+            const { items } = await listAll(userRefInStorage)
+
+            for (const itemRef of items) {
+              await deleteObject(itemRef)
+            }
+
+            // Firebase Authentication のユーザーアカウント削除
+            if (auth.currentUser) {
+              await auth.currentUser.delete()
+            }
+
+            Alert.alert('退会が完了しました')
+            router.push('auth/top')
+          } catch (error) {
+            console.error('退会に失敗しました:', error)
+            Alert.alert('退会に失敗しました')
+          }
+        }
+      }
+    ]
+  )
 }
 
 const Mypage = (): JSX.Element => {
@@ -96,7 +140,15 @@ const Mypage = (): JSX.Element => {
             label='編集'
             buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
             labelStyle={{ fontSize: 24, lineHeight: 21 }}
-            onPress={() => { handlePress(id) }}
+            onPress={() => handlePress(id)}
+          />
+        )}
+        {auth.currentUser?.uid === user?.id && (
+          <Button
+            label='退会'
+            buttonStyle={{ width: '100%', marginTop: 16, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, color: 'red', lineHeight: 21 }}
+            onPress={() => handleWithdraw(auth.currentUser.uid)}
           />
         )}
       </View>
@@ -107,7 +159,7 @@ const Mypage = (): JSX.Element => {
             <TouchableOpacity
               key={area}
               style={[styles.tab, selectedArea === area && styles.selectedTab]}
-              onPress={() => { setSelectedArea(area) }}
+              onPress={() => setSelectedArea(area)}
             >
               <Text style={styles.tabText}>{area}</Text>
             </TouchableOpacity>
