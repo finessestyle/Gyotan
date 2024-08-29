@@ -73,14 +73,6 @@ const SignUp = (): JSX.Element => {
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
 
-  useEffect(() => {
-    setEmail('')
-    setPassword('')
-    setUserName('')
-    setProfile('')
-    setUserImage(null)
-  }, [])
-
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -103,7 +95,8 @@ const SignUp = (): JSX.Element => {
           value={userName}
           onChangeText={(text) => { setUserName(text) }}
           autoCapitalize='none'
-          placeholder='ユーザーネームを入力'
+          placeholder='ユーザーネームを入力※10文字以内'
+          maxLength={10}
           keyboardType='default'
           returnKeyType='done'
         />
@@ -132,7 +125,8 @@ const SignUp = (): JSX.Element => {
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
           autoCapitalize='none'
-          placeholder='プロフィールを入力'
+          placeholder='プロフィールを入力※30文字以内'
+          maxLength={30}
           keyboardType='default'
           returnKeyType='done'
         />

@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { collection, doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
@@ -71,7 +71,7 @@ const handlePress = async (
     const userData = userDoc.data()
     const userName = userData?.userName ?? 'ゲスト'
     const userImage = userData?.userImage ?? ''
-    const postRef = collection(db, 'posts')
+    const postRef = doc(db, 'posts', id)
     const postId = postRef.id
 
     const imageUrls = await Promise.all(images.map(async (image, index) => {
@@ -83,7 +83,7 @@ const handlePress = async (
       return await getDownloadURL(storageRef)
     }))
 
-    await setDoc(doc(db, 'posts', postId), {
+    await setDoc(doc(db, 'posts', id), {
       userId,
       userName,
       userImage,
@@ -112,7 +112,7 @@ const Edit = (): JSX.Element => {
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
-  const [fishArea, setFishArea] = useState('')
+  const [fishArea, setFishArea] = useState<string | null>(null)
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [lure, setLure] = useState('')
@@ -131,7 +131,7 @@ const Edit = (): JSX.Element => {
     }
   }
 
-  const removeImage = (index: number) => {
+  const removeImage = (index: number): void => {
     setImages(prevImages => prevImages.filter((_, i) => i !== index))
   }
 
@@ -241,19 +241,18 @@ const Edit = (): JSX.Element => {
             }
           }}
           items={[
-            { label: '北湖北エリア', value: '北湖北エリア' },
-            { label: '北湖東エリア', value: '北湖東エリア' },
-            { label: '北湖西エリア', value: '北湖西エリア' },
-            { label: '南湖東エリア', value: '南湖東エリア' },
-            { label: '南湖西エリア', value: '南湖西エリア' }
+            { label: '北湖北', value: '北湖北' },
+            { label: '北湖東', value: '北湖東' },
+            { label: '北湖西', value: '北湖西' },
+            { label: '南湖東', value: '南湖東' },
+            { label: '南湖西', value: '南湖西' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
-
         <Text style={styles.textTitle}>サイズ</Text>
         <TextInput
-          value={length}
+          value={length !== null ? String(length) : ''}
           style={styles.input}
           onChangeText={(text) => { setLength(Number(text)) }}
           placeholder='長さを入力してください'
@@ -262,7 +261,7 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>重さ</Text>
         <TextInput
-          value={weight}
+          value={weight !== null ? String(weight) : ''}
           style={styles.input}
           onChangeText={(text) => { setWeight(Number(text)) }}
           placeholder='重さを入力してください'

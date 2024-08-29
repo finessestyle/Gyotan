@@ -100,7 +100,7 @@ const Mypage = (): JSX.Element => {
           />
         )}
       </View>
-      <View style={styles.inner}>
+      <View style={styles.subInner}>
         <Text style={styles.title}>あなたの釣果</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
@@ -128,7 +128,11 @@ const styles = StyleSheet.create({
     flex: 1
   },
   inner: {
-    marginVertical: 30,
+    marginVertical: 24,
+    marginHorizontal: 19
+  },
+  subInner: {
+    marginVertical: 8,
     marginHorizontal: 19
   },
   title: {

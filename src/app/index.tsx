@@ -8,7 +8,7 @@ const Index = (): JSX.Element => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        router.replace('post/list')
+        router.replace('/post/list')
       } else {
         router.replace('auth/top')
       }

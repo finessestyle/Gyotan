@@ -45,10 +45,8 @@ const handlePress = async (
     if (auth.currentUser === null) return
 
     const mapRef = collection(db, 'maps')
-    const newMapRef = await addDoc(mapRef, {}) // 新しいドキュメントを追加し、ドキュメントIDを取得
-    const mapId = newMapRef.id
 
-    await setDoc(doc(db, 'maps', mapId), { // Firestoreにドキュメントを追加
+    await addDoc(mapRef, { // Firestoreにドキュメントを追加
       title,
       area,
       season,

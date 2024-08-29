@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native'
 import { Link } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
-import { ref, deleteObject } from 'firebase/storage'
+import { ref, deleteObject, listAll } from 'firebase/storage'
 import { type Post } from '../../types/post'
 import { auth, db, storage } from '../config'
 import Icon from '../components/Icon'
@@ -10,11 +10,29 @@ interface Props {
   post: Post
 }
 
+const deleteFiles = async (postId: string): Promise<void> => {
+  try {
+    // Firestoreのドキュメント削除
+    const postRef = doc(db, 'posts', postId)
+    await deleteDoc(postRef)
+
+    // posts/{postId} 内のすべてのファイルを削除
+    const postRefInStorage = ref(storage, `posts/${postId}`)
+    const { items } = await listAll(postRefInStorage)
+
+    for (const itemRef of items) {
+      await deleteObject(itemRef)
+    }
+
+    Alert.alert('削除が完了しました')
+  } catch (error) {
+    console.log(error)
+    Alert.alert('削除に失敗しました')
+  }
+}
+
 const handlePress = (id: string, post?: Post): void => {
   if (auth.currentUser?.uid === post?.userId) {
-    const postRef = doc(db, 'posts', id)
-    const storageRef = ref(storage, `posts/${id}`)
-
     Alert.alert('投稿を削除します', 'よろしいですか？', [
       {
         text: 'キャンセル'
@@ -23,16 +41,7 @@ const handlePress = (id: string, post?: Post): void => {
         text: '削除する',
         style: 'destructive',
         onPress: () => {
-          const deletePost = async (): Promise<void> => {
-            try {
-              await deleteDoc(postRef)
-              await deleteObject(storageRef)
-              Alert.alert('削除が完了しました')
-            } catch (error) {
-              Alert.alert('削除に失敗しました')
-            }
-          }
-          void deletePost()
+          void deleteFiles(id)
         }
       }
     ])

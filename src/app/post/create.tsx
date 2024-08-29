@@ -2,8 +2,8 @@ import {
   View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
-import { useState, useEffect } from 'react'
-import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
+import { useState } from 'react'
+import { collection, Timestamp, getDoc, doc, updateDoc, addDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImageMultiplePicker from 'expo-image-picker'
@@ -90,7 +90,7 @@ const handlePress = async (
       dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
-    await setDoc(doc(db, 'posts', postId), { // Firestoreにドキュメントを追加
+    await updateDoc(doc(db, 'posts', postId), {
       userId,
       userName,
       userImage,
@@ -107,10 +107,8 @@ const handlePress = async (
       exifData: exifData.length > 0 ? exifData : null,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
-
-    router.back() // 成功したら前のページに戻る
+    router.back()
   } catch (error) {
-    console.log('Error: ', error)
     Alert.alert('投稿に失敗しました')
   }
 }
@@ -126,18 +124,6 @@ const Create = (): JSX.Element => {
   const [lure, setLure] = useState('')
   const [lureColor, setLureColor] = useState('')
   const [catchFish, setCatchFish] = useState<number | null>(null)
-
-  useEffect(() => {
-    setTitle('')
-    setImages([])
-    setWeather('')
-    setFishArea('')
-    setLength(null)
-    setWeight(null)
-    setLure('')
-    setLureColor('')
-    setCatchFish(null)
-  }, [])
 
   const pickImage = async (): Promise<void> => {
     const result = await ImageMultiplePicker.launchImageLibraryAsync({
@@ -171,8 +157,8 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>タイトル</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => { setTitle(text) }}
           value={title}
+          onChangeText={(text) => { setTitle(text) }}
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
@@ -245,6 +231,7 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>サイズ</Text>
         <TextInput
           style={styles.input}
+          value={length}
           onChangeText={(text) => { setLength(Number(text)) }}
           placeholder='長さを入力してください'
           keyboardType='numeric'
@@ -253,6 +240,7 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>重さ</Text>
         <TextInput
           style={styles.input}
+          value={weight}
           onChangeText={(text) => { setWeight(Number(text)) }}
           placeholder='重さを入力してください'
           keyboardType='number-pad'
