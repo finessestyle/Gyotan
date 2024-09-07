@@ -67,7 +67,7 @@ const List = (): JSX.Element => {
         <FlatList
           data={posts}
           renderItem={({ item }) => <ListItem post={item} /> }
-          keyExtractor={(item) => item.id}
+          // keyExtractor={(item) => item.id}
         />
         <CircleButton onPress={handlePress}>
           <Icon name='plus' size={40} color='#ffffff' />

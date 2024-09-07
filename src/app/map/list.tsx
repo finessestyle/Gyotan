@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { db } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
 import MapListItem from '../../components/MapListItem'
 import Icon from '../../components/Icon'
@@ -24,9 +24,10 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
-        const { title, area, season, latitude, longitude, content, updatedAt } = doc.data()
+        const { userId, title, area, season, latitude, longitude, content, updatedAt } = doc.data()
         remoteMaps.push({
           id: doc.id,
+          userId,
           title,
           area,
           season,

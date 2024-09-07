@@ -85,13 +85,16 @@ const Edit = (): JSX.Element => {
     const ref = doc(db, 'users', userId)
     getDoc(ref)
       .then((docRef) => {
-        const data = docRef.data()
-        if (data !== null) { // データが存在する場合にセット
-          setEmail(data.email || '')
-          setUserImage(data.userImage || null)
-          setUserName(data.userName || '')
-          setProfile(data.profile || '')
+        const data = docRef.data() as {
+          email?: string
+          userImage?: string
+          userName?: string
+          profile?: string
         }
+        setEmail(data.email ?? '')
+        setUserImage(data.userImage ?? null)
+        setUserName(data.userName ?? '')
+        setProfile(data.profile ?? '')
       })
       .catch((error) => {
         console.log(error)

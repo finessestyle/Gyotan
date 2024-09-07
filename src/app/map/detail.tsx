@@ -21,9 +21,10 @@ const Detail = (): JSX.Element => {
 
     const mapRef = doc(db, 'maps', id)
     const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
-      const { title, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
+      const { userId, title, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
+        userId,
         title,
         area,
         season,

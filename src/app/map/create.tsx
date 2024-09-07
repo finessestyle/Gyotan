@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, Timestamp, doc, setDoc, addDoc } from 'firebase/firestore'
+import { collection, Timestamp, addDoc } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import Button from '../../components/Button'
@@ -43,10 +43,11 @@ const handlePress = async (
       return
     }
     if (auth.currentUser === null) return
-
+    const userId = auth.currentUser.uid
     const mapRef = collection(db, 'maps')
 
     await addDoc(mapRef, { // Firestoreにドキュメントを追加
+      userId,
       title,
       area,
       season,

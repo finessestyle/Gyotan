@@ -32,13 +32,18 @@ const deleteFiles = async (postId: string): Promise<void> => {
 }
 
 const handlePress = (id: string, post?: Post): void => {
+  if (post === null) {
+    Alert.alert('投稿が見つかりませんでした')
+    return
+  }
   if (auth.currentUser?.uid === post?.userId) {
     Alert.alert('投稿を削除します', 'よろしいですか？', [
       {
-        text: 'キャンセル'
+        text: 'キャンセル',
+        style: 'cancel'
       },
       {
-        text: '削除する',
+        text: '投稿を削除する',
         style: 'destructive',
         onPress: () => {
           void deleteFiles(id)

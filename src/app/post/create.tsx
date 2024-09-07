@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, Timestamp, getDoc, doc, updateDoc, addDoc } from 'firebase/firestore'
+import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImageMultiplePicker from 'expo-image-picker'
@@ -90,7 +90,7 @@ const handlePress = async (
       dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
-    await updateDoc(doc(db, 'posts', postId), {
+    await setDoc(doc(db, 'posts', postId), {
       userId,
       userName,
       userImage,
@@ -231,7 +231,7 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>サイズ</Text>
         <TextInput
           style={styles.input}
-          value={length}
+          value={length !== null ? String(length) : ''}
           onChangeText={(text) => { setLength(Number(text)) }}
           placeholder='長さを入力してください'
           keyboardType='numeric'
@@ -240,7 +240,7 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>重さ</Text>
         <TextInput
           style={styles.input}
-          value={weight}
+          value={weight !== null ? String(weight) : ''}
           onChangeText={(text) => { setWeight(Number(text)) }}
           placeholder='重さを入力してください'
           keyboardType='number-pad'

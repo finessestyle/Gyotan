@@ -78,15 +78,20 @@ const Edit = (): JSX.Element => {
     const ref = doc(db, 'maps', id)
     getDoc(ref)
       .then((docRef) => {
-        const data = docRef.data()
-        if (data !== null) {
-          setTitle(data.title || '')
-          setArea(data.area || '')
-          setSeason(data.season || '')
-          setLatitude(data.latitude || null)
-          setLongitude(data.logitude || null)
-          setContent(data.content || '')
+        const data = docRef.data() as {
+          title?: string
+          area?: string
+          season?: string
+          latitude?: string
+          longitude?: string
+          content?: string
         }
+        setTitle(data.title ?? '')
+        setArea(data.area ?? '')
+        setSeason(data.season ?? '')
+        setLatitude(data?.latitude !== undefined && data.latitude !== '' ? parseFloat(data.latitude) : null)
+        setLongitude(data?.longitude !== undefined && data.latitude !== '' ? parseFloat(data.longitude) : null)
+        setContent(data.content ?? '')
       })
       .catch((error) => {
         console.log(error)

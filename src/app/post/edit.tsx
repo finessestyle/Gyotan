@@ -112,7 +112,7 @@ const Edit = (): JSX.Element => {
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
-  const [fishArea, setFishArea] = useState<string | null>(null)
+  const [fishArea, setFishArea] = useState('')
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [lure, setLure] = useState('')
@@ -140,19 +140,28 @@ const Edit = (): JSX.Element => {
     const ref = doc(db, 'posts', id)
     getDoc(ref)
       .then((docRef) => {
-        const data = docRef.data()
-        if (data !== null) {
-          setTitle(data.title || '')
-          setImages(data.images?.map((uri: string) => ({ uri })) || [])
-          setWeather(data.weather || '')
-          setContent(data.content || '')
-          setFishArea(data.fishArea || '')
-          setLength(data.length || '')
-          setWeight(data.weight || '')
-          setLure(data.lure || '')
-          setLureColor(data.lureColor || '')
-          setCatchFish(data.catchFish || '')
+        const data = docRef?.data() as {
+          title?: string
+          images?: string[]
+          weather?: string
+          content?: string
+          fishArea?: string
+          length?: string
+          weight?: string
+          lure?: string
+          lureColor?: string
+          catchFish?: string
         }
+        setTitle(data.title ?? '')
+        setImages(data.images?.map((uri: string) => ({ uri })) ?? [])
+        setWeather(data.weather ?? '')
+        setContent(data.content ?? '')
+        setFishArea(data.fishArea ?? '')
+        setLength(data?.length !== undefined && data.length !== '' ? parseFloat(data.length) : null)
+        setWeight(data?.weight !== undefined && data.weight !== '' ? parseFloat(data.weight) : null)
+        setLure(data?.lure ?? '')
+        setLureColor(data?.lureColor ?? '')
+        setWeight(data?.catchFish !== undefined && data.catchFish !== '' ? parseFloat(data.catchFish) : null)
       })
       .catch((error) => {
         console.log(error)
@@ -199,7 +208,9 @@ const Edit = (): JSX.Element => {
               <Image source={{ uri: image.uri }} style={styles.image} />
               <TouchableOpacity
                 style={styles.removeButton}
-                onPress={() => removeImage(index)}
+                onPress={() => {
+                  removeImage(index)
+                }}
               >
                 <Text style={styles.removeButtonText}>×</Text>
               </TouchableOpacity>
@@ -359,7 +370,7 @@ const Edit = (): JSX.Element => {
           void handlePress(
             id,
             title,
-            images.map(img => img.uri),
+            images,
             weather,
             content,
             length,

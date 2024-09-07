@@ -9,10 +9,9 @@ interface Props {
   map: FishMap
 }
 
-const handlePress = (id: string, map: { userId: string }): void => {
+const handlePress = (id: string, map?: FishMap): void => {
   if (auth.currentUser?.uid === map?.userId) {
     const mapRef = doc(db, 'maps', id)
-
     Alert.alert('投稿を削除します', 'よろしいですか？', [
       {
         text: 'キャンセル'
@@ -21,7 +20,7 @@ const handlePress = (id: string, map: { userId: string }): void => {
         text: '削除する',
         style: 'destructive',
         onPress: () => {
-          const deletePost = async (): Promise<void> => {
+          const deleteMap = async (): Promise<void> => {
             try {
               await deleteDoc(mapRef)
               Alert.alert('削除が完了しました')
@@ -29,16 +28,14 @@ const handlePress = (id: string, map: { userId: string }): void => {
               Alert.alert('削除に失敗しました')
             }
           }
-          void deletePost()
+          void deleteMap()
         }
       }
     ])
-  } else {
-    Alert.alert('削除権限がありません')
   }
 }
 
-const ListItem = (props: Props): JSX.Element | null => {
+const MapListItem = (props: Props): JSX.Element | null => {
   const { map } = props
   const { title, updatedAt } = map
   if (title === null || updatedAt === null) { return null }
@@ -92,4 +89,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ListItem
+export default MapListItem
