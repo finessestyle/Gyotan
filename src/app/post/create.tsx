@@ -124,6 +124,90 @@ const Create = (): JSX.Element => {
   const [lure, setLure] = useState('')
   const [lureColor, setLureColor] = useState('')
   const [catchFish, setCatchFish] = useState<number | null>(null)
+  const [category, setCategory] = useState<string | null>(null)
+
+  const softLures = [
+    { label: 'スモラバ', value: 'スモラバ' },
+    { label: 'ネコリグ', value: 'ネコリグ' },
+    { label: 'ミドスト', value: 'ミドスト' },
+    { label: 'ノーシンカーリグ', value: 'ノーシンカーリグ' },
+    { label: 'ジグヘッドワッキー', value: 'ジグヘッドワッキー' },
+    { label: 'ダウンショットリグ', value: 'ダウンショットリグ' },
+    { label: '虫系', value: '虫系' },
+    { label: 'ヘビキャロ', value: 'ヘビキャロ' },
+    { label: 'テキサスリグ', value: 'テキサスリグ' },
+    { label: 'スイムベイト', value: 'スイムベイト' },
+    { label: 'シャッドテール', value: 'シャッドテール' }
+  ]
+
+  const hardLures = [
+    { label: 'クランクベイト', value: 'クランクベイト' },
+    { label: 'ディープクランク', value: 'ディープクランク' },
+    { label: 'ミノー', value: 'ミノー' },
+    { label: 'シャッド', value: 'シャッド' },
+    { label: 'バイブレーション', value: 'バイブレーション' },
+    { label: 'スピナーベイト', value: 'スピナーベイト' },
+    { label: 'クランクベイト', value: 'クランクベイト' },
+    { label: 'ディープクランク', value: 'ディープクランク' },
+    { label: 'ミノー', value: 'ミノー' },
+    { label: 'シャッド', value: 'シャッド' },
+    { label: 'バイブレーション', value: 'バイブレーション' },
+    { label: 'スピナーベイト', value: 'スピナーベイト' },
+    { label: 'バズベイト', value: 'バズベイト' },
+    { label: 'チャターベイト', value: 'チャターベイト' },
+    { label: 'ビッグベイト', value: 'ビッグベイト' },
+    { label: 'I字系', value: 'I字系' },
+    { label: 'ラバージグ', value: 'ラバージグ' },
+    { label: 'フットボールジグ', value: 'フットボールジグ' },
+    { label: 'メタルバイブ', value: 'メタルバイブ' },
+    { label: 'ウェイクベイト', value: 'ウェイクベイト' },
+    { label: 'ポッパー', value: 'ポッパー' },
+    { label: 'ペンシルベイト', value: 'ペンシルベイト' },
+    { label: 'プロップベイト', value: 'プロップベイト' },
+    { label: 'ハネモノ', value: 'ハネモノ' },
+    { label: 'フロッグ', value: 'フロッグ' }
+  ]
+
+  const softLureColors = [
+    { label: 'ウォーターメロン', value: 'ウォーターメロン' },
+    { label: 'グリパン', value: 'グリパン' },
+    { label: 'スカッパノン', value: 'スカッパノン' },
+    { label: 'スモーク', value: 'スモーク' },
+    { label: 'クリア', value: 'クリア' },
+    { label: 'ホワイト', value: 'ホワイト' },
+    { label: 'ブラック', value: 'ブラック' },
+    { label: 'ツートン', value: 'ツートン' },
+    { label: 'レッド', value: 'レッド' },
+    { label: 'ブルー', value: 'ブルー' },
+    { label: 'チャート', value: 'チャート' },
+    { label: 'パープル', value: 'パープル' },
+    { label: 'ピンク', value: 'ピンク' },
+    { label: 'ゴールド', value: 'ゴールド' },
+    { label: 'シルバー', value: 'シルバー' },
+    { label: 'ゴースト', value: 'ゴースト' }
+  ]
+
+  const hardLureColors = [
+    { label: 'ゴールド', value: 'ゴールド' },
+    { label: 'シルバー', value: 'シルバー' },
+    { label: 'レッド', value: 'レッド' },
+    { label: 'ブルー', value: 'ブルー' },
+    { label: 'チャート', value: 'チャート' },
+    { label: 'パープル', value: 'パープル' },
+    { label: 'ゴースト', value: 'ゴースト' },
+    { label: 'ピンク', value: 'ピンク' },
+    { label: 'ホワイト', value: 'ホワイト' },
+    { label: 'ブラック', value: 'ブラック' },
+    { label: 'クロー', value: 'クロー' },
+    { label: 'ホロ', value: 'ホロ' },
+    { label: 'インナープレート', value: 'インナープレート' },
+    { label: 'クリア', value: 'クリア' },
+    { label: 'ツートン', value: 'ツートン' }
+  ]
+
+  const lureOptions = category === 'ソフトルアー' ? softLures : hardLures
+  const lureColorOptions = category === 'ソフトルアー' ? softLureColors : hardLureColors
+  const maxLength = 100
 
   const pickImage = async (): Promise<void> => {
     const result = await ImageMultiplePicker.launchImageLibraryAsync({
@@ -162,6 +246,7 @@ const Create = (): JSX.Element => {
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
+          maxLength={15}
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
@@ -185,13 +270,18 @@ const Create = (): JSX.Element => {
         </View>
         <Text style={styles.textTitle}>釣果内容</Text>
         <TextInput
-          style={styles.input}
+          style={styles.contentInput}
           value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣果内容を入力してください'
           keyboardType='default'
           returnKeyType='done'
+          multiline
+          maxLength={maxLength}
         />
+        <Text style={styles.charCount}>
+          残り{maxLength - content.length}文字
+        </Text>
         <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
           value={weather}
@@ -233,8 +323,8 @@ const Create = (): JSX.Element => {
           style={styles.input}
           value={length !== null ? String(length) : ''}
           onChangeText={(text) => { setLength(Number(text)) }}
-          placeholder='長さを入力してください'
-          keyboardType='numeric'
+          placeholder='長さ(cm)を入力してください'
+          keyboardType='number-pad'
           returnKeyType='done'
         />
         <Text style={styles.textTitle}>重さ</Text>
@@ -242,85 +332,53 @@ const Create = (): JSX.Element => {
           style={styles.input}
           value={weight !== null ? String(weight) : ''}
           onChangeText={(text) => { setWeight(Number(text)) }}
-          placeholder='重さを入力してください'
+          placeholder='重さ(g)を入力してください'
           keyboardType='number-pad'
           returnKeyType='done'
         />
         <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
-          value={lure}
+          value={category}
           onValueChange={(value: string | null) => {
             if (value !== null) {
+              setCategory(value)
               setLure(value)
-            }
-          }}
-          items={[
-            { label: 'クランクベイト', value: 'クランクベイト' },
-            { label: 'ディープクランク', value: 'ディープクランク' },
-            { label: 'ミノー', value: 'ミノー' },
-            { label: 'シャッド', value: 'シャッド' },
-            { label: 'バイブレーション', value: 'バイブレーション' },
-            { label: 'スピナーベイト', value: 'スピナーベイト' },
-            { label: 'バズベイト', value: 'バズベイト' },
-            { label: 'チャターベイト', value: 'チャターベイト' },
-            { label: 'ビッグベイト', value: 'ビッグベイト' },
-            { label: 'I字系', value: 'I字系' },
-            { label: 'ラバージグ', value: 'ラバージグ' },
-            { label: 'フットボールジグ', value: 'フットボールジグ' },
-            { label: 'メタルバイブ', value: 'メタルバイブ' },
-            { label: 'ウェイクベイト', value: 'ウェイクベイト' },
-            { label: 'ポッパー', value: 'ポッパー' },
-            { label: 'ペンシルベイト', value: 'ペンシルベイト' },
-            { label: 'プロップベイト', value: 'プロップベイト' },
-            { label: 'ハネモノ', value: 'ハネモノ' },
-            { label: 'フロッグ', value: 'フロッグ' },
-            { label: 'スモラバ', value: 'スモラバ' },
-            { label: 'ネコリグ', value: 'ネコリグ' },
-            { label: 'ミドスト', value: 'ミドスト' },
-            { label: 'ノーシンカーリグ', value: 'ノーシンカーリグ' },
-            { label: 'ジグヘッドワッキー', value: 'ジグヘッドワッキー' },
-            { label: 'ダウンショットリグ', value: 'ダウンショットリグ' },
-            { label: '虫系', value: '虫系' },
-            { label: 'ヘビキャロ', value: 'ヘビキャロ' },
-            { label: 'テキサスリグ', value: 'テキサスリグ' },
-            { label: 'スイムベイト', value: 'スイムベイト' },
-            { label: 'シャッドテール', value: 'シャッドテール' }
-          ]}
-          style={pickerSelectStyles}
-          placeholder={{ label: 'ルアーを選択してください', value: null }}
-        />
-        <Text style={styles.textTitle}>ルアーカラー</Text>
-        <RNPickerSelect
-          value={lureColor}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
               setLureColor(value)
             }
           }}
           items={[
-            { label: 'ゴールド', value: 'ゴールド' },
-            { label: 'シルバー', value: 'シルバー' },
-            { label: 'レッド', value: 'レッド' },
-            { label: 'ブルー', value: 'ブルー' },
-            { label: 'チャート', value: 'チャート' },
-            { label: 'パープル', value: 'パープル' },
-            { label: 'ゴースト', value: 'ゴースト' },
-            { label: 'ピンク', value: 'ピンク' },
-            { label: 'ホワイト', value: 'ホワイト' },
-            { label: 'ブラック', value: 'ブラック' },
-            { label: 'クロー', value: 'クロー' },
-            { label: 'ホロ', value: 'ホロ' },
-            { label: 'インナープレート', value: 'インナープレート' },
-            { label: 'クリア', value: 'クリア' },
-            { label: 'ウォーターメロン', value: 'ウォーターメロン' },
-            { label: 'グリパン', value: 'グリパン' },
-            { label: 'スカッパノン', value: 'スカッパノン' },
-            { label: 'スモーク', value: 'スモーク' },
-            { label: 'ツートン', value: 'ツートン' }
+            { label: 'ソフトルアー', value: 'ソフトルアー' },
+            { label: 'ハードルアー', value: 'ハードルアー' }
           ]}
+          placeholder={{ label: 'カテゴリーを選択してください', value: null }}
           style={pickerSelectStyles}
-          placeholder={{ label: '釣果エリアを選択してください', value: null }}
         />
+        {category !== null && (
+          <RNPickerSelect
+            value={lure}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setLure(value)
+              }
+            }}
+            items={lureOptions}
+            placeholder={{ label: 'ルアーを選択してください', value: null }}
+            style={pickerSelectStyles}
+          />
+        )}
+        {category !== null && (
+          <RNPickerSelect
+            value={lureColor}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setLureColor(value)
+              }
+            }}
+            items={lureColorOptions}
+            placeholder={{ label: 'ルアーカラーを選択してください', value: null }}
+            style={pickerSelectStyles}
+          />
+        )}
         <Text style={styles.textTitle}>釣果数</Text>
         <RNPickerSelect
           value={catchFish}
@@ -378,6 +436,19 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     paddingLeft: 18,
     fontSize: 16
+  },
+  contentInput: {
+    borderBottomWidth: 1,
+    borderColor: '#D0D0D0',
+    height: 100,
+    marginVertical: 4,
+    alignItems: 'flex-start',
+    paddingLeft: 18,
+    fontSize: 16
+  },
+  charCount: {
+    textAlign: 'right',
+    color: 'gray'
   },
   textTitle: {
     paddingVertical: 4

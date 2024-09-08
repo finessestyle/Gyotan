@@ -1,4 +1,7 @@
-import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, Alert } from 'react-native'
+import {
+  View, Text, StyleSheet, ScrollView, Image,
+  FlatList, TouchableOpacity, Alert
+} from 'react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc } from 'firebase/firestore'
