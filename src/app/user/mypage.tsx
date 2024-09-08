@@ -145,20 +145,20 @@ const Mypage = (): JSX.Element => {
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
         {auth.currentUser?.uid === user?.id && (
-          <Button
-            label='編集'
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
-            onPress={() => { handlePress(id) }}
-          />
-        )}
-        {auth.currentUser?.uid === user?.id && (
-          <Button
-            label='退会'
-            buttonStyle={{ width: '100%', marginTop: 16, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, color: 'red', lineHeight: 21 }}
-            onPress={() => { void handleWithdraw(user) }}
-          />
+          <View style={styles.buttonStyle}>
+            <Button
+              label='編集'
+              buttonStyle={{ width: '30%', marginTop: 8, marginRight: 8, alignItems: 'center', height: 30 }}
+              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              onPress={() => { handlePress(id) }}
+            />
+            <Button
+              label='退会'
+              buttonStyle={{ width: '30%', marginTop: 8, alignItems: 'center', height: 30 }}
+              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              onPress={() => { void handleWithdraw(user) }}
+            />
+          </View>
         )}
       </View>
       <View style={styles.subInner}>
@@ -217,7 +217,13 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userProfile: {
-    fontSize: 16
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    minHeight: 80,
+    paddingHorizontal: 5,
+    paddingVertical: 5,
+    fontSize: 16,
+    borderRadius: 8
   },
   tabs: {
     flexDirection: 'row',
@@ -235,6 +241,10 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     color: '#467FD3'
+  },
+  buttonStyle: {
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 })
 

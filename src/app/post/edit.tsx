@@ -83,6 +83,12 @@ const handlePress = async (
       return await getDownloadURL(storageRef)
     }))
 
+    const exifData = images.map(image => ({
+      latitude: image.exif?.GPSLatitude ?? null,
+      longitude: image.exif?.GPSLongitude ?? null,
+      dateTime: image.exif?.DateTimeOriginal ?? null
+    }))
+
     await setDoc(doc(db, 'posts', id), {
       userId,
       userName,
@@ -97,6 +103,7 @@ const handlePress = async (
       lureColor,
       catchFish,
       fishArea,
+      exifData: exifData.length > 0 ? exifData : null,
       updatedAt: Timestamp.fromDate(new Date())
     })
     router.back()
@@ -124,10 +131,15 @@ const Edit = (): JSX.Element => {
       mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
-      quality: 0.3
+      quality: 0.3,
+      exif: true
     })
-    if (!result.canceled) {
-      setImages(prevImages => [...prevImages, ...result.assets.map(asset => ({ uri: asset.uri }))])
+    if (!result.canceled && result.assets.length > 0) {
+      const processedAssets = result.assets.map(asset => ({
+        uri: asset.uri,
+        exif: asset.exif ?? undefined
+      }))
+      setImages(processedAssets)
     }
   }
 
@@ -151,6 +163,7 @@ const Edit = (): JSX.Element => {
           lure?: string
           lureColor?: string
           catchFish?: string
+          exifData?: string
         }
         setTitle(data.title ?? '')
         setImages(data.images?.map((uri: string) => ({ uri })) ?? [])

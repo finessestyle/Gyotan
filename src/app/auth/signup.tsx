@@ -3,7 +3,7 @@ import {
   StyleSheet, TouchableOpacity, Image
 } from 'react-native'
 import { Link, router } from 'expo-router'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import { doc, setDoc } from 'firebase/firestore'

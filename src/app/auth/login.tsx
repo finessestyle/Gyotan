@@ -21,6 +21,7 @@ const handlePress = async (email: string, password: string): Promise<void> => {
 const LogIn = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -48,7 +49,7 @@ const LogIn = (): JSX.Element => {
         <Button label='ログイン' onPress={() => { void handlePress(email, password) }} />
         <View style={styles.footer}>
           <Link href='/auth/signup' asChild replace>
-            <TouchableOpacity >
+            <TouchableOpacity>
               <Text style={styles.footerLink}>新規会員登録はこちらをクリック</Text>
             </TouchableOpacity>
           </Link>
