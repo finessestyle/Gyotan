@@ -1,25 +1,20 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
-import { Link } from 'expo-router'
+import { View, Text, StyleSheet } from 'react-native'
+import { useEffect } from 'react'
+import { useRouter } from 'expo-router'
 
 const Top = (): JSX.Element => {
+  const router = useRouter()
+
+  useEffect(() => {
+    setTimeout(() => {
+      router.replace('/auth/login')
+    }, 3000)
+  }, [router])
+
   return (
     <View style={styles.container}>
-      <View style={styles.topInner}>
-        <Image style={styles.topImage} source={ require('../../../assets/4.jpeg') } />
-        <Text style={styles.topText} >釣果を投稿・共有して琵琶湖にバス釣りに行こう🎣</Text>
-      </View>
-      <View style={styles.nav}>
-        <Link href="auth/login" asChild replace>
-          <TouchableOpacity style={styles.leftNav}>
-            <Text style={styles.navText}>ログイン</Text>
-          </TouchableOpacity>
-        </Link>
-        <View style={styles.separator} />
-        <Link href="auth/signup" asChild replace>
-          <TouchableOpacity style={styles.rightNav}>
-            <Text style={styles.navText}>新規登録</Text>
-          </TouchableOpacity>
-        </Link>
+      <View style={styles.inner}>
+        <Text style={styles.innerText}>Gyotan</Text>
       </View>
     </View>
   )
@@ -29,11 +24,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  topInner: {
+  inner: {
+    flex: 1,
+    backgroundColor: '#467FD3',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  topImage: {
-    height: 800,
-    width: 'auto'
+  innerText: {
+    fontSize: 64,
+    color: '#ffffff',
+    fontFamily: 'block'
   },
   topText: {
     position: 'absolute',

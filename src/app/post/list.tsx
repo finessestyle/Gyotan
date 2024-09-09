@@ -1,5 +1,5 @@
 import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { useEffect, useState, useRef} from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'

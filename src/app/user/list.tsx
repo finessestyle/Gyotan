@@ -37,7 +37,6 @@ const List = (): JSX.Element => {
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
-        ListEmptyComponent={<Text>No users found</Text>}
       />
     </View>
   )

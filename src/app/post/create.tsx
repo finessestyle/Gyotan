@@ -246,7 +246,7 @@ const Create = (): JSX.Element => {
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
-          maxLength={15}
+          maxLength={13}
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
