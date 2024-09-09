@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   innerText: {
     fontSize: 64,
     color: '#ffffff',
-    fontFamily: 'block'
+    fontWeight: 'bold'
   },
   topText: {
     position: 'absolute',
