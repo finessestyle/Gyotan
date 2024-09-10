@@ -31,9 +31,16 @@ const Layout = (): JSX.Element => {
         tabBarActiveTintColor: '#467FD3'
       }}>
         <Tabs.Screen
+          name="post/top"
+          options={{
+            title: '最新釣果',
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
+          }}
+        />
+        <Tabs.Screen
           name="post/list"
           options={{
-            title: '釣果一覧',
+            title: 'エリア釣果',
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="list" color={color} />
           }}
         />
@@ -42,13 +49,6 @@ const Layout = (): JSX.Element => {
           options={{
             title: '釣り場一覧',
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="map" color={color} />
-          }}
-        />
-        <Tabs.Screen
-          name="user/list"
-          options={{
-            title: 'ユーザー一覧',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="users" color={color} />
           }}
         />
         <Tabs.Screen
@@ -131,6 +131,13 @@ const Layout = (): JSX.Element => {
         />
         <Tabs.Screen
           name="user/edit"
+          options={{
+            href: null,
+            headerLeft: () => { return renderBackButton() }
+          }}
+        />
+        <Tabs.Screen
+          name="user/list"
           options={{
             href: null,
             headerLeft: () => { return renderBackButton() }
