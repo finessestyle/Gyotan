@@ -1,16 +1,11 @@
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native'
-import { router, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { db } from '../../config'
 import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
-import Button from '../../components/Button'
 import ListItem from '../../components/ListItem'
-
-const handlePress = (id: string): void => {
-  router.push({ pathname: 'user/edit', params: { id } })
-}
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
@@ -67,7 +62,7 @@ const Detail = (): JSX.Element => {
   }, [selectedArea, id])
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
         <View style={styles.userTop}>
@@ -78,14 +73,6 @@ const Detail = (): JSX.Element => {
           <Text style={styles.userName}>{user?.userName}さん</Text>
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
-        {auth.currentUser?.uid === user?.id && (
-          <Button
-            label='編集'
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
-            onPress={() => { handlePress(id) }}
-          />
-        )}
       </View>
       <View style={styles.subInner}>
         <Text style={styles.title}>釣果一覧</Text>
@@ -106,7 +93,7 @@ const Detail = (): JSX.Element => {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 

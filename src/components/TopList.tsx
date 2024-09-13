@@ -18,19 +18,23 @@ const TopList = (props: Props): JSX.Element | null => {
       asChild
     >
       <TouchableOpacity style={styles.listItem}>
-        <View>
-          <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
-            <TouchableOpacity>
-              <View style={styles.userInfo} >
-                {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
-                <Text style={styles.userName}>{post?.userName}さん</Text>
-              </View>
-            </TouchableOpacity>
-          </Link>
+        <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
+          <TouchableOpacity>
+            <View style={styles.userInfo} >
+              {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
+              <Text style={styles.userName}>{post?.userName}さん</Text>
+            </View>
+          </TouchableOpacity>
+        </Link>
+        <View style={styles.fishImage}>
           <Image
             style={styles.listItemImage}
             source={{ uri: imageUri }}
           />
+          <View style={styles.fishInfo}>
+            <Text style={styles.length}>{post?.length}cm / </Text>
+            <Text style={styles.weight}>{post?.weight}g</Text>
+          </View>
         </View>
         <View style={styles.date}>
           <Text style={styles.listItemDate}>投稿日：{dateString}</Text>
@@ -43,20 +47,19 @@ const TopList = (props: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   listItem: {
     backgroundColor: '#ffffff',
-    paddingVertical: 8,
-    alignItems: 'center',
+    width: 'auto',
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
     borderColor: 'rgba(0,0,0,0.15)',
     height: 'auto',
-    marginHorizontal: 16
+    marginHorizontal: 8,
+    marginBottom: 16
   },
   userInfo: {
     height: 60,
     flexDirection: 'row',
-    paddingHorizontal: 8,
     alignItems: 'center',
-    borderColor: '#B0B0B0'
+    marginHorizontal: 8
   },
   userImage: {
     width: 48,
@@ -69,13 +72,35 @@ const styles = StyleSheet.create({
     lineHeight: 32,
     color: '#467FD3'
   },
+  fishImage: {
+    position: 'relative'
+  },
+  fishInfo: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 8,
+    right: 24
+  },
+  fishArea: {
+    color: '#ffffff',
+    fontSize: 24
+  },
+  length: {
+    color: '#ffffff',
+    fontSize: 24
+  },
+  weight: {
+    color: '#ffffff',
+    fontSize: 24
+  },
   listItemImage: {
-    width: 320,
-    height: 300,
-    borderRadius: 20
+    width: 'auto',
+    height: 300
   },
   date: {
-    marginVertical: 8
+    marginVertical: 8,
+    marginHorizontal: 8,
+    alignItems: 'flex-start'
   },
   listItemDate: {
     fontSize: 16,

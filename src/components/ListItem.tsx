@@ -75,9 +75,11 @@ const ListItem = (props: Props): JSX.Element | null => {
           <Text style={styles.listItemTitle}>{post.title}</Text>
           <Text style={styles.listItemDate}>{dateString}</Text>
         </View>
-        <TouchableOpacity style={styles.deleteButton} onPress={() => { handlePress(post.id, post) }}>
-          <Icon name='delete' size={32} color='#B0B0B0' />
-        </TouchableOpacity>
+        {auth.currentUser?.uid === post?.userId && (
+          <TouchableOpacity style={styles.deleteButton} onPress={() => { handlePress(post.id, post) }}>
+            <Icon name='delete' size={32} color='#B0B0B0' />
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
     </Link>
   )

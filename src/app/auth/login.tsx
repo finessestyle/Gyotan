@@ -12,7 +12,7 @@ const handlePress = async (email: string, password: string): Promise<void> => {
     await auth.signOut()
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     console.log(userCredential.user.uid)
-    router.replace('post/list')
+    router.replace('post/top')
   } catch (error) {
     Alert.alert('ログインに失敗しました')
   }

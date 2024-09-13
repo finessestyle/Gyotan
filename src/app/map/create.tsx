@@ -144,19 +144,21 @@ const Create = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-        <Button label='投稿' onPress={() => {
-          void handlePress(
-            title,
-            area,
-            season,
-            latitude,
-            longitude,
-            content
-          )
-        }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-          labelStyle={{ fontSize: 24, lineHeight: 21 }}
-        />
+        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+          <Button label='投稿' onPress={() => {
+            void handlePress(
+              title,
+              area,
+              season,
+              latitude,
+              longitude,
+              content
+            )
+          }}
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+          />
+        )}
       </ScrollView>
     </KeyboardAwareScrollView>
   )

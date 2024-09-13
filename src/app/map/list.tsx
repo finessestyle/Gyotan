@@ -2,7 +2,7 @@ import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
-import { db } from '../../config'
+import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
 import MapListItem from '../../components/MapListItem'
 import Icon from '../../components/Icon'
@@ -19,6 +19,7 @@ const List = (): JSX.Element => {
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
 
   useEffect(() => {
+    if (auth.currentUser === null) return
     const ref = collection(db, 'maps')
     const q = query(ref, where('area', '==', selectedArea), orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
@@ -62,9 +63,11 @@ const List = (): JSX.Element => {
           renderItem={({ item }) => <MapListItem map={item} /> }
           keyExtractor={(item) => item.id}
         />
-        <CircleButton onPress={handlePress}>
-          <Icon name='plus' size={40} color='#ffffff' />
-        </CircleButton>
+        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+          <CircleButton onPress={handlePress}>
+            <Icon name='plus' size={40} color='#ffffff' />
+          </CircleButton>
+        )}
       </View>
     </View>
   )

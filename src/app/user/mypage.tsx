@@ -11,11 +11,33 @@ import { deleteUser } from 'firebase/auth'
 import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
-import Button from '../../components/Button'
 import LogOutButton from '../../components/LogOutButton'
+import { FontAwesome6 } from '@expo/vector-icons'
 
 const handlePress = (id: string): void => {
-  router.push({ pathname: 'user/edit', params: { id } })
+  Alert.alert(
+    '選択してください',
+    undefined, // No message provided
+    [
+      {
+        text: '編集',
+        onPress: () => {
+          router.push({ pathname: 'user/edit', params: { id } })
+        }
+      },
+      {
+        text: '退会',
+        onPress: () => {
+          void handleWithdraw(id)
+        },
+        style: 'destructive'
+      },
+      {
+        text: 'キャンセル',
+        style: 'cancel'
+      }
+    ]
+  )
 }
 
 const deleteFiles = async (userId: string): Promise<void> => {
@@ -136,9 +158,16 @@ const Mypage = (): JSX.Element => {
   }, [selectedArea])
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>マイページ</Text>
+        <View style={styles.innerTitle}>
+          <Text style={styles.title}>マイページ</Text>
+          {auth.currentUser?.uid === user?.id && (
+            <TouchableOpacity style={styles.setting} onPress={() => { handlePress(id) }}>
+              <FontAwesome6 size={24} name="gear" color='#D0D0D0' />
+            </TouchableOpacity>
+          )}
+        </View>
         <View style={styles.userTop}>
           <Image
             source={{ uri: user?.userImage }}
@@ -147,22 +176,6 @@ const Mypage = (): JSX.Element => {
           <Text style={styles.userName}>{user?.userName}さん</Text>
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
-        {auth.currentUser?.uid === user?.id && (
-          <View style={styles.buttonStyle}>
-            <Button
-              label='編集'
-              buttonStyle={{ width: '30%', marginTop: 8, marginRight: 8, alignItems: 'center', height: 30 }}
-              labelStyle={{ fontSize: 24, lineHeight: 21 }}
-              onPress={() => { handlePress(id) }}
-            />
-            <Button
-              label='退会'
-              buttonStyle={{ width: '30%', marginTop: 8, alignItems: 'center', height: 30 }}
-              labelStyle={{ fontSize: 24, lineHeight: 21 }}
-              onPress={() => { void handleWithdraw(user) }}
-            />
-          </View>
-        )}
       </View>
       <View style={styles.subInner}>
         <Text style={styles.title}>あなたの釣果</Text>
@@ -183,7 +196,7 @@ const Mypage = (): JSX.Element => {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </ScrollView>
+    </View>
   )
 }
 
@@ -191,13 +204,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  innerTitle: {
+    flexDirection: 'row'
+  },
+  setting: {
+    marginLeft: 'auto',
+    marginRight: 16
+  },
   inner: {
-    marginVertical: 24,
-    marginHorizontal: 19
+    marginTop: 24,
+    marginHorizontal: 16
   },
   subInner: {
-    marginVertical: 8,
-    marginHorizontal: 19
+    marginVertical: 12,
+    marginHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -212,7 +232,9 @@ const styles = StyleSheet.create({
   userImage: {
     width: 200,
     height: 200,
-    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 150,
     marginBottom: 8
   },
   userName: {

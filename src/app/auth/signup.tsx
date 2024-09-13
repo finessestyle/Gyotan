@@ -59,7 +59,7 @@ const handlePress = async (
       updatedAt: new Date()
     })
 
-    router.replace('/post/list')
+    router.replace('/post/top')
   } catch (error) {
     console.log(error)
     Alert.alert('新規登録に失敗しました')

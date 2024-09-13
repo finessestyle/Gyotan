@@ -1,26 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import axios from 'axios'
 import { openWeatherApiKey } from '../config'
 
-const Weather = ({ lat, lon }) => {
-  const [weather, setWeather] = useState(null)
+interface Props {
+  lat: number
+  lon: number
+}
+
+interface WeatherData {
+  daily: Array<{
+    dt: number
+    temp: {
+      max: number
+      min: number
+    }
+    weather: Array<{
+      icon: string
+    }>
+    wind_speed: number
+    wind_deg: number
+  }>
+}
+
+const Weather: React.FC<Props> = ({ lat, lon }) => {
+  const [weather, setWeather] = useState<WeatherData | null>(null)
 
   useEffect(() => {
-    const fetchWeather = async () => {
+    const fetchWeather = async (): Promise<void> => {
       const weatherUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=metric&appid=${openWeatherApiKey}`
       try {
-        const response = await axios.get(weatherUrl)
+        const response = await axios.get<WeatherData>(weatherUrl)
         setWeather(response.data)
       } catch (error) {
         Alert.alert('天気予報の取得に失敗しました')
       }
     }
-
-    fetchWeather()
+    void fetchWeather()
   }, [lat, lon, openWeatherApiKey])
 
-  const getWindDirection = (windDeg) => {
+  const getWindDirection = (windDeg: number): string => {
     if (windDeg >= 11.25 && windDeg < 33.75) return '北北東風'
     if (windDeg >= 33.75 && windDeg < 56.25) return '北東風'
     if (windDeg >= 56.25 && windDeg < 78.75) return '東北東風'
@@ -39,7 +58,7 @@ const Weather = ({ lat, lon }) => {
     return '北風'
   }
 
-  const renderWeather = (weatherData, index) => {
+  const renderWeather = (weatherData: WeatherData, index: number): JSX.Element => {
     const date = new Date(weatherData.daily[index].dt * 1000)
     date.setHours(date.getHours() + 9)
     const month = date.getMonth() + 1
@@ -62,14 +81,16 @@ const Weather = ({ lat, lon }) => {
 
   return (
     <View style={styles.container}>
-      {weather ? (
+      {weather !== null
+        ? (
         <View style={styles.horizontalContainer}>
           {renderWeather(weather, 0)}
           {renderWeather(weather, 1)}
-        </View>
-      ) : (
-        <Text>天気予報を取得中...</Text>
-      )}
+          {renderWeather(weather, 2)}
+        </View>)
+        : (
+        <Text>天気予報を取得中...</Text>)
+      }
     </View>
   )
 }
@@ -80,12 +101,11 @@ const styles = StyleSheet.create({
   },
   horizontalContainer: {
     flexDirection: 'row', // 横並びに配置
-    justifyContent: 'space-between', // コンテンツを均等に配置
-    borderBottomWidth: 1
+    justifyContent: 'center'
   },
   weatherReport: {
-    marginBottom: 20,
-    alignItems: 'center'
+    alignItems: 'center',
+    marginHorizontal: 16
   },
   date: {
     fontSize: 16,

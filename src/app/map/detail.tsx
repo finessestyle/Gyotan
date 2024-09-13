@@ -38,11 +38,11 @@ const Detail = (): JSX.Element => {
   }, [id])
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.inner}>
-        <View style={styles.postBody}>
+    <ScrollView style={styles.container}>
+      <View style={styles.inner}>
+        <View style={styles.areaBody}>
           <View style={styles.fishArea}>
-            <Text>{map?.title}</Text>
+            <Text style={styles.title}>{map?.title}</Text>
             <Text>[{map?.season}]</Text>
           </View>
           <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
@@ -54,14 +54,16 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        <Button
-          label='編集'
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-          labelStyle={{ fontSize: 24, lineHeight: 21 }}
-          onPress={() => { handlePress(id) }}
-        />
-      </ScrollView>
-    </View>
+        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+          <Button
+            label='編集'
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            onPress={() => { handlePress(id) }}
+          />
+        )}
+      </View>
+    </ScrollView>
   )
 }
 
@@ -74,62 +76,31 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     marginHorizontal: 16
   },
-  postBody: {
+  areaBody: {
     borderWidth: 1,
     borderColor: '#B0B0B0',
-    marginBottom: 10,
+    marginBottom: 8,
     height: 'auto',
-    borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 8
+    borderRadius: 8
   },
   fishArea: {
-    height: 32,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B0B0B0',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  fishAreaImage: {
-    height: 175,
-    width: 'auto'
-  },
-  fishTime: {
-    height: 32,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B0B0B0',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  fishingInfomation: {
-    height: 32,
-    width: 'auto',
+    height: 48,
     flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: '#B0B0B0'
-  },
-  leftInfo: {
-    flex: 1,
-    height: 32,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#D0D0D0'
+    marginHorizontal: 32
   },
-  rightInfo: {
-    flex: 1,
-    height: 32,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  fishImage: {
-    height: 322,
-    width: 'auto'
+  title: {
+    fontSize: 18,
+    lineHeight: 32
   },
   fishInfo: {
+    borderTopWidth: 1,
+    borderTopColor: '#D0D0D0',
     height: 'auto',
     lineHeight: 32,
     alignItems: 'center',
-    justifyContent: 'center'
+    paddingVertical: 8
   },
   fishText: {
     fontSize: 16,
