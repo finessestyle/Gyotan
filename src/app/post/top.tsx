@@ -55,7 +55,7 @@ const top = (): JSX.Element => {
         <View style={styles.lottieContainer}>
           <Lottie
             ref={animation}
-            source={require('../../../assets/fishing.json')}
+            source={require('../../../assets/loading2.json')}
             autoPlay
             loop
             style={styles.lottie}
@@ -76,7 +76,8 @@ const top = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#F0F4F8'
   },
   lottieContainer: {
     flex: 1,

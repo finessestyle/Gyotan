@@ -177,7 +177,8 @@ const Edit = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#F0F4F8'
   },
   inner: {
     marginVertical: 24,

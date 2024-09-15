@@ -9,7 +9,6 @@ import Button from '../../components/Button'
 
 const handlePress = async (email: string, password: string): Promise<void> => {
   try {
-    await auth.signOut()
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     console.log(userCredential.user.uid)
     router.replace('post/top')
@@ -21,7 +20,6 @@ const handlePress = async (email: string, password: string): Promise<void> => {
 const LogIn = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-
   return (
     <View style={styles.container}>
       <View style={styles.inner}>

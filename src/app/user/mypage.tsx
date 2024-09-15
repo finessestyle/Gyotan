@@ -202,14 +202,16 @@ const Mypage = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#F0F4F8'
   },
   innerTitle: {
     flexDirection: 'row'
   },
   setting: {
     marginLeft: 'auto',
-    marginRight: 16
+    marginRight: 16,
+    marginTop: 4
   },
   inner: {
     marginTop: 24,
@@ -238,17 +240,12 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userName: {
-    fontSize: 24,
-    marginBottom: 8
+    fontSize: 20,
+    marginBottom: 8,
+    fontWeight: 'bold'
   },
   userProfile: {
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    minHeight: 80,
-    paddingHorizontal: 5,
-    paddingVertical: 5,
-    fontSize: 16,
-    borderRadius: 8
+    fontSize: 14
   },
   tabs: {
     flexDirection: 'row',

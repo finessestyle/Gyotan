@@ -55,9 +55,9 @@ const handlePress = (id: string, post?: Post): void => {
 
 const ListItem = (props: Props): JSX.Element | null => {
   const { post } = props
-  const { title, images, updatedAt } = post
+  const { title, images, length, weight, updatedAt } = post
   const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
-  if (title === null || updatedAt === null || images === null) { return null }
+  if (title === null || updatedAt === null || images === null || length === null || weight === null) { return null }
   const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
   return (
     <Link
@@ -73,6 +73,10 @@ const ListItem = (props: Props): JSX.Element | null => {
         </View>
         <View>
           <Text style={styles.listItemTitle}>{post.title}</Text>
+          <View style={styles.fishInfo}>
+            <Text style={styles.listItemDate}>{length}cm / </Text>
+            <Text style={styles.listItemFish}>{weight}g</Text>
+          </View>
           <Text style={styles.listItemDate}>{dateString}</Text>
         </View>
         {auth.currentUser?.uid === post?.userId && (
@@ -90,13 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     flexDirection: 'row',
     paddingVertical: 16,
-    paddingHorizontal: 19,
+    paddingHorizontal: 8,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.15)',
     height: 80,
     marginBottom: 8,
-    marginHorizontal: 16,
     borderRadius: 8
   },
   listItemImage: {
@@ -113,6 +116,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 16,
     color: '#848484'
+  },
+  listItemFish: {
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#848484'
+  },
+  fishInfo: {
+    flexDirection: 'row'
   },
   deleteButton: {
     position: 'absolute',

@@ -132,8 +132,8 @@ const SignUp = (): JSX.Element => {
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          buttonStyle={{ height: 24, backgroundColor: '#F0F0F0' }}
+          labelStyle={{ lineHeight: 12, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
             }).catch((error) => {

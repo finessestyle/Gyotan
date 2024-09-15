@@ -99,7 +99,8 @@ const Detail = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#F0F4F8'
   },
   inner: {
     marginVertical: 24,
@@ -120,17 +121,18 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userImage: {
-    width: 200,
-    height: 200,
+    width: 180,
+    height: 180,
     borderRadius: 100,
     marginBottom: 8
   },
   userName: {
-    fontSize: 24,
-    marginBottom: 8
+    fontSize: 20,
+    marginBottom: 8,
+    fontWeight: 'bold'
   },
   userProfile: {
-    fontSize: 16
+    fontSize: 14
   },
   tabs: {
     flexDirection: 'row',
