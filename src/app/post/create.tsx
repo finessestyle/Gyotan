@@ -21,6 +21,7 @@ const handlePress = async (
   lure: string,
   lureColor: string,
   catchFish: number | null,
+  area: string,
   fishArea: string
 ): Promise<void> => {
   try {
@@ -38,6 +39,10 @@ const handlePress = async (
     }
     if (content === '') {
       Alert.alert('エラー', '釣果内容を入力してください')
+      return
+    }
+    if (area === '') {
+      Alert.alert('エラー', '釣果エリアを選択してください')
       return
     }
     if (fishArea === '') {
@@ -103,6 +108,7 @@ const handlePress = async (
       lure,
       lureColor,
       catchFish,
+      area,
       fishArea,
       exifData: exifData.length > 0 ? exifData : null,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
@@ -119,13 +125,13 @@ const Create = (): JSX.Element => {
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
   const [fishArea, setFishArea] = useState('')
+  const [area, setArea] = useState('')
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [lure, setLure] = useState('')
   const [lureColor, setLureColor] = useState('')
   const [catchFish, setCatchFish] = useState<number | null>(null)
   const [category, setCategory] = useState<string | null>(null)
-  const [areas, setAreas] = useState<string | null>(null)
 
   const hokkoNarea = [
     { label: '海津漁港エリア', value: '海津漁港エリア' },
@@ -140,8 +146,7 @@ const Create = (): JSX.Element => {
     { label: '飯浦エリア', value: '飯浦エリア' },
     { label: '西野放水路エリア', value: '西野放水路エリア' },
     { label: '片山石積みエリア', value: '片山石積みエリア' },
-    { label: '野田沼エリア', value: '野田沼エリア' },
-    { label: 'エリア', value: 'エリア' }
+    { label: '野田沼エリア', value: '野田沼エリア' }
   ]
 
   const hokkoEarea = [
@@ -156,16 +161,16 @@ const Create = (): JSX.Element => {
     { label: '彦根新港エリア', value: '彦根新港エリア' },
     { label: '旧彦根港エリア', value: '旧彦根港エリア' },
     { label: '芹川河口エリア', value: '芹川河口エリア' },
-    { labe: '宇曽川河口エリア', value: '宇曽川河口エリア' },
+    { label: '宇曽川河口エリア', value: '宇曽川河口エリア' },
     { label: '野田沼エリア', value: '野田沼エリア' },
     { label: '曽根沼エリア', value: '曽根沼エリア' },
-    { label: '文禄川河口エリア', value: '文禄川エリア' },
+    { label: '文禄川河口エリア', value: '文禄川河口エリア' },
     { label: '神上沼エリア', value: '神上沼エリア' },
     { label: '愛知川河口エリア', value: '愛知川河口エリア' },
-    { label: '大同川エリア①', value: '大同川エリア①' },
-    { label: '大同川エリア②', value: '大同川エリア②' },
-    { label: '伊庭内湖エリア①', value: '伊庭内湖エリア①' },
-    { label: '伊庭内湖エリア②', value: '伊庭内湖エリア②' },
+    { label: '大同川エリア１', value: '大同川エリア１' },
+    { label: '大同川エリア２', value: '大同川エリア２' },
+    { label: '伊庭内湖エリア１', value: '伊庭内湖エリア１' },
+    { label: '伊庭内湖エリア２', value: '伊庭内湖エリア２' },
     { label: '長命寺川エリア', value: '長命寺川エリア' },
     { label: '吉川浄水場前エリア', value: '吉川浄水場前エリア' },
     { label: '吉川漁港エリア', value: '吉川漁港エリア' }
@@ -190,12 +195,12 @@ const Create = (): JSX.Element => {
     { label: '八屋戸川エリア', value: '八屋戸川エリア' },
     { label: '和邇川河口エリア', value: '和邇川河口エリア' },
     { label: '真野浜周辺エリア', value: '真野浜周辺エリア' },
-    { label: ' 米プラザ前エリア', value: ' 米プラザ前エリア' }
+    { label: '米プラザ前エリア', value: '米プラザ前エリア' }
   ]
 
   const nannkoEarea = [
-    { label: '木浜埋立地①エリア', value: '木浜埋立地①エリア' },
-    { label: '木浜埋立地②エリア', value: '木浜埋立地②エリア' },
+    { label: '木浜埋立地１エリア', value: '木浜埋立地１エリア' },
+    { label: '木浜埋立地２エリア', value: '木浜埋立地２エリア' },
     { label: '赤野井ワンド', value: '赤野井ワンド' },
     { label: '烏丸半島周辺エリア', value: '烏丸半島周辺エリア' },
     { label: '平湖・柳平湖エリア', value: '平湖・柳平湖エリア' },
@@ -217,8 +222,8 @@ const Create = (): JSX.Element => {
     { label: '阪本赤鳥居エリア', value: '阪本赤鳥居エリア' },
     { label: 'KKRホテルびわこエリア', value: 'KKRホテルびわこエリア' },
     { label: '浜大津エリア', value: '浜大津エリア' },
-    { label: '由美浜・におの浜エリア①', value: '由美浜・におの浜エリア①' },
-    { label: '由美浜・におの浜エリア②', value: '由美浜・におの浜エリア②' },
+    { label: '由美浜・におの浜エリア１', value: '由美浜・におの浜エリア１' },
+    { label: '由美浜・におの浜エリア２', value: '由美浜・におの浜エリア２' },
     { label: '膳所港・城跡公園周辺エリア', value: '膳所港・城跡公園周辺エリア' },
     { label: 'なぎさ公園・青嵐の道エリア', value: 'なぎさ公園・青嵐の道エリア' }
   ]
@@ -301,16 +306,21 @@ const Create = (): JSX.Element => {
     { label: 'クリア', value: 'クリア' },
     { label: 'ツートン', value: 'ツートン' }
   ]
+
   const areaOptions =
-    areas === '北湖北'
-      ? hokkoNarea
-      : areas === '北湖東'
-        ? hokkoEarea
-        : areas === '北湖西'
-          ? hokkoWarea
-          : areas === '南湖東'
-            ? nannkoEarea
-            : areas === '南湖西'
+  fishArea === '北湖北'
+    ? hokkoNarea
+    : fishArea === '北湖東'
+      ? hokkoEarea
+      : fishArea === '北湖西'
+        ? hokkoWarea
+        : fishArea === '南湖東'
+          ? nannkoEarea
+          : fishArea === '南湖西'
+            ? nannkoWarea
+            : fishArea === null || fishArea === undefined
+              ? []
+              : []
   const lureOptions = category === 'ソフトルアー' ? softLures : hardLures
   const lureColorOptions = category === 'ソフトルアー' ? softLureColors : hardLureColors
   const maxLength = 100
@@ -407,11 +417,11 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣果エリアを選択</Text>
         <RNPickerSelect
-          value={areas}
+          value={fishArea}
           onValueChange={(value: string | null) => {
             if (value !== null) {
-              setAreas(value)
               setFishArea(value)
+              setArea(value)
             }
           }}
           items={[
@@ -424,16 +434,16 @@ const Create = (): JSX.Element => {
           placeholder={{ label: 'エリアを選択してください', value: null }}
           style={pickerSelectStyles}
         />
-        {areas !== null && (
+        {fishArea !== null && (
           <RNPickerSelect
-            value={fishArea}
+            value={area}
             onValueChange={(value: string | null) => {
               if (value !== null) {
-                setFishArea(value)
+                setArea(value)
               }
             }}
             items={areaOptions}
-            placeholder={{ label: '釣果エリアを選択してください', value: null }}
+            placeholder={{ label: 'エリアを選択してください', value: null }}
             style={pickerSelectStyles}
           />
         )}
@@ -521,6 +531,7 @@ const Create = (): JSX.Element => {
             lure,
             lureColor,
             catchFish,
+            area,
             fishArea
           )
         }}
@@ -539,7 +550,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,

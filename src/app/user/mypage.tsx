@@ -1,5 +1,5 @@
 import {
-  View, Text, StyleSheet, ScrollView, Image,
+  View, Text, StyleSheet, Image,
   FlatList, TouchableOpacity, Alert
 } from 'react-native'
 import { router, useLocalSearchParams, useNavigation } from 'expo-router'
@@ -55,7 +55,7 @@ const deleteFiles = async (userId: string): Promise<void> => {
   }
 }
 
-const handleWithdraw = async (user?: User | null): Promise<void> => {
+const handleWithdraw = async (user: User): Promise<void> => {
   if (user === null) {
     Alert.alert('ユーザーが見つかりませんでした')
     return
@@ -72,7 +72,7 @@ const handleWithdraw = async (user?: User | null): Promise<void> => {
       {
         text: '退会する',
         style: 'destructive',
-        onPress: () => { void handleDeleteUser(userId) }
+        onPress: () => { void handleDeleteUser() }
       }
     ])
   }
@@ -127,7 +127,7 @@ const Mypage = (): JSX.Element => {
       snapshot.forEach((doc) => {
         const {
           userId, userName, userImage, title, images, weather, content, length,
-          weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt
+          weight, lure, lureColor, catchFish, fishArea, area, exifData, updatedAt
         } = doc.data()
         userPost.push({
           id: doc.id,
@@ -144,6 +144,7 @@ const Mypage = (): JSX.Element => {
           lureColor,
           catchFish,
           fishArea,
+          area,
           updatedAt,
           exifData
         })
@@ -157,6 +158,8 @@ const Mypage = (): JSX.Element => {
     }
   }, [selectedArea])
 
+  const isAnonymous = auth.currentUser?.isAnonymous === true
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -169,18 +172,31 @@ const Mypage = (): JSX.Element => {
           )}
         </View>
         <View style={styles.userTop}>
-          <Image
-            source={{ uri: user?.userImage }}
-            style={styles.userImage}
-          />
-          <Text style={styles.userName}>{user?.userName}さん</Text>
-          <Text style={styles.userProfile}>{user?.profile}</Text>
+          {isAnonymous
+            ? (
+            <View style={styles.userTop}>
+              <View style={styles.userImageContainer}>
+                <FontAwesome6 size={130} name='user' color={'#ffffff'}/>
+              </View>
+              <Text style={styles.userName}>ゲストさん</Text>
+            </View>)
+            : (
+            <>
+            <Image
+              source={{ uri: user?.userImage }}
+              style={styles.userImage}
+            />
+            <Text style={styles.userName}>{user?.userName}さん</Text>
+            <Text style={styles.userProfile}>{user?.profile}</Text>
+            </>)
+          }
         </View>
       </View>
       <View style={styles.subInner}>
         <Text style={styles.title}>あなたの釣果</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
+
             <TouchableOpacity
               key={area}
               style={[styles.tab, selectedArea === area && styles.selectedTab]}
@@ -238,6 +254,16 @@ const styles = StyleSheet.create({
     borderColor: '#D0D0D0',
     borderRadius: 150,
     marginBottom: 8
+  },
+  userImageContainer: {
+    width: 200,
+    height: 200,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    backgroundColor: '#D0D0D0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 150
   },
   userName: {
     fontSize: 20,

@@ -21,7 +21,7 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
       setPost({
         id: postDoc.id,
         userId,
@@ -36,6 +36,7 @@ const Detail = (): JSX.Element => {
         lure,
         lureColor,
         catchFish,
+        area,
         fishArea,
         exifData,
         updatedAt
@@ -57,7 +58,7 @@ const Detail = (): JSX.Element => {
         </Link>
         <View style={styles.postBody}>
           <View style={styles.fishArea}>
-            <Text>釣果エリア: {post?.fishArea}</Text>
+            <Text>{post?.area} : {post?.fishArea}</Text>
           </View>
           <Map
             latitude={post?.exifData[0]?.latitude ?? 0}

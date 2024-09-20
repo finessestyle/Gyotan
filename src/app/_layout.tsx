@@ -1,6 +1,7 @@
 import { Tabs, useRouter } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { auth } from '../config'
 
 const Layout = (): JSX.Element => {
   const router = useRouter()
@@ -87,59 +88,140 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
+          name="auth/anonymouseLogin"
+          options={{
+            href: null,
+            tabBarStyle: { display: 'none' },
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/auth/signup')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
           name="post/detail"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/top')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="post/edit"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="map/create"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
+
         <Tabs.Screen
           name="map/detail"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="map/edit"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="user/detail"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="user/edit"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/user/mypage')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
           name="user/list"
           options={{
             href: null,
-            headerLeft: () => { return renderBackButton() }
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/auth/signup')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
