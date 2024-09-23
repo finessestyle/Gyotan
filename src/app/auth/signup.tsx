@@ -147,13 +147,6 @@ const SignUp = (): JSX.Element => {
 
         <Button label='会員登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
         <View style={styles.footer}>
-          <Link href='/auth/anonymouseLogin' asChild replace>
-            <TouchableOpacity>
-              <Text style={styles.footerLink}>ゲスト登録はこちらをクリック</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
-        <View style={styles.footer}>
           <Link href='/auth/login' asChild replace>
             <TouchableOpacity>
               <Text style={styles.footerLink}>ログインはこちらをクリック</Text>

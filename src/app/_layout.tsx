@@ -1,7 +1,6 @@
 import { Tabs, useRouter } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { auth } from '../config'
 
 const Layout = (): JSX.Element => {
   const router = useRouter()
@@ -85,22 +84,6 @@ const Layout = (): JSX.Element => {
           options={{
             href: null,
             tabBarStyle: { display: 'none' }
-          }}
-        />
-        <Tabs.Screen
-          name="auth/anonymouseLogin"
-          options={{
-            href: null,
-            tabBarStyle: { display: 'none' },
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/auth/signup')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
           }}
         />
         <Tabs.Screen
