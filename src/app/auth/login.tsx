@@ -27,26 +27,26 @@ const LogIn = (): JSX.Element => {
         <TextInput
           style={styles.input}
           value={email}
-          onChangeText={(text) => { setEmail(text) }}
           autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
           returnKeyType='done'
+          onChangeText={(text) => { setEmail(text) }}
         />
         <TextInput
           style={styles.input}
           value={password}
-          onChangeText={(text) => { setPassword(text) }}
           autoCapitalize='none'
           secureTextEntry
           placeholder='パスワードを入力'
           textContentType='password'
           returnKeyType='done'
+          onChangeText={(text) => { setPassword(text) }}
         />
         <Button label='ログイン' onPress={() => { void handlePress(email, password) }} />
         <View style={styles.footer}>
-          <Link href='/auth/signup' asChild replace>
+          <Link replace href='/auth/signup' asChild >
             <TouchableOpacity>
               <Text style={styles.footerLink}>新規会員登録はこちらをクリック</Text>
             </TouchableOpacity>

@@ -65,14 +65,6 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
-          name="auth/top"
-          options={{
-            headerShown: false,
-            href: null,
-            tabBarStyle: { display: 'none' }
-          }}
-        />
-        <Tabs.Screen
           name="auth/login"
           options={{
             href: null,

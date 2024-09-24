@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState } from 'react'
-import { collection, Timestamp, addDoc } from 'firebase/firestore'
+import { collection, addDoc, Timestamp } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import Button from '../../components/Button'

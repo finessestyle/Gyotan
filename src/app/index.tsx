@@ -5,14 +5,13 @@ import { auth } from '../config'
 
 const Index = (): JSX.Element => {
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user !== null) {
         router.replace('/post/top')
       }
     })
-    return unsubscribe
   }, [])
-  return <Redirect href="auth/top" />
+  return <Redirect href="auth/login" />
 }
 
 export default Index

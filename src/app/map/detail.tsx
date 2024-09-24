@@ -1,5 +1,5 @@
 import { View, StyleSheet, Text, ScrollView } from 'react-native'
-import { router, useLocalSearchParams, Link } from 'expo-router'
+import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db, auth } from '../../config'
