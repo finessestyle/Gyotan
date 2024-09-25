@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
@@ -32,7 +32,7 @@ const Detail = (): JSX.Element => {
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -48,6 +48,7 @@ const Detail = (): JSX.Element => {
           lureColor,
           catchFish,
           fishArea,
+          area,
           updatedAt,
           exifData
         })

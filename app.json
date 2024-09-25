@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "GyotanApp",
-    "slug": "GyotanApp",
-    "scheme": "gyotanapp",
+    "name": "Gyotan",
+    "slug": "Gyotan",
+    "scheme": "gyotan",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +18,7 @@
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.gyotan.gyotanapp",
+      "package": "com.gyotan.Gyotan",
       "versionCode": 1,
       "permissions": [],
       "adaptiveIcon": {
@@ -32,6 +32,11 @@
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d84dd01a-d9e3-4aff-8016-d61f33ce9674"
+      }
+    }
   }
 }

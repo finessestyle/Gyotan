@@ -2,7 +2,7 @@ import {
   View, Text, StyleSheet, Image,
   FlatList, TouchableOpacity, Alert
 } from 'react-native'
-import { router, useLocalSearchParams, useNavigation } from 'expo-router'
+import { router, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
@@ -14,21 +14,23 @@ import ListItem from '../../components/ListItem'
 import LogOutButton from '../../components/LogOutButton'
 import { FontAwesome6 } from '@expo/vector-icons'
 
-const handlePress = (id: string): void => {
+const handlePress = (): void => {
+  const userId = auth.currentUser?.uid
+  if (userId === undefined || userId === null || userId === '') return
   Alert.alert(
     '選択してください',
-    undefined, // No message provided
+    undefined,
     [
       {
         text: '編集',
         onPress: () => {
-          router.push({ pathname: 'user/edit', params: { id } })
+          router.push({ pathname: 'user/edit', params: { id: userId } })
         }
       },
       {
         text: '退会',
         onPress: () => {
-          void handleWithdraw(id)
+          void handleWithdraw(userId)
         },
         style: 'destructive'
       },
@@ -55,27 +57,23 @@ const deleteFiles = async (userId: string): Promise<void> => {
   }
 }
 
-const handleWithdraw = async (user: User): Promise<void> => {
-  if (user === null) {
+const handleWithdraw = async (userId: string): Promise<void> => {
+  if (userId === undefined || userId === null || userId === '') {
     Alert.alert('ユーザーが見つかりませんでした')
     return
   }
 
-  const userId = auth.currentUser?.uid
-
-  if (auth.currentUser?.uid === userId) {
-    Alert.alert('退会確認', '本当に退会しますか？', [
-      {
-        text: 'キャンセル',
-        style: 'cancel'
-      },
-      {
-        text: '退会する',
-        style: 'destructive',
-        onPress: () => { void handleDeleteUser() }
-      }
-    ])
-  }
+  Alert.alert('退会確認', '本当に退会しますか？', [
+    {
+      text: 'キャンセル',
+      style: 'cancel'
+    },
+    {
+      text: '退会する',
+      style: 'destructive',
+      onPress: () => { void handleDeleteUser(userId) }
+    }
+  ])
 }
 
 const handleDeleteUser = async (userId: string): Promise<void> => {
@@ -92,7 +90,6 @@ const handleDeleteUser = async (userId: string): Promise<void> => {
 }
 
 const Mypage = (): JSX.Element => {
-  const id = String(useLocalSearchParams().id)
   const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
@@ -166,7 +163,7 @@ const Mypage = (): JSX.Element => {
         <View style={styles.innerTitle}>
           <Text style={styles.title}>マイページ</Text>
           {auth.currentUser?.uid === user?.id && (
-            <TouchableOpacity style={styles.setting} onPress={() => { handlePress(id) }}>
+            <TouchableOpacity style={styles.setting} onPress={handlePress}>
               <FontAwesome6 size={24} name="gear" color='#D0D0D0' />
             </TouchableOpacity>
           )}
