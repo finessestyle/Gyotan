@@ -1,4 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native'
+import React, {
+  View, Text, TouchableOpacity, StyleSheet, Image
+} from 'react-native'
 import { Link } from 'expo-router'
 import { type Post } from '../../types/post'
 

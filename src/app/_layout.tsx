@@ -1,10 +1,8 @@
-import { Tabs, useRouter } from 'expo-router'
+import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import React, { View, StyleSheet, TouchableOpacity } from 'react-native'
 
 const Layout = (): JSX.Element => {
-  const router = useRouter()
-
   const renderBackButton = (): JSX.Element => {
     return (
       <TouchableOpacity onPress={() => {
@@ -47,7 +45,16 @@ const Layout = (): JSX.Element => {
           name="post/create"
           options={{
             title: '釣果投稿',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="plus" color={color} />
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="plus" color={color} />,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/top')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen

@@ -1,4 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native'
+import React, {
+  View, Text, TouchableOpacity, StyleSheet, Image, Alert
+} from 'react-native'
 import { Link } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
@@ -95,12 +97,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 16,
     paddingHorizontal: 8,
+    marginBottom: 8,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0,0,0,0.15)',
-    height: 80,
-    marginBottom: 8,
-    borderRadius: 8
+    borderRadius: 8,
+    height: 'auto'
   },
   listItemImage: {
     width: 80,

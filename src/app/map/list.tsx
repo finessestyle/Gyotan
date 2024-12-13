@@ -1,4 +1,6 @@
-import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import React, {
+  View, FlatList, StyleSheet, Text, TouchableOpacity
+} from 'react-native'
 import { useEffect, useState } from 'react'
 import { router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
@@ -21,7 +23,7 @@ const List = (): JSX.Element => {
   useEffect(() => {
     if (auth.currentUser === null) return
     const ref = collection(db, 'maps')
-    const q = query(ref, where('area', '==', selectedArea), orderBy('updatedAt', 'desc'))
+    const q = query(ref, where('area', '==', selectedArea), orderBy('updatedAt', 'asc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
@@ -44,7 +46,7 @@ const List = (): JSX.Element => {
   }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行
 
   return (
-    <View style={styles.outerContainer}>
+    <View style={styles.container}>
       <View style={styles.container}>
         <Text style={styles.title}>釣り場一覧</Text>
         <View style={styles.tabs}>
@@ -63,7 +65,7 @@ const List = (): JSX.Element => {
           renderItem={({ item }) => <MapListItem map={item} /> }
           keyExtractor={(item) => item.id}
         />
-        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
           <CircleButton onPress={handlePress}>
             <Icon name='plus' size={40} color='#ffffff' />
           </CircleButton>

@@ -1,4 +1,6 @@
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
+import React, {
+  View, StyleSheet, Text, TouchableOpacity, Image
+} from 'react-native'
 import { Link } from 'expo-router'
 import { type User } from '../../types/user'
 

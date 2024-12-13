@@ -1,21 +1,22 @@
 {
   "expo": {
     "name": "Gyotan",
-    "slug": "Gyotan",
+    "slug": "GyotanApp",
     "scheme": "gyotan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gyotan.gyotanapp",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "newArchEnabled": true
     },
     "android": {
       "package": "com.gyotan.Gyotan",
@@ -23,8 +24,9 @@
       "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive_foreground.png",
-        "backgroundColor": "./assets/icon_adaptive_background.png"
-      }
+        "backgroundColor": "#FFFFFF"
+      },
+      "newArchEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

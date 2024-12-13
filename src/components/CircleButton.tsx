@@ -1,4 +1,6 @@
-import { Text, TouchableOpacity, StyleSheet, type ViewStyle } from 'react-native'
+import React, {
+  Text, TouchableOpacity, StyleSheet, type ViewStyle
+} from 'react-native'
 
 interface Props {
   children: JSX.Element

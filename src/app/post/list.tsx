@@ -1,4 +1,6 @@
-import { View, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native'
+import React, {
+  View, FlatList, StyleSheet, Text, TouchableOpacity
+} from 'react-native'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
@@ -61,7 +63,7 @@ const List = (): JSX.Element => {
         <FlatList
           data={posts}
           renderItem={({ item }) => <ListItem post={item} /> }
-          keyExtractor={(item) => item.id}
+          style={{ marginHorizontal: 8 }}
         />
       </View>
     </View>
@@ -72,15 +74,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F0F4F8'
-  },
-  lottieContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  lottie: {
-    width: 300,
-    height: 300
   },
   title: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView } from 'react-native'
+import React, { View, StyleSheet, Text, ScrollView } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
@@ -54,7 +54,7 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
           <Button
             label='編集'
             buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
   fishText: {
     fontSize: 16,
     lineHeight: 24,
+    marginHorizontal: 8,
     color: '#000000'
   },
   swiper: {

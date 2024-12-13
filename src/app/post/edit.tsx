@@ -1,5 +1,6 @@
-import {
-  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image, TouchableOpacity
+import React, {
+  View, Text, TextInput, StyleSheet,
+  ScrollView, Alert, Image, TouchableOpacity
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -504,19 +505,30 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
-    borderRadius: 4,
+    borderRadius: 8,
+    marginTop: 4,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    justifyContent: 'space-between'
   },
   imageWrapper: {
     position: 'relative',
-    margin: 4,
-    marginBottom: 4
+    margin: 6,
+    borderRadius: 8,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2
   },
   image: {
     width: 100,
     height: 100,
-    margin: 2
+    borderRadius: 8
   },
   removeButton: {
     position: 'absolute',

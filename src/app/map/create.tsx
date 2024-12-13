@@ -1,4 +1,4 @@
-import {
+import React, {
   ScrollView, Text, TextInput, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
@@ -114,7 +114,8 @@ const Create = (): JSX.Element => {
             { label: '春', value: '春' },
             { label: '夏', value: '夏' },
             { label: '秋', value: '秋' },
-            { label: '冬', value: '冬' }
+            { label: '冬', value: '冬' },
+            { label: '通年', value: '通年' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: '季節を選択してください', value: null }}
@@ -137,14 +138,15 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
-          style={styles.input}
+          style={styles.contentInput}
           value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣り場内容を入力してください'
           keyboardType='default'
           returnKeyType='done'
+          multiline
         />
-        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
           <Button label='投稿' onPress={() => {
             void handlePress(
               title,
@@ -183,6 +185,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     height: 32,
+    marginVertical: 4,
+    alignItems: 'flex-start',
+    paddingLeft: 18,
+    fontSize: 16
+  },
+  contentInput: {
+    borderBottomWidth: 1,
+    borderColor: '#D0D0D0',
+    height: 'auto',
     marginVertical: 4,
     alignItems: 'flex-start',
     paddingLeft: 18,

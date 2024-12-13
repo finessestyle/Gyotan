@@ -1,4 +1,4 @@
-import {
+import React, {
   Text, TextInput, StyleSheet, ScrollView, Alert
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -142,7 +142,8 @@ const Edit = (): JSX.Element => {
             { label: '春', value: '春' },
             { label: '夏', value: '夏' },
             { label: '秋', value: '秋' },
-            { label: '冬', value: '冬' }
+            { label: '冬', value: '冬' },
+            { label: '通年', value: '通年' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: '季節を選択してください', value: null }}
@@ -163,7 +164,6 @@ const Edit = (): JSX.Element => {
           keyboardType='numeric'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>地理院地図URL</Text>
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
           style={styles.input}
@@ -173,7 +173,7 @@ const Edit = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-        {auth.currentUser?.uid === 'ybY8Ui8KDbWfDof50P6Rf08CkQy1' && (
+        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
           <Button label='投稿' onPress={() => {
             void handlePress(
               id,

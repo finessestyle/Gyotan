@@ -1,4 +1,4 @@
-import {
+import React, {
   View, Text, StyleSheet, Image,
   FlatList, TouchableOpacity, Alert
 } from 'react-native'
@@ -82,6 +82,7 @@ const handleDeleteUser = async (userId: string): Promise<void> => {
     if (auth.currentUser !== null) {
       await deleteUser(auth.currentUser)
       Alert.alert('退会が完了しました')
+      router.replace('/auth/signup')
     }
   } catch (error) {
     console.log(error)
@@ -190,7 +191,6 @@ const Mypage = (): JSX.Element => {
         </View>
       </View>
       <View style={styles.subInner}>
-        <Text style={styles.title}>あなたの釣果</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
 
@@ -206,7 +206,6 @@ const Mypage = (): JSX.Element => {
         <FlatList
           data={posts}
           renderItem={({ item }) => <ListItem post={item} />}
-          keyExtractor={(item) => item.id}
         />
       </View>
     </View>
@@ -231,8 +230,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 16
   },
   subInner: {
+    flex: 1,
     marginVertical: 12,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   title: {
     fontSize: 24,

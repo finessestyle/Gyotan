@@ -1,4 +1,6 @@
-import { View, StyleSheet, Image, Text, ScrollView, TouchableOpacity } from 'react-native'
+import React, {
+  View, StyleSheet, Image, Text, ScrollView, TouchableOpacity
+} from 'react-native'
 import { router, useLocalSearchParams, Link } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
@@ -46,8 +48,8 @@ const Detail = (): JSX.Element => {
   }, [id])
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.inner}>
+    <ScrollView style={styles.container}>
+      <View style={styles.inner}>
         <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
           <TouchableOpacity>
             <View style={styles.userInfo} >
@@ -58,7 +60,7 @@ const Detail = (): JSX.Element => {
         </Link>
         <View style={styles.postBody}>
           <View style={styles.fishArea}>
-            <Text>{post?.area} : {post?.fishArea}</Text>
+            <Text>{post?.fishArea} : {post?.area}</Text>
           </View>
           <Map
             latitude={post?.exifData[0]?.latitude ?? 0}
@@ -113,8 +115,8 @@ const Detail = (): JSX.Element => {
             onPress={() => { handlePress(id) }}
           />
         )}
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 

@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
+import React, {
+  View, Text, StyleSheet, Image, FlatList, TouchableOpacity
+} from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/firestore'
@@ -76,7 +78,6 @@ const Detail = (): JSX.Element => {
         </View>
       </View>
       <View style={styles.subInner}>
-        <Text style={styles.title}>釣果一覧</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
             <TouchableOpacity
@@ -105,11 +106,12 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 19
+    marginHorizontal: 16
   },
   subInner: {
-    marginVertical: 8,
-    marginHorizontal: 19
+    flex: 1,
+    marginVertical: 12,
+    marginHorizontal: 8
   },
   title: {
     fontSize: 24,
@@ -122,9 +124,10 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userImage: {
-    width: 180,
-    height: 180,
-    borderRadius: 100,
+    width: 200,
+    height: 200,
+    borderColor: '#D0D0D0',
+    borderRadius: 150,
     marginBottom: 8
   },
   userName: {

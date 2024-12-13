@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import React, { Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { Link } from 'expo-router'
 import { type FishMap } from '../../types/fishmap'
 import Map from '../components/Map'
@@ -30,12 +30,12 @@ const MapListItem = (props: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   listItem: {
     backgroundColor: '#ffffff',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.15)',
-    marginBottom: 8,
-    marginHorizontal: 16,
     paddingHorizontal: 8,
     paddingVertical: 8,
+    marginBottom: 8,
+    marginHorizontal: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.15)',
     borderRadius: 8,
     height: 'auto'
   },

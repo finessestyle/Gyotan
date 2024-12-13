@@ -1,4 +1,4 @@
-import {
+import React, {
   View, ScrollView, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
@@ -367,7 +367,7 @@ const Create = (): JSX.Element => {
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
           label="釣果画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
@@ -391,7 +391,7 @@ const Create = (): JSX.Element => {
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣果内容を入力してください'
           keyboardType='default'
-          returnKeyType='done'
+          returnKeyType='default'
           multiline
           maxLength={maxLength}
         />
@@ -412,8 +412,8 @@ const Create = (): JSX.Element => {
             { label: '雨', value: '雨' },
             { label: '雪', value: '雪' }
           ]}
-          style={pickerSelectStyles}
           placeholder={{ label: '天気を選択してください', value: null }}
+          style={pickerSelectStyles}
         />
         <Text style={styles.textTitle}>釣果エリアを選択</Text>
         <RNPickerSelect
@@ -586,15 +586,30 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderWidth: 1,
     borderColor: '#D0D0D0',
-    flexDirection: 'row'
+    borderRadius: 8,
+    marginTop: 4,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between'
   },
   imageWrapper: {
     position: 'relative',
-    margin: 6
+    margin: 6,
+    borderRadius: 8,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2
   },
   image: {
     width: 100,
-    height: 100
+    height: 100,
+    borderRadius: 8
   },
   imageNumber: {
     position: 'absolute',
@@ -603,29 +618,29 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
     padding: 4,
-    fontSize: 8
+    fontSize: 10
   }
 })
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
-    paddingVertical: 4,
+    paddingVertical: 10,
     paddingHorizontal: 19,
     borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
-    borderRadius: 4,
+    borderRadius: 4, // 丸みを統一
     color: 'black',
     paddingRight: 30,
-    marginVertical: 4
+    marginVertical: 8
   },
   inputAndroid: {
     fontSize: 16,
+    paddingVertical: 10, // 高さを統一
     paddingHorizontal: 19,
-    paddingVertical: 8,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 1, // ボーダー幅を統一
     borderBottomColor: '#D0D0D0',
-    borderRadius: 8,
+    borderRadius: 4, // 丸みを統一
     color: 'black',
     paddingRight: 30
   }

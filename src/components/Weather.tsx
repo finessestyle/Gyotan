@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, Image, StyleSheet, Alert } from 'react-native'
+import React, { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import axios from 'axios'
 import { openWeatherApiKey } from '../config'
 
