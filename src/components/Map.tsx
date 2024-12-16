@@ -1,4 +1,4 @@
-import React, { View, StyleSheet } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import MapView, { Circle, UrlTile } from 'react-native-maps'
 
 interface Props {
@@ -15,7 +15,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
       <MapView
         style={styles.map}
         mapType='standard'
-        scrollEnabled={false}
+        // scrollEnabled={false}
         region={{
           latitude,
           longitude,

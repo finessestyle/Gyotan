@@ -1,5 +1,5 @@
 /* eslint-disable  */
-import React, { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   Keyboard, Dimensions, Animated
 } from 'react-native'

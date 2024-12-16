@@ -1,4 +1,4 @@
-import React, {
+import {
   View, StyleSheet, Image, Text, ScrollView, TouchableOpacity
 } from 'react-native'
 import { router, useLocalSearchParams, Link } from 'expo-router'
@@ -68,7 +68,7 @@ const Detail = (): JSX.Element => {
           />
           <View style={styles.fishTime}>
             <Text>
-              釣果日時: {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
+              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
             </Text>
           </View>
           <Swiper style={styles.swiper} showsButtons={true}>
@@ -78,26 +78,26 @@ const Detail = (): JSX.Element => {
           </Swiper>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>天気: {post?.weather}</Text>
+              <Text>天気 : {post?.weather}</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>釣果数: {post?.catchFish}匹</Text>
+              <Text>釣果数 : {post?.catchFish}匹</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>サイズ: {post?.length}cm</Text>
+              <Text>サイズ : {post?.length}cm</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>重さ: {post?.weight}g</Text>
+              <Text>重さ : {post?.weight}g</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>ルアー: {post?.lure}</Text>
+              <Text>ルアー : {post?.lure}</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>カラー: {post?.lureColor}</Text>
+              <Text>カラー : {post?.lureColor}</Text>
             </View>
           </View>
           <View style={styles.fishInfo}>
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   userInfo: {
     borderWidth: 1,

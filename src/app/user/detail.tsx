@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, StyleSheet, Image, FlatList, TouchableOpacity
 } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'

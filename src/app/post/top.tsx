@@ -1,4 +1,4 @@
-import React, { View, FlatList, Text, StyleSheet } from 'react-native'
+import { View, FlatList, Text, StyleSheet } from 'react-native'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
@@ -42,13 +42,11 @@ const top = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.title}>最新釣果</Text>
-        <FlatList
-          data={posts}
-          renderItem={({ item }) => <TopList post={item} /> }
-        />
-      </View>
+      <Text style={styles.title}>最新釣果</Text>
+      <FlatList
+        data={posts}
+        renderItem={({ item }) => <TopList post={item} /> }
+      />
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, TextInput, StyleSheet,
   ScrollView, Alert, Image, TouchableOpacity
 } from 'react-native'
@@ -268,14 +268,6 @@ const Edit = (): JSX.Element => {
       })
   }, [id])
 
-  const generateCatchFishOptions = (): Array<{ label: string, value: number }> => {
-    const options = []
-    for (let i = 1; i <= 20; i += 1) {
-      options.push({ label: `${i} `, value: i })
-    }
-    return options
-  }
-
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
       <ScrollView style={styles.inner}>
@@ -346,7 +338,7 @@ const Edit = (): JSX.Element => {
             { label: '雪', value: '雪' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: '天気を選択してください', value: null }}
+          placeholder={{ label: '天気を選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>釣果エリア</Text>
         <RNPickerSelect
@@ -364,7 +356,7 @@ const Edit = (): JSX.Element => {
             { label: '南湖西', value: '南湖西' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: '釣果エリアを選択してください', value: null }}
+          placeholder={{ label: '釣果エリアを選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>サイズ</Text>
         <TextInput
@@ -398,7 +390,7 @@ const Edit = (): JSX.Element => {
             { label: 'ソフトルアー', value: 'ソフトルアー' },
             { label: 'ハードルアー', value: 'ハードルアー' }
           ]}
-          placeholder={{ label: 'カテゴリーを選択してください', value: null }}
+          placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
           style={pickerSelectStyles}
         />
         {category !== null && (
@@ -410,7 +402,7 @@ const Edit = (): JSX.Element => {
               }
             }}
             items={lureOptions}
-            placeholder={{ label: 'ルアーを選択してください', value: null }}
+            placeholder={{ label: 'ルアーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
         )}
@@ -423,21 +415,23 @@ const Edit = (): JSX.Element => {
               }
             }}
             items={lureColorOptions}
-            placeholder={{ label: 'ルアーカラーを選択してください', value: null }}
+            placeholder={{ label: 'ルアーカラーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
         )}
         <Text style={styles.textTitle}>釣果数</Text>
-        <RNPickerSelect
-          value={catchFish}
-          onValueChange={(value: number | null) => {
-            if (value !== null) {
-              setCatchFish(value)
+        <TextInput
+          style={styles.input}
+          value={catchFish !== null ? String(catchFish) : ''}
+          onChangeText={(text) => {
+            const numericValue = Number(text)
+            if (!isNaN(numericValue)) {
+              setCatchFish(Number(text))
             }
           }}
-          items={generateCatchFishOptions()}
-          style={pickerSelectStyles}
-          placeholder={{ label: '釣果数を選択してください', value: null }}
+          placeholder='釣果数を入力してください'
+          keyboardType='number-pad'
+          returnKeyType='done'
         />
         <Button label='投稿' onPress={() => {
           void handlePress(

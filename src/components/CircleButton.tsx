@@ -1,4 +1,4 @@
-import React, {
+import {
   Text, TouchableOpacity, StyleSheet, type ViewStyle
 } from 'react-native'
 

@@ -1,4 +1,4 @@
-import React, {
+import {
   Text, TextInput, StyleSheet, ScrollView, Alert
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
@@ -128,7 +128,7 @@ const Edit = (): JSX.Element => {
             { label: '南湖西', value: '南湖西' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: 'エリアを選択してください', value: null }}
+          placeholder={{ label: 'エリアを選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>季節を選択</Text>
         <RNPickerSelect
@@ -146,7 +146,7 @@ const Edit = (): JSX.Element => {
             { label: '通年', value: '通年' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: '季節を選択してください', value: null }}
+          placeholder={{ label: '季節を選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>緯度</Text>
         <TextInput
@@ -155,6 +155,7 @@ const Edit = (): JSX.Element => {
           placeholder='緯度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
+          value={latitude !== null ? latitude.toString() : ''}
         />
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
@@ -163,15 +164,17 @@ const Edit = (): JSX.Element => {
           placeholder='経度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
+          value={longitude !== null ? longitude.toString() : ''}
         />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
-          style={styles.input}
+          style={styles.mapInput}
           value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣り場内容を入力してください'
           keyboardType='default'
           returnKeyType='done'
+          multiline
         />
         {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
           <Button label='投稿' onPress={() => {
@@ -218,6 +221,16 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     fontSize: 16
   },
+  mapInput: {
+    borderBottomWidth: 1,
+    borderColor: '#D0D0D0',
+    height: 'auto',
+    marginVertical: 4,
+    alignItems: 'flex-start',
+    paddingLeft: 18,
+    fontSize: 16
+  },
+
   textTitle: {
     paddingVertical: 4
   },

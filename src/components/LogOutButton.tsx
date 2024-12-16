@@ -1,4 +1,4 @@
-import React, {
+import {
   TouchableOpacity, Text, StyleSheet, Alert
 } from 'react-native'
 import { signOut } from '@firebase/auth'

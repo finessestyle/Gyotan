@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import React, { View, Text, Image, StyleSheet, Alert } from 'react-native'
+import { View, Text, Image, StyleSheet, Alert } from 'react-native'
 import axios from 'axios'
 import { openWeatherApiKey } from '../config'
 
@@ -33,6 +33,7 @@ const Weather: React.FC<Props> = ({ lat, lon }) => {
         const response = await axios.get<WeatherData>(weatherUrl)
         setWeather(response.data)
       } catch (error) {
+        console.log(error)
         Alert.alert('天気予報の取得に失敗しました')
       }
     }

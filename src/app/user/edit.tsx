@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, TextInput, StyleSheet, Alert, Image
 } from 'react-native'
 import { router } from 'expo-router'

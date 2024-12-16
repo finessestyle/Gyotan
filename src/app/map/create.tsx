@@ -1,4 +1,4 @@
-import React, {
+import {
   ScrollView, Text, TextInput, StyleSheet, Alert
 } from 'react-native'
 import { router } from 'expo-router'
@@ -100,7 +100,7 @@ const Create = (): JSX.Element => {
             { label: '南湖西', value: '南湖西' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: 'エリアを選択してください', value: null }}
+          placeholder={{ label: 'エリアを選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>季節を選択</Text>
         <RNPickerSelect
@@ -118,10 +118,11 @@ const Create = (): JSX.Element => {
             { label: '通年', value: '通年' }
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: '季節を選択してください', value: null }}
+          placeholder={{ label: '季節を選択してください', value: '' }}
         />
         <Text style={styles.textTitle}>緯度</Text>
         <TextInput
+          value={latitude}
           style={styles.input}
           onChangeText={(text) => { setLatitude(Number(text)) }}
           placeholder='緯度を入力してください'
@@ -130,6 +131,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
+          value={longitude}
           style={styles.input}
           onChangeText={(text) => { setLongitude(Number(text)) }}
           placeholder='経度を入力してください'

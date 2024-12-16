@@ -1,4 +1,4 @@
-import React, { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { Link } from 'expo-router'
 import { type FishMap } from '../../types/fishmap'
 import Map from '../components/Map'

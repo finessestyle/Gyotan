@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, StyleSheet, Image,
   FlatList, TouchableOpacity, Alert
 } from 'react-native'

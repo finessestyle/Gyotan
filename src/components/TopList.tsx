@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, TouchableOpacity, StyleSheet, Image
 } from 'react-native'
 import { Link } from 'expo-router'
@@ -55,7 +55,12 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.15)',
     height: 'auto',
     marginHorizontal: 8,
-    marginBottom: 16
+    marginBottom: 16,
+    shadowColor: '#000000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8
   },
   userInfo: {
     height: 60,
@@ -64,8 +69,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 8
   },
   userImage: {
-    width: 48,
-    height: 48,
+    width: 50,
+    height: 50,
     borderRadius: 20
   },
   userName: {

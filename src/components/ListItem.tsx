@@ -1,4 +1,4 @@
-import React, {
+import {
   View, Text, TouchableOpacity, StyleSheet, Image, Alert
 } from 'react-native'
 import { Link } from 'expo-router'
