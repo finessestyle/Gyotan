@@ -5,13 +5,13 @@
     "scheme": "gyotan",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
+    "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.gyotan.gyotanapp",
@@ -21,7 +21,10 @@
     "android": {
       "package": "com.gyotan.Gyotan",
       "versionCode": 1,
-      "permissions": [],
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive_foreground.png",
         "backgroundColor": "#FFFFFF"
@@ -36,7 +39,6 @@
       "expo-font"
     ],
     "extra": {
-      "openWeatherApiKey": "58004a48d0f60b09d56f0ad7d1eafd26",
       "eas": {
         "projectId": "d84dd01a-d9e3-4aff-8016-d61f33ce9674"
       }

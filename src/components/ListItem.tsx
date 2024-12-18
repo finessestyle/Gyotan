@@ -57,10 +57,10 @@ const handlePress = (id: string, post?: Post): void => {
 
 const ListItem = (props: Props): JSX.Element | null => {
   const { post } = props
-  const { title, images, length, weight, updatedAt } = post
+  const { title, images, length, weight, updatedAt, area } = post
   const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
   if (title === null || updatedAt === null || images === null || length === null || weight === null) { return null }
-  const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
+  // const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
   return (
     <Link
       href={{ pathname: '/post/detail', params: { id: post.id } }}
@@ -75,11 +75,11 @@ const ListItem = (props: Props): JSX.Element | null => {
         </View>
         <View>
           <Text style={styles.listItemTitle}>{post.title}</Text>
+          <Text style={styles.listItemDate}>{area}</Text>
           <View style={styles.fishInfo}>
             <Text style={styles.listItemDate}>{length}cm / </Text>
             <Text style={styles.listItemFish}>{weight}g</Text>
           </View>
-          <Text style={styles.listItemDate}>{dateString}</Text>
         </View>
         {auth.currentUser?.uid === post?.userId && (
           <TouchableOpacity style={styles.deleteButton} onPress={() => { handlePress(post.id, post) }}>
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   listItem: {
     backgroundColor: '#ffffff',
     flexDirection: 'row',
-    paddingVertical: 16,
+    paddingVertical: 8,
     paddingHorizontal: 8,
     marginBottom: 8,
     alignItems: 'center',
@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
     height: 'auto'
   },
   listItemImage: {
-    width: 80,
-    height: 64
+    width: 100,
+    height: 70
   },
   listItemTitle: {
     paddingLeft: 16,

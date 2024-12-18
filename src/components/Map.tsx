@@ -15,7 +15,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
       <MapView
         style={styles.map}
         mapType='standard'
-        // scrollEnabled={false}
+        scrollEnabled={false}
         region={{
           latitude,
           longitude,
