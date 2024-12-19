@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   areaBody: {
     borderWidth: 1,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 32
+    marginHorizontal: 8
   },
   title: {
     fontSize: 18,

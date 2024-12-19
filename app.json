@@ -14,12 +14,12 @@
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.gyotan.gyotanapp",
+      "bundleIdentifier": "jp.gyotan.gyotanapp",
       "buildNumber": "1.0.0",
       "newArchEnabled": true
     },
     "android": {
-      "package": "com.gyotan.Gyotan",
+      "package": "jp.gyotan.Gyotan",
       "versionCode": 1,
       "permissions": [
         "ACCESS_FINE_LOCATION",

@@ -13,7 +13,13 @@ const TopList = (props: Props): JSX.Element | null => {
   const { images, updatedAt } = post
   const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
   if (updatedAt === null || images === null) { return null }
-  const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
+  const dateString = post.updatedAt.toDate().toLocaleString('ja-JP', {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
   return (
     <Link
       href={{ pathname: '/post/detail', params: { id: post.id } }}

@@ -638,22 +638,19 @@ const styles = StyleSheet.create({
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
-    paddingVertical: 10,
+    paddingVertical: 6,
     paddingHorizontal: 19,
     borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
-    borderRadius: 4, // 丸みを統一
     color: 'black',
-    paddingRight: 30,
     marginVertical: 8
   },
   inputAndroid: {
     fontSize: 16,
-    paddingVertical: 10, // 高さを統一
+    paddingVertical: 10,
     paddingHorizontal: 19,
-    borderBottomWidth: 1, // ボーダー幅を統一
+    borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
-    borderRadius: 4, // 丸みを統一
     color: 'black',
     paddingRight: 30
   }

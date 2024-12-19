@@ -28,7 +28,7 @@ const Weather: React.FC<Props> = ({ lat, lon }) => {
 
   useEffect(() => {
     const fetchWeather = async (): Promise<void> => {
-      const weatherUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=metric&appid=${openWeatherApiKey}`
+      const weatherUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,alerts&units=metric&appid=${openWeatherApiKey}`
       try {
         const response = await axios.get<WeatherData>(weatherUrl)
         setWeather(response.data)
@@ -74,8 +74,8 @@ const Weather: React.FC<Props> = ({ lat, lon }) => {
         <Image source={{ uri: `https://openweathermap.org/img/w/${icon}.png` }} style={styles.icon} />
         <Text style={styles.wind}>{windDirection}</Text>
         <Text style={styles.wind}>{windSpeed}m</Text>
-        <Text style={styles.tempMax}>最高：{Math.round(weatherData.daily[index].temp.max)}℃</Text>
-        <Text style={styles.tempMin}>最低：{Math.floor(weatherData.daily[index].temp.min)}℃</Text>
+        <Text style={styles.tempMax}>最高：{weatherData.daily[index].temp.max.toFixed(1)}℃</Text>
+        <Text style={styles.tempMin}>最低：{weatherData.daily[index].temp.min.toFixed(1)}℃</Text>
       </View>
     )
   }
