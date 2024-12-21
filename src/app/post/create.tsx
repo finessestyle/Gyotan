@@ -643,16 +643,16 @@ const pickerSelectStyles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
     color: 'black',
-    marginVertical: 8
+    marginVertical: 8,
+    paddingRight: 30
   },
   inputAndroid: {
     fontSize: 16,
-    paddingVertical: 10,
+    paddingVertical: 6,
     paddingHorizontal: 19,
     borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
-    color: 'black',
-    paddingRight: 30
+    color: 'black'
   }
 })
 

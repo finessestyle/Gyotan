@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../config'
 import Button from '../../components/Button'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const handlePress = async (email: string, password: string): Promise<void> => {
   try {
@@ -21,6 +22,8 @@ const handlePress = async (email: string, password: string): Promise<void> => {
 const LogIn = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -35,16 +38,28 @@ const LogIn = (): JSX.Element => {
           returnKeyType='done'
           onChangeText={(text) => { setEmail(text) }}
         />
-        <TextInput
-          style={styles.input}
-          value={password}
-          autoCapitalize='none'
-          secureTextEntry
-          placeholder='パスワードを入力'
-          textContentType='password'
-          returnKeyType='done'
-          onChangeText={(text) => { setPassword(text) }}
-        />
+        <View style={styles.inputcontainer}>
+          <TextInput
+            style={styles.input}
+            value={password}
+            autoCapitalize='none'
+            secureTextEntry={!isPasswordVisible}
+            placeholder='パスワードを入力'
+            textContentType='password'
+            returnKeyType='done'
+            onChangeText={(text) => { setPassword(text) }}
+          />
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
+          >
+            <Icon
+              name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
         <Button label='ログイン' onPress={() => { void handlePress(email, password) }} />
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >
@@ -74,6 +89,7 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   input: {
+    position: 'relative',
     borderWidth: 1,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
@@ -82,6 +98,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     color: '#000000'
+  },
+  inputcontainer: {
+    position: 'relative'
+  },
+  icon: {
+    position: 'absolute',
+    right: 16,
+    top: 24,
+    transform: [{ translateY: -12 }]
   },
   footer: {
     flexDirection: 'row'

@@ -10,6 +10,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
+import Icon from 'react-native-vector-icons/Ionicons'
 
 const handlePress = async (
   email: string,
@@ -72,6 +73,7 @@ const SignUp = (): JSX.Element => {
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -110,16 +112,30 @@ const SignUp = (): JSX.Element => {
           textContentType='emailAddress'
           returnKeyType='done'
         />
-        <TextInput
-          style={styles.input}
-          value={password}
-          onChangeText={(text) => { setPassword(text) }}
-          autoCapitalize='none'
-          secureTextEntry
-          placeholder='パスワードを入力※６文字以上'
-          textContentType='password'
-          returnKeyType='done'
-        />
+
+        <View style={styles.inputcontainer}>
+          <TextInput
+            style={styles.input}
+            value={password}
+            autoCapitalize='none'
+            secureTextEntry={!isPasswordVisible}
+            placeholder='パスワードを入力'
+            textContentType='password'
+            returnKeyType='done'
+            onChangeText={(text) => { setPassword(text) }}
+          />
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
+          >
+            <Icon
+              name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
+
         <TextInput
           style={styles.input}
           value={profile}
@@ -181,6 +197,15 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     marginBottom: 16
+  },
+  inputcontainer: {
+    position: 'relative'
+  },
+  icon: {
+    position: 'absolute',
+    right: 16,
+    top: 24,
+    transform: [{ translateY: -12 }]
   },
   imagePicker: {
     fontSize: 16
