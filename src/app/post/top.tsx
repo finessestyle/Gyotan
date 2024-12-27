@@ -45,6 +45,8 @@ const top = (): JSX.Element => {
       <Text style={styles.title}>最新釣果</Text>
       <FlatList
         data={posts}
+        numColumns={2}
+        style={{ marginHorizontal: 8 }}
         renderItem={({ item }) => <TopList post={item} /> }
       />
     </View>

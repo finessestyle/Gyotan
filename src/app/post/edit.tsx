@@ -23,6 +23,7 @@ const handlePress = async (
   lure: string,
   lureColor: string,
   catchFish: number | null,
+  area: string,
   fishArea: string
 ): Promise<void> => {
   try {
@@ -40,6 +41,10 @@ const handlePress = async (
     }
     if (content === '') {
       Alert.alert('エラー', '釣果内容を入力してください')
+      return
+    }
+    if (area === '') {
+      Alert.alert('エラー', '釣果エリアを選択してください')
       return
     }
     if (fishArea === '') {
@@ -103,6 +108,7 @@ const handlePress = async (
       lure,
       lureColor,
       catchFish,
+      area,
       fishArea,
       exifData: exifData.length > 0 ? exifData : null,
       updatedAt: Timestamp.fromDate(new Date())
@@ -120,6 +126,7 @@ const Edit = (): JSX.Element => {
   const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [weather, setWeather] = useState('')
   const [content, setContent] = useState('')
+  const [area, setArea] = useState('')
   const [fishArea, setFishArea] = useState('')
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
@@ -127,6 +134,101 @@ const Edit = (): JSX.Element => {
   const [lureColor, setLureColor] = useState('')
   const [catchFish, setCatchFish] = useState<number | null>(null)
   const [category, setCategory] = useState<string | null>(null)
+
+  const hokkoNarea = [
+    { label: '海津漁港エリア', value: '海津漁港エリア' },
+    { label: '海津大崎エリア', value: '海津大崎エリア' },
+    { label: '大浦湾エリア', value: '大浦湾エリア' },
+    { label: 'アミレンタルボート前エリア', value: 'アミレンタルボート前エリア' },
+    { label: '奥出湾エリア', value: '奥出湾エリア' },
+    { label: '黒土崎エリア', value: '黒土崎エリア' },
+    { label: '月出ワンドエリア', value: '月出ワンドエリア' },
+    { label: '塩津浜エリア', value: '塩津浜エリア' },
+    { label: '藤ケ崎エリア', value: '藤ケ崎エリア' },
+    { label: '飯浦エリア', value: '飯浦エリア' },
+    { label: '西野放水路エリア', value: '西野放水路エリア' },
+    { label: '片山石積みエリア', value: '片山石積みエリア' },
+    { label: '野田沼エリア', value: '野田沼エリア' }
+  ]
+
+  const hokkoEarea = [
+    { label: '姉川河口エリア', value: '姉川河口エリア' },
+    { label: '南浜エリア', value: '南浜エリア' },
+    { label: 'KBセーレン前エリア', value: 'KBセーレン前エリア' },
+    { label: '長浜港エリア', value: '長浜港エリア' },
+    { label: '神明浜エリア', value: '神明浜エリア' },
+    { label: '天野川河口エリア', value: '天野川河口エリア' },
+    { label: '入江橋エリア', value: '入江橋エリア' },
+    { label: '蒼の湖邸前エリア', value: '蒼の湖邸前エリア' },
+    { label: '彦根新港エリア', value: '彦根新港エリア' },
+    { label: '旧彦根港エリア', value: '旧彦根港エリア' },
+    { label: '芹川河口エリア', value: '芹川河口エリア' },
+    { label: '宇曽川河口エリア', value: '宇曽川河口エリア' },
+    { label: '野田沼エリア', value: '野田沼エリア' },
+    { label: '曽根沼エリア', value: '曽根沼エリア' },
+    { label: '文禄川河口エリア', value: '文禄川河口エリア' },
+    { label: '神上沼エリア', value: '神上沼エリア' },
+    { label: '愛知川河口エリア', value: '愛知川河口エリア' },
+    { label: '大同川エリア１', value: '大同川エリア１' },
+    { label: '大同川エリア２', value: '大同川エリア２' },
+    { label: '伊庭内湖エリア１', value: '伊庭内湖エリア１' },
+    { label: '伊庭内湖エリア２', value: '伊庭内湖エリア２' },
+    { label: '長命寺川エリア', value: '長命寺川エリア' },
+    { label: '吉川浄水場前エリア', value: '吉川浄水場前エリア' },
+    { label: '吉川漁港エリア', value: '吉川漁港エリア' }
+  ]
+
+  const hokkoWarea = [
+    { label: '知内漁港エリア', value: '知内漁港エリア' },
+    { label: '貫川内湖エリア', value: '貫川内湖エリア' },
+    { label: '浜分沼エリア', value: '浜分沼エリア' },
+    { label: '外ヶ浜風車前エリア', value: '外ヶ浜風車前エリア' },
+    { label: '安曇川・新堀船溜まり', value: '安曇川・新堀船溜まり' },
+    { label: 'エカイ・十ヶ坪沼エリア', value: 'エカイ・十ヶ坪沼エリア' },
+    { label: '松ノ木内湖エリア', value: '松ノ木内湖エリア' },
+    { label: '萩の浜エリア', value: '萩の浜エリア' },
+    { label: '大溝港エリア', value: '大溝港エリア' },
+    { label: '乙女ヶ池エリア', value: '乙女ヶ池エリア' },
+    { label: '滝川河口エリア', value: '滝川河口エリア' },
+    { label: 'レイクオーツカ前エリア', value: 'レイクオーツカ前エリア' },
+    { label: '近江舞子・内湖エリア', value: '近江舞子・内湖エリア' },
+    { label: '大谷川河口エリア', value: '大谷川河口エリア' },
+    { label: '木戸川エリア', value: '木戸川エリア' },
+    { label: '八屋戸川エリア', value: '八屋戸川エリア' },
+    { label: '和邇川河口エリア', value: '和邇川河口エリア' },
+    { label: '真野浜周辺エリア', value: '真野浜周辺エリア' },
+    { label: '米プラザ前エリア', value: '米プラザ前エリア' }
+  ]
+
+  const nannkoEarea = [
+    { label: '木浜埋立地１エリア', value: '木浜埋立地１エリア' },
+    { label: '木浜埋立地２エリア', value: '木浜埋立地２エリア' },
+    { label: '赤野井ワンド', value: '赤野井ワンド' },
+    { label: '烏丸半島周辺エリア', value: '烏丸半島周辺エリア' },
+    { label: '平湖・柳平湖エリア', value: '平湖・柳平湖エリア' },
+    { label: '北山田漁港周辺エリア', value: '北山田漁港周辺エリア' },
+    { label: '矢橋帰帆島周辺エリア', value: '矢橋帰帆島周辺エリア' },
+    { label: '漕艇場護岸エリア', value: '漕艇場護岸エリア' },
+    { label: '瀬田川大橋周辺エリア', value: '瀬田川大橋周辺エリア' },
+    { label: '瀬田川・南郷洗堰北エリア', value: '瀬田川・南郷洗堰北エリア' }
+  ]
+
+  const nannkoWarea = [
+    { label: 'カヤ池エリア', value: 'カヤ池エリア' },
+    { label: '堅田港エリア', value: '堅田港エリア' },
+    { label: 'なぎさ漁港エリア', value: 'なぎさ漁港エリア' },
+    { label: '天神川河口エリア', value: '天神川河口エリア' },
+    { label: '山ノ下湾エリア', value: '山ノ下湾エリア' },
+    { label: '雄琴港エリア', value: '雄琴港エリア' },
+    { label: 'カネカ石積み護岸エリア', value: 'カネカ石積み護岸エリア' },
+    { label: '阪本赤鳥居エリア', value: '阪本赤鳥居エリア' },
+    { label: 'KKRホテルびわこエリア', value: 'KKRホテルびわこエリア' },
+    { label: '浜大津エリア', value: '浜大津エリア' },
+    { label: '由美浜・におの浜エリア１', value: '由美浜・におの浜エリア１' },
+    { label: '由美浜・におの浜エリア２', value: '由美浜・におの浜エリア２' },
+    { label: '膳所港・城跡公園周辺エリア', value: '膳所港・城跡公園周辺エリア' },
+    { label: 'なぎさ公園・青嵐の道エリア', value: 'なぎさ公園・青嵐の道エリア' }
+  ]
 
   const softLures = [
     { label: 'スモラバ', value: 'スモラバ' },
@@ -207,10 +309,24 @@ const Edit = (): JSX.Element => {
     { label: 'ツートン', value: 'ツートン' }
   ]
 
+  const areaOptions =
+  fishArea === '北湖北'
+    ? hokkoNarea
+    : fishArea === '北湖東'
+      ? hokkoEarea
+      : fishArea === '北湖西'
+        ? hokkoWarea
+        : fishArea === '南湖東'
+          ? nannkoEarea
+          : fishArea === '南湖西'
+            ? nannkoWarea
+            : fishArea === null || fishArea === undefined
+              ? []
+              : []
+
   const lureOptions = category === 'ソフトルアー' ? softLures : hardLures
   const lureColorOptions = category === 'ソフトルアー' ? softLureColors : hardLureColors
   const maxLength = 100
-
 
   const pickImage = async (): Promise<void> => {
     const result = await ImageMultiplePicker.launchImageLibraryAsync({
@@ -280,7 +396,7 @@ const Edit = (): JSX.Element => {
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
-          maxLength={15}
+          maxLength={12}
         />
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
@@ -358,6 +474,20 @@ const Edit = (): JSX.Element => {
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: '' }}
         />
+        {fishArea !== null && (
+          <RNPickerSelect
+            value={area}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setArea(value)
+              }
+            }}
+            items={areaOptions}
+            placeholder={{ label: 'エリアを選択してください', value: '' }}
+            style={pickerSelectStyles}
+          />
+        )}
+
         <Text style={styles.textTitle}>サイズ</Text>
         <TextInput
           value={length !== null ? String(length) : ''}
@@ -445,6 +575,7 @@ const Edit = (): JSX.Element => {
             lure,
             lureColor,
             catchFish,
+            area,
             fishArea
           )
         }}

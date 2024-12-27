@@ -67,18 +67,17 @@ const ListItem = (props: Props): JSX.Element | null => {
       asChild
     >
       <TouchableOpacity style={styles.listItem}>
-        <View>
+        <View style={styles.fishImage}>
+          <View>
+            <Text>{post?.area}</Text>
+          </View>
           <Image
             style={styles.listItemImage}
             source={{ uri: imageUri }}
           />
-        </View>
-        <View>
-          <Text style={styles.listItemTitle}>{post.title}</Text>
-          <Text style={styles.listItemDate}>{area}</Text>
           <View style={styles.fishInfo}>
-            <Text style={styles.listItemDate}>{length}cm / </Text>
-            <Text style={styles.listItemFish}>{weight}g</Text>
+            <Text style={styles.length}>{post?.length}cm / </Text>
+            <Text style={styles.weight}>{post?.weight}g</Text>
           </View>
         </View>
         {auth.currentUser?.uid === post?.userId && (
@@ -93,43 +92,42 @@ const ListItem = (props: Props): JSX.Element | null => {
 
 const styles = StyleSheet.create({
   listItem: {
-    backgroundColor: '#ffffff',
-    flexDirection: 'row',
-    paddingVertical: 8,
-    paddingHorizontal: 8,
-    marginBottom: 8,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.15)',
     borderRadius: 8,
-    height: 'auto'
+    width: '50%',
+    marginBottom: 8,
+    shadowColor: '#000000',
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8
+  },
+  fishImage: {
+    position: 'relative',
+    marginHorizontal: 3,
+    marginVertical: 3
   },
   listItemImage: {
-    width: 100,
-    height: 70
-  },
-  listItemTitle: {
-    paddingLeft: 16,
-    fontSize: 16,
-    lineHeight: 16
-  },
-  listItemDate: {
-    paddingLeft: 16,
-    fontSize: 12,
-    lineHeight: 16,
-    color: '#848484'
-  },
-  listItemFish: {
-    fontSize: 12,
-    lineHeight: 16,
-    color: '#848484'
+    height: 120,
+    borderRadius: 8
   },
   fishInfo: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: 4,
+    right: 8
+  },
+  length: {
+    color: '#ffffff',
+    fontSize: 14
+  },
+  weight: {
+    color: '#ffffff',
+    fontSize: 14
   },
   deleteButton: {
     position: 'absolute',
-    right: 19
+    top: 20,
+    right: 5
   }
 })
 

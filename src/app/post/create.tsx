@@ -321,6 +321,7 @@ const Create = (): JSX.Element => {
             : fishArea === null || fishArea === undefined
               ? []
               : []
+
   const lureOptions = category === 'ソフトルアー' ? softLures : hardLures
   const lureColorOptions = category === 'ソフトルアー' ? softLureColors : hardLureColors
   const maxLength = 100
@@ -355,7 +356,7 @@ const Create = (): JSX.Element => {
           placeholder='タイトルを入力'
           keyboardType='default'
           returnKeyType='done'
-          maxLength={13}
+          maxLength={12}
         />
 
         <Text style={styles.textTitle}>ファイルを選択</Text>
@@ -638,21 +639,24 @@ const styles = StyleSheet.create({
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 16,
-    paddingVertical: 6,
+    paddingVertical: 4,
     paddingHorizontal: 19,
     borderBottomWidth: 1,
     borderBottomColor: '#D0D0D0',
+    borderRadius: 4,
     color: 'black',
-    marginVertical: 8,
-    paddingRight: 30
+    paddingRight: 30,
+    marginVertical: 4
   },
   inputAndroid: {
     fontSize: 16,
-    paddingVertical: 6,
     paddingHorizontal: 19,
-    borderBottomWidth: 1,
+    paddingVertical: 8,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#D0D0D0',
-    color: 'black'
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30
   }
 })
 

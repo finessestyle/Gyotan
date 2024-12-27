@@ -10,31 +10,19 @@ interface Props {
 
 const TopList = (props: Props): JSX.Element | null => {
   const { post } = props
-  const { images, updatedAt } = post
+  const { images } = post
   const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
-  if (updatedAt === null || images === null) { return null }
-  const dateString = post.updatedAt.toDate().toLocaleString('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
+  if (images === null) { return null }
   return (
     <Link
       href={{ pathname: '/post/detail', params: { id: post.id } }}
       asChild
     >
       <TouchableOpacity style={styles.listItem}>
-        <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
-          <TouchableOpacity>
-            <View style={styles.userInfo} >
-              {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
-              <Text style={styles.userName}>{post?.userName}さん</Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
         <View style={styles.fishImage}>
+          <View>
+            <Text>{post?.title}</Text>
+          </View>
           <Image
             style={styles.listItemImage}
             source={{ uri: imageUri }}
@@ -44,9 +32,6 @@ const TopList = (props: Props): JSX.Element | null => {
             <Text style={styles.weight}>{post?.weight}g</Text>
           </View>
         </View>
-        <View style={styles.date}>
-          <Text style={styles.listItemDate}>投稿日：{dateString}</Text>
-        </View>
       </TouchableOpacity>
     </Link>
   )
@@ -54,71 +39,38 @@ const TopList = (props: Props): JSX.Element | null => {
 
 const styles = StyleSheet.create({
   listItem: {
-    backgroundColor: '#ffffff',
-    width: 'auto',
-    borderWidth: 1,
-    borderRadius: 16,
-    borderColor: 'rgba(0,0,0,0.15)',
+    borderRadius: 8,
+    width: '50%',
     height: 'auto',
-    marginHorizontal: 8,
-    marginBottom: 16,
+    marginBottom: 8,
     shadowColor: '#000000',
     shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowRadius: 8,
     shadowOffset: { width: 0, height: 8 },
     elevation: 8
   },
-  userInfo: {
-    height: 60,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 8
-  },
-  userImage: {
-    width: 50,
-    height: 50,
-    borderRadius: 20
-  },
-  userName: {
-    paddingLeft: 16,
-    fontSize: 20,
-    lineHeight: 32,
-    color: '#467FD3'
-  },
   fishImage: {
-    position: 'relative'
+    position: 'relative',
+    marginHorizontal: 4,
+    marginVertical: 4
+  },
+  listItemImage: {
+    height: 120,
+    borderRadius: 8
   },
   fishInfo: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 8,
-    right: 24
-  },
-  fishArea: {
-    color: '#ffffff',
-    fontSize: 24
+    bottom: 4,
+    right: 8
   },
   length: {
     color: '#ffffff',
-    fontSize: 24
+    fontSize: 14
   },
   weight: {
     color: '#ffffff',
-    fontSize: 24
-  },
-  listItemImage: {
-    width: 'auto',
-    height: 300
-  },
-  date: {
-    marginVertical: 8,
-    marginHorizontal: 8,
-    alignItems: 'flex-start'
-  },
-  listItemDate: {
-    fontSize: 16,
-    lineHeight: 16,
-    color: '#848484'
+    fontSize: 14
   }
 })
 

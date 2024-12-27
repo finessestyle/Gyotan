@@ -43,29 +43,28 @@ const List = (): JSX.Element => {
       setPosts(remotePosts)
     })
     return unsubscribe
-  }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行
+  }, [selectedArea])
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
-        <Text style={styles.title}>エリア釣果</Text>
-        <View style={styles.tabs}>
-          {areas.map((area) => (
-            <TouchableOpacity
-              key={area}
-              style={[styles.tab, selectedArea === area && styles.selectedTab]}
-              onPress={() => { setSelectedArea(area) }}
-            >
-              <Text style={styles.tabText}>{area}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-        <FlatList
-          data={posts}
-          renderItem={({ item }) => <ListItem post={item} /> }
-          style={{ marginHorizontal: 8 }}
-        />
+      <Text style={styles.title}>エリア釣果</Text>
+      <View style={styles.tabs}>
+        {areas.map((area) => (
+          <TouchableOpacity
+            key={area}
+            style={[styles.tab, selectedArea === area && styles.selectedTab]}
+            onPress={() => { setSelectedArea(area) }}
+          >
+            <Text style={styles.tabText}>{area}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
+      <FlatList
+        data={posts}
+        numColumns={2}
+        renderItem={({ item }) => <ListItem post={item} /> }
+        style={{ marginHorizontal: 8 }}
+      />
     </View>
   )
 }

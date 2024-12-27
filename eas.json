@@ -1,7 +1,4 @@
 {
-  "cli": {
-    "appVersionSource": "remote"
-  },
   "build": {
     "production": {
       "env": {

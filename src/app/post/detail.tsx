@@ -66,16 +66,16 @@ const Detail = (): JSX.Element => {
             latitude={post?.exifData[0]?.latitude ?? 0}
             longitude={post?.exifData[0]?.longitude ?? 0}
           />
-          <View style={styles.fishTime}>
-            <Text>
-              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
-            </Text>
-          </View>
           <Swiper style={styles.swiper} showsButtons={true}>
             {postImages.map((uri, index) => (
               <Image key={index} source={{ uri }} style={styles.fishImage} />
             ))}
           </Swiper>
+          <View style={styles.fishTime}>
+            <Text>
+              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
+            </Text>
+          </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
               <Text>天気 : {post?.weather}</Text>
@@ -134,15 +134,15 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
     borderBottomWidth: 0,
-    height: 60,
+    height: 40,
     flexDirection: 'row',
     paddingHorizontal: 8,
     alignItems: 'center',
     borderColor: '#B0B0B0'
   },
   userImage: {
-    width: 48,
-    height: 48,
+    width: 30,
+    height: 30,
     borderRadius: 20
   },
   userName: {
