@@ -11,18 +11,19 @@ interface Post {
   userId: string
   userName: string
   userImage: string
-  title: string
   images: string[]
-  weather: string
-  content: string
-  length: number
-  weight: number
-  lure: string
-  lureColor: string
-  catchFish: number
+  exifData: ExifData[]
   area: string
   fishArea: string
-  exifData: ExifData[]
+  weather: string
+  lure: string
+  lureColor: string
+  lureAction: string
+  structure: string
+  cover: string
+  length: number
+  weight: number
+  catchFish: number
   updatedAt: Timestamp
 }
 

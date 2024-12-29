@@ -57,9 +57,9 @@ const handlePress = (id: string, post?: Post): void => {
 
 const ListItem = (props: Props): JSX.Element | null => {
   const { post } = props
-  const { title, images, length, weight, updatedAt, area } = post
+  const { images, length, weight, updatedAt, area } = post
   const imageUri = Array.isArray(post.images) && post.images.length > 0 ? post.images[0] : undefined
-  if (title === null || updatedAt === null || images === null || length === null || weight === null) { return null }
+  if (updatedAt === null || images === null || length === null || weight === null || area === null) { return null }
   // const dateString = post.updatedAt.toDate().toLocaleString('ja-JP')
   return (
     <Link
@@ -69,7 +69,7 @@ const ListItem = (props: Props): JSX.Element | null => {
       <TouchableOpacity style={styles.listItem}>
         <View style={styles.fishImage}>
           <View>
-            <Text>{post?.area}</Text>
+            <Text style={styles.area}>{post?.area}</Text>
           </View>
           <Image
             style={styles.listItemImage}
@@ -105,6 +105,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginHorizontal: 3,
     marginVertical: 3
+  },
+  area: {
+    color: '#B0B0B0'
   },
   listItemImage: {
     height: 120,

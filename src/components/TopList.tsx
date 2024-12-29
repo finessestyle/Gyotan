@@ -20,9 +20,6 @@ const TopList = (props: Props): JSX.Element | null => {
     >
       <TouchableOpacity style={styles.listItem}>
         <View style={styles.fishImage}>
-          <View>
-            <Text>{post?.title}</Text>
-          </View>
           <Image
             style={styles.listItemImage}
             source={{ uri: imageUri }}
@@ -40,22 +37,19 @@ const TopList = (props: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   listItem: {
     borderRadius: 8,
-    width: '50%',
+    width: '49%',
     height: 'auto',
     marginBottom: 8,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8
+    marginHorizontal: 2
   },
   fishImage: {
-    position: 'relative',
-    marginHorizontal: 4,
-    marginVertical: 4
+    position: 'relative'
+  },
+  title: {
+    color: '#B0B0B0'
   },
   listItemImage: {
-    height: 120,
+    height: 150,
     borderRadius: 8
   },
   fishInfo: {

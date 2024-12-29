@@ -23,19 +23,18 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, title, images, weather, content, length, weight, lure, lureColor, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, lureColor, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
       setPost({
         id: postDoc.id,
         userId,
         userName,
         userImage,
-        title,
         images,
         weather,
-        content,
         length,
         weight,
         lure,
+        lureAction,
         lureColor,
         catchFish,
         area,
@@ -47,17 +46,16 @@ const Detail = (): JSX.Element => {
     return unsubscribe
   }, [id])
 
+  useEffect(() => {
+    const newReport =
+    `今日は${area}で釣りをしました。天気は${weather}で、${lure}（カラー: ${lureColor}）を使い、
+    ${lureAction}のアクションで狙いました。釣果は${length}（${weight}）を含む${catchFish}。とても満足のいく一日でした！`
+    setReport(newReport)
+  }, [weather, area, lure, lureColor, lureAction, length, weight, catchFish])
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
-        <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
-          <TouchableOpacity>
-            <View style={styles.userInfo} >
-              {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
-              <Text style={styles.userName}>{post?.userName}さん</Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
         <View style={styles.postBody}>
           <View style={styles.fishArea}>
             <Text>{post?.fishArea} : {post?.area}</Text>
@@ -73,7 +71,12 @@ const Detail = (): JSX.Element => {
           </Swiper>
           <View style={styles.fishTime}>
             <Text>
-              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP')}
+              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP', {
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit',
+              hour: '2-digit'
+            })}
             </Text>
           </View>
           <View style={styles.fishingInfomation}>
@@ -100,6 +103,15 @@ const Detail = (): JSX.Element => {
               <Text>カラー : {post?.lureColor}</Text>
             </View>
           </View>
+          <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
+            <TouchableOpacity>
+              <View style={styles.userInfo} >
+                <Text>投稿者 : </Text>
+                {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
+                <Text style={styles.userName}>{post?.userName}さん</Text>
+              </View>
+            </TouchableOpacity>
+          </Link>
           <View style={styles.fishInfo}>
             <Text>-釣果状況-</Text>
             <Text style={styles.fishText}>
@@ -129,40 +141,15 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     marginHorizontal: 8
   },
-  userInfo: {
-    borderWidth: 1,
-    borderTopRightRadius: 8,
-    borderTopLeftRadius: 8,
-    borderBottomWidth: 0,
-    height: 40,
-    flexDirection: 'row',
-    paddingHorizontal: 8,
-    alignItems: 'center',
-    borderColor: '#B0B0B0'
-  },
-  userImage: {
-    width: 30,
-    height: 30,
-    borderRadius: 20
-  },
-  userName: {
-    paddingLeft: 16,
-    fontSize: 20,
-    lineHeight: 32,
-    color: '#467FD3'
-  },
   postBody: {
     borderWidth: 1,
     borderColor: '#B0B0B0',
     marginBottom: 10,
     height: 'auto',
-    borderBottomRightRadius: 8,
-    borderBottomLeftRadius: 8
+    borderRadius: 8
   },
   fishArea: {
     height: 32,
-    borderBottomWidth: 1,
-    borderBottomColor: '#B0B0B0',
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -201,6 +188,26 @@ const styles = StyleSheet.create({
   fishImage: {
     height: 322,
     width: 'auto'
+  },
+  userInfo: {
+    height: 32,
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    borderColor: '#B0B0B0'
+  },
+  userImage: {
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    paddingLeft: 8
+  },
+  userName: {
+    paddingLeft: 8,
+    fontSize: 16,
+    lineHeight: 32,
+    color: '#467FD3'
   },
   fishInfo: {
     height: 'auto',
