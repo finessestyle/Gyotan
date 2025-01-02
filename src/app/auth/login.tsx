@@ -54,7 +54,7 @@ const LogIn = (): JSX.Element => {
             onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
           >
             <Icon
-              name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+              name={isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
               size={24}
               color="gray"
             />

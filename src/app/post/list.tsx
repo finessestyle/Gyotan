@@ -7,7 +7,7 @@ import { db } from '../../config'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
 
-const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
+const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
 
 const List = (): JSX.Element => {
   const [posts, setPosts] = useState<Post[]>([])
@@ -19,7 +19,7 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, lure, lureColor, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureColor, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -32,6 +32,9 @@ const List = (): JSX.Element => {
           weight,
           lure,
           lureColor,
+          lureAction,
+          structure,
+          cover,
           catchFish,
           area,
           fishArea,
@@ -46,7 +49,7 @@ const List = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>エリア釣果</Text>
+      <Text style={styles.title}>エリア別釣果</Text>
       <View style={styles.tabs}>
         {areas.map((area) => (
           <TouchableOpacity

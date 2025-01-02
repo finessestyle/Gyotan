@@ -1,58 +1,11 @@
 import {
-  View, Text, TouchableOpacity, StyleSheet, Image, Alert
+  View, Text, TouchableOpacity, StyleSheet, Image
 } from 'react-native'
 import { Link } from 'expo-router'
-import { deleteDoc, doc } from 'firebase/firestore'
-import { ref, deleteObject, listAll } from 'firebase/storage'
 import { type Post } from '../../types/post'
-import { auth, db, storage } from '../config'
-import Icon from '../components/Icon'
 
 interface Props {
   post: Post
-}
-
-const deleteFiles = async (postId: string): Promise<void> => {
-  try {
-    // Firestoreのドキュメント削除
-    const postRef = doc(db, 'posts', postId)
-    await deleteDoc(postRef)
-
-    // posts/{postId} 内のすべてのファイルを削除
-    const postRefInStorage = ref(storage, `posts/${postId}`)
-    const { items } = await listAll(postRefInStorage)
-
-    for (const itemRef of items) {
-      await deleteObject(itemRef)
-    }
-
-    Alert.alert('削除が完了しました')
-  } catch (error) {
-    console.log(error)
-    Alert.alert('削除に失敗しました')
-  }
-}
-
-const handlePress = (id: string, post?: Post): void => {
-  if (post === null) {
-    Alert.alert('投稿が見つかりませんでした')
-    return
-  }
-  if (auth.currentUser?.uid === post?.userId) {
-    Alert.alert('投稿を削除します', 'よろしいですか？', [
-      {
-        text: 'キャンセル',
-        style: 'cancel'
-      },
-      {
-        text: '投稿を削除する',
-        style: 'destructive',
-        onPress: () => {
-          void deleteFiles(id)
-        }
-      }
-    ])
-  }
 }
 
 const ListItem = (props: Props): JSX.Element | null => {
@@ -80,11 +33,6 @@ const ListItem = (props: Props): JSX.Element | null => {
             <Text style={styles.weight}>{post?.weight}g</Text>
           </View>
         </View>
-        {auth.currentUser?.uid === post?.userId && (
-          <TouchableOpacity style={styles.deleteButton} onPress={() => { handlePress(post.id, post) }}>
-            <Icon name='delete' size={32} color='#B0B0B0' />
-          </TouchableOpacity>
-        )}
       </TouchableOpacity>
     </Link>
   )
@@ -93,24 +41,19 @@ const ListItem = (props: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   listItem: {
     borderRadius: 8,
-    width: '50%',
+    width: '49%',
+    height: 'auto',
     marginBottom: 8,
-    shadowColor: '#000000',
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 8
+    marginHorizontal: 2
   },
   fishImage: {
-    position: 'relative',
-    marginHorizontal: 3,
-    marginVertical: 3
+    position: 'relative'
   },
   area: {
     color: '#B0B0B0'
   },
   listItemImage: {
-    height: 120,
+    height: 140,
     borderRadius: 8
   },
   fishInfo: {
@@ -126,11 +69,6 @@ const styles = StyleSheet.create({
   weight: {
     color: '#ffffff',
     fontSize: 14
-  },
-  deleteButton: {
-    position: 'absolute',
-    top: 20,
-    right: 5
   }
 })
 

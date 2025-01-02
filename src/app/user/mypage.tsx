@@ -91,7 +91,7 @@ const handleDeleteUser = async (userId: string): Promise<void> => {
 }
 
 const Mypage = (): JSX.Element => {
-  const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
+  const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
@@ -124,15 +124,14 @@ const Mypage = (): JSX.Element => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
         const {
-          userId, userName, userImage, title, images, weather, content, length,
-          weight, lure, lureColor, catchFish, fishArea, area, exifData, updatedAt
+          userId, userName, userImage, images, weather, content, length,
+          weight, lure, lureColor, lureAction, structure, cover, catchFish, fishArea, area, exifData, updatedAt
         } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
           userName,
           userImage,
-          title,
           images,
           weather,
           content,
@@ -140,6 +139,9 @@ const Mypage = (): JSX.Element => {
           weight,
           lure,
           lureColor,
+          lureAction,
+          structure,
+          cover,
           catchFish,
           fishArea,
           area,
@@ -205,6 +207,7 @@ const Mypage = (): JSX.Element => {
         </View>
         <FlatList
           data={posts}
+          numColumns={2}
           renderItem={({ item }) => <ListItem post={item} />}
         />
       </View>

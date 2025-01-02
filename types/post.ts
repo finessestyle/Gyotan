@@ -25,6 +25,7 @@ interface Post {
   weight: number
   catchFish: number
   updatedAt: Timestamp
+  content: string
 }
 
 export type { Post }

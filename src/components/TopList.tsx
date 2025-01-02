@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     color: '#B0B0B0'
   },
   listItemImage: {
-    height: 150,
+    height: 140,
     borderRadius: 8
   },
   fishInfo: {

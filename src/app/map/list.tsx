@@ -10,7 +10,7 @@ import MapListItem from '../../components/MapListItem'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
 
-const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
+const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
 
 const handlePress = (): void => {
   router.push('/map/create')
@@ -43,7 +43,7 @@ const List = (): JSX.Element => {
       setMaps(remoteMaps)
     })
     return unsubscribe
-  }, [selectedArea]) // selectedAreaが変更されたら再度クエリを実行
+  }, [selectedArea])
 
   return (
     <View style={styles.container}>

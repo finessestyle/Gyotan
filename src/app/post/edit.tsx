@@ -12,6 +12,13 @@ import RNPickerSelect from 'react-native-picker-select'
 import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 
+interface Area {
+  label: string
+  value: string
+  latitude: number
+  longitude: number
+}
+
 const handlePress = async (
   id: string,
   images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
@@ -25,7 +32,12 @@ const handlePress = async (
   cover: string,
   length: number | null,
   weight: number | null,
-  catchFish: number | null
+  catchFish: number | null,
+  hokkoNarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
+  hokkoEarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
+  hokkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
+  nannkoEarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
+  nannkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>
 ): Promise<void> => {
   try {
     if (images.length === 0) {
@@ -94,9 +106,17 @@ const handlePress = async (
       return await getDownloadURL(storageRef)
     }))
 
+    const biwakoAreas = [
+      ...hokkoNarea,
+      ...hokkoEarea,
+      ...hokkoWarea,
+      ...nannkoEarea,
+      ...nannkoWarea
+    ]
+    const selectedArea = biwakoAreas.find(area => area.value === fishArea)
     const exifData = images.map(image => ({
-      latitude: image.exif?.GPSLatitude ?? null,
-      longitude: image.exif?.GPSLongitude ?? null,
+      latitude: image.exif?.GPSLatitude ?? selectedArea?.latitude ?? null,
+      longitude: image.exif?.GPSLongitude ?? selectedArea?.longitude ?? null,
       dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
@@ -142,99 +162,100 @@ const Edit = (): JSX.Element => {
   const [catchFish, setCatchFish] = useState<number | null>(null)
   const [category, setCategory] = useState<string | null>(null)
 
-  const hokkoNarea = [
-    { label: '海津漁港エリア', value: '海津漁港エリア' },
-    { label: '海津大崎エリア', value: '海津大崎エリア' },
-    { label: '大浦湾エリア', value: '大浦湾エリア' },
-    { label: 'アミレンタルボート前エリア', value: 'アミレンタルボート前エリア' },
-    { label: '奥出湾エリア', value: '奥出湾エリア' },
-    { label: '黒土崎エリア', value: '黒土崎エリア' },
-    { label: '月出ワンドエリア', value: '月出ワンドエリア' },
-    { label: '塩津浜エリア', value: '塩津浜エリア' },
-    { label: '藤ケ崎エリア', value: '藤ケ崎エリア' },
-    { label: '飯浦エリア', value: '飯浦エリア' },
-    { label: '西野放水路エリア', value: '西野放水路エリア' },
-    { label: '片山石積みエリア', value: '片山石積みエリア' },
-    { label: '野田沼エリア', value: '野田沼エリア' }
+  const hokkoNarea: Area[] = [
+    { label: '海津大崎エリア', value: '海津大崎エリア', latitude: 35.4463, longitude: 136.091 },
+    { label: '大浦湾エリア', value: '大浦湾エリア', latitude: 35.4835, longitude: 136.117 },
+    { label: 'アミレンタルボート前エリア', value: 'アミレンタルボート前エリア', latitude: 35.4834, longitude: 136.129 },
+    { label: '奥出湾エリア', value: '奥出湾エリア', latitude: 35.4794, longitude: 136.129 },
+    { label: '黒土崎エリア', value: '黒土崎エリア', latitude: 35.4557, longitude: 136.132 },
+    { label: '月出ワンドエリア', value: '月出ワンドエリア', latitude: 35.5025, longitude: 136.164 },
+    { label: '塩津浜エリア', value: '塩津浜エリア', latitude: 35.5127, longitude: 136.164 },
+    { label: '藤ケ崎エリア', value: '藤ケ崎エリア', latitude: 35.4999, longitude: 136.173 },
+    { label: '飯浦エリア', value: '飯浦エリア', latitude: 35.5034, longitude: 136.182 },
+    { label: '西野放水路エリア', value: '西野放水路エリア', latitude: 35.4664, longitude: 136.193 },
+    { label: '片山石積みエリア', value: '片山石積みエリア', latitude: 35.4557, longitude: 136.198 },
+    { label: '野田沼エリア', value: '野田沼エリア', latitude: 35.4505, longitude: 136.198 }
   ]
 
-  const hokkoEarea = [
-    { label: '姉川河口エリア', value: '姉川河口エリア' },
-    { label: '南浜エリア', value: '南浜エリア' },
-    { label: 'KBセーレン前エリア', value: 'KBセーレン前エリア' },
-    { label: '長浜港エリア', value: '長浜港エリア' },
-    { label: '神明浜エリア', value: '神明浜エリア' },
-    { label: '天野川河口エリア', value: '天野川河口エリア' },
-    { label: '入江橋エリア', value: '入江橋エリア' },
-    { label: '蒼の湖邸前エリア', value: '蒼の湖邸前エリア' },
-    { label: '彦根新港エリア', value: '彦根新港エリア' },
-    { label: '旧彦根港エリア', value: '旧彦根港エリア' },
-    { label: '芹川河口エリア', value: '芹川河口エリア' },
-    { label: '宇曽川河口エリア', value: '宇曽川河口エリア' },
-    { label: '野田沼エリア', value: '野田沼エリア' },
-    { label: '曽根沼エリア', value: '曽根沼エリア' },
-    { label: '文禄川河口エリア', value: '文禄川河口エリア' },
-    { label: '神上沼エリア', value: '神上沼エリア' },
-    { label: '愛知川河口エリア', value: '愛知川河口エリア' },
-    { label: '大同川エリア１', value: '大同川エリア１' },
-    { label: '大同川エリア２', value: '大同川エリア２' },
-    { label: '伊庭内湖エリア１', value: '伊庭内湖エリア１' },
-    { label: '伊庭内湖エリア２', value: '伊庭内湖エリア２' },
-    { label: '長命寺川エリア', value: '長命寺川エリア' },
-    { label: '吉川浄水場前エリア', value: '吉川浄水場前エリア' },
-    { label: '吉川漁港エリア', value: '吉川漁港エリア' }
+  const hokkoEarea: Area[] = [
+    { label: '姉川河口エリア', value: '姉川河口エリア', latitude: 35.388, longitude: 136.215 },
+    { label: '南浜エリア', value: '南浜エリア', latitude: 35.3875, longitude: 136.227 },
+    { label: '相撲周辺エリア', value: '相撲周辺エリア', latitude: 35.3856, longitude: 136.243 },
+    { label: 'KBセーレン前エリア', value: 'KBセーレン前エリア', latitude: 35.3791, longitude: 136.256 },
+    { label: '長浜港エリア', value: '長浜港エリア', latitude: 35.3712, longitude: 136.265 },
+    { label: '神明浜エリア', value: '神明浜エリア', latitude: 35.3455, longitude: 136.275 },
+    { label: '天野川河口エリア', value: '天野川河口エリア', latitude: 35.3299, longitude: 136.267 },
+    { label: '入江橋エリア', value: '入江橋エリア', latitude: 35.3202, longitude: 136.267 },
+    { label: '蒼の湖邸前エリア', value: '蒼の湖邸前エリア', latitude: 35.2981, longitude: 136.254 },
+    { label: '彦根新港エリア', value: '彦根新港エリア', latitude: 35.2848, longitude: 136.245 },
+    { label: '旧彦根港エリア', value: '旧彦根港エリア', latitude: 35.2797, longitude: 136.255 },
+    { label: '芹川河口エリア', value: '芹川河口エリア', latitude: 35.2754, longitude: 136.234 },
+    { label: '宇曽川河口エリア', value: '宇曽川河口エリア', latitude: 35.2505, longitude: 136.193 },
+    { label: '野田沼エリア', value: '野田沼エリア', latitude: 35.2486, longitude: 136.208 },
+    { label: '曽根沼エリア', value: '曽根沼エリア', latitude: 35.2411, longitude: 136.194 },
+    { label: '文禄川河口エリア', value: '文禄川河口エリア', latitude: 35.2396, longitude: 136.173 },
+    { label: '神上沼エリア', value: '神上沼エリア', latitude: 35.2282, longitude: 136.16 },
+    { label: '愛知川河口エリア', value: '愛知川河口エリア', latitude: 35.215, longitude: 136.116 },
+    { label: '大同川エリア１', value: '大同川エリア１', latitude: 35.2034, longitude: 136.112 },
+    { label: '大同川エリア２', value: '大同川エリア２', latitude: 35.1992, longitude: 136.121 },
+    { label: '伊庭内湖エリア１', value: '伊庭内湖エリア１', latitude: 35.1851, longitude: 136.141 },
+    { label: '伊庭内湖エリア２', value: '伊庭内湖エリア２', latitude: 35.1741, longitude: 136.141 },
+    { label: '西の湖エリア', value: '西の湖エリア', latitude: 35.1582, longitude: 136.114 },
+    { label: '長命寺川エリア', value: '長命寺川エリア', latitude: 35.1566, longitude: 136.066 },
+    { label: '吉川浄水場前エリア', value: '吉川浄水場前エリア', latitude: 35.1445, longitude: 135.987 },
+    { label: '吉川漁港エリア', value: '吉川漁港エリア', latitude: 35.1248, longitude: 135.974 }
   ]
 
-  const hokkoWarea = [
-    { label: '知内漁港エリア', value: '知内漁港エリア' },
-    { label: '貫川内湖エリア', value: '貫川内湖エリア' },
-    { label: '浜分沼エリア', value: '浜分沼エリア' },
-    { label: '外ヶ浜風車前エリア', value: '外ヶ浜風車前エリア' },
-    { label: '安曇川・新堀船溜まり', value: '安曇川・新堀船溜まり' },
-    { label: 'エカイ・十ヶ坪沼エリア', value: 'エカイ・十ヶ坪沼エリア' },
-    { label: '松ノ木内湖エリア', value: '松ノ木内湖エリア' },
-    { label: '萩の浜エリア', value: '萩の浜エリア' },
-    { label: '大溝港エリア', value: '大溝港エリア' },
-    { label: '乙女ヶ池エリア', value: '乙女ヶ池エリア' },
-    { label: '滝川河口エリア', value: '滝川河口エリア' },
-    { label: 'レイクオーツカ前エリア', value: 'レイクオーツカ前エリア' },
-    { label: '近江舞子・内湖エリア', value: '近江舞子・内湖エリア' },
-    { label: '大谷川河口エリア', value: '大谷川河口エリア' },
-    { label: '木戸川エリア', value: '木戸川エリア' },
-    { label: '八屋戸川エリア', value: '八屋戸川エリア' },
-    { label: '和邇川河口エリア', value: '和邇川河口エリア' },
-    { label: '真野浜周辺エリア', value: '真野浜周辺エリア' },
-    { label: '米プラザ前エリア', value: '米プラザ前エリア' }
+  const hokkoWarea: Area[] = [
+    { label: '知内漁港エリア', value: '知内漁港エリア', latitude: 35.4476, longitude: 136.058 },
+    { label: '貫川内湖エリア', value: '貫川内湖エリア', latitude: 35.4309, longitude: 136.041 },
+    { label: '浜分沼エリア', value: '浜分沼エリア', latitude: 35.4212, longitude: 136.046 },
+    { label: '外ヶ浜風車前エリア', value: '外ヶ浜風車前エリア', latitude: 35.35, longitude: 136.07 },
+    { label: '安曇川・新堀船溜まり', value: '安曇川・新堀船溜まり', latitude: 35.3248, longitude: 136.08 },
+    { label: 'エカイ・十ヶ坪沼エリア', value: 'エカイ・十ヶ坪沼エリア', latitude: 35.3212, longitude: 136.059 },
+    { label: '松ノ木内湖エリア', value: '松ノ木内湖エリア', latitude: 35.3127, longitude: 136.051 },
+    { label: '萩の浜エリア', value: '萩の浜エリア', latitude: 35.2996, longitude: 136.028 },
+    { label: '大溝港エリア', value: '大溝港エリア', latitude: 35.2931, longitude: 136.016 },
+    { label: '乙女ヶ池エリア', value: '乙女ヶ池エリア', latitude: 35.29, longitude: 136.015 },
+    { label: '滝川河口エリア', value: '滝川河口エリア', latitude: 35.246, longitude: 135.971 },
+    { label: 'レイクオーツカ前エリア', value: 'レイクオーツカ前エリア', latitude: 35.2373, longitude: 135.962 },
+    { label: '近江舞子・内湖エリア', value: '近江舞子・内湖エリア', latitude: 35.2302, longitude: 135.961 },
+    { label: '大谷川河口エリア', value: '大谷川河口エリア', latitude: 35.2054, longitude: 135.936 },
+    { label: '木戸川エリア', value: '木戸川エリア', latitude: 35.2003, longitude: 135.925 },
+    { label: '八屋戸川エリア', value: '八屋戸川エリア', latitude: 35.1833, longitude: 135.918 },
+    { label: '和邇川河口エリア', value: '和邇川河口エリア', latitude: 35.1565, longitude: 135.937 },
+    { label: '真野浜周辺エリア', value: '真野浜周辺エリア', latitude: 35.1275, longitude: 135.931 },
+    { label: '米プラザ前エリア', value: '米プラザ前エリア', latitude: 35.1246, longitude: 135.929 }
   ]
 
-  const nannkoEarea = [
-    { label: '木浜埋立地１エリア', value: '木浜埋立地１エリア' },
-    { label: '木浜埋立地２エリア', value: '木浜埋立地２エリア' },
-    { label: '赤野井ワンド', value: '赤野井ワンド' },
-    { label: '烏丸半島周辺エリア', value: '烏丸半島周辺エリア' },
-    { label: '平湖・柳平湖エリア', value: '平湖・柳平湖エリア' },
-    { label: '北山田漁港周辺エリア', value: '北山田漁港周辺エリア' },
-    { label: '矢橋帰帆島周辺エリア', value: '矢橋帰帆島周辺エリア' },
-    { label: '漕艇場護岸エリア', value: '漕艇場護岸エリア' },
-    { label: '瀬田川大橋周辺エリア', value: '瀬田川大橋周辺エリア' },
-    { label: '瀬田川・南郷洗堰北エリア', value: '瀬田川・南郷洗堰北エリア' }
+  const nannkoEarea: Area[] = [
+    { label: '木浜埋立地１エリア', value: '木浜埋立地１エリア', latitude: 35.1113, longitude: 135.944 },
+    { label: '木浜埋立地２エリア', value: '木浜埋立地２エリア', latitude: 35.1016, longitude: 135.942 },
+    { label: '赤野井ワンド', value: '赤野井ワンド', latitude: 35.0807, longitude: 135.947 },
+    { label: '烏丸半島周辺エリア', value: '烏丸半島周辺エリア', latitude: 35.0674, longitude: 135.935 },
+    { label: '平湖・柳平湖エリア', value: '平湖・柳平湖エリア', latitude: 35.0497, longitude: 135.924 },
+    { label: '北山田漁港周辺エリア', value: '北山田漁港周辺エリア', latitude: 35.0315, longitude: 135.912 },
+    { label: '矢橋帰帆島周辺エリア', value: '矢橋帰帆島周辺エリア', latitude: 35.0093, longitude: 135.913 },
+    { label: '漕艇場護岸エリア', value: '漕艇場護岸エリア', latitude: 34.993, longitude: 135.909 },
+    { label: '瀬田川大橋周辺エリア', value: '瀬田川大橋周辺エリア', latitude: 34.9779, longitude: 135.907 },
+    { label: '瀬田川・南郷洗堰北エリア', value: '瀬田川・南郷洗堰北エリア', latitude: 34.9457, longitude: 135.911 }
   ]
 
-  const nannkoWarea = [
-    { label: 'カヤ池エリア', value: 'カヤ池エリア' },
-    { label: '堅田港エリア', value: '堅田港エリア' },
-    { label: 'なぎさ漁港エリア', value: 'なぎさ漁港エリア' },
-    { label: '天神川河口エリア', value: '天神川河口エリア' },
-    { label: '山ノ下湾エリア', value: '山ノ下湾エリア' },
-    { label: '雄琴港エリア', value: '雄琴港エリア' },
-    { label: 'カネカ石積み護岸エリア', value: 'カネカ石積み護岸エリア' },
-    { label: '阪本赤鳥居エリア', value: '阪本赤鳥居エリア' },
-    { label: 'KKRホテルびわこエリア', value: 'KKRホテルびわこエリア' },
-    { label: '浜大津エリア', value: '浜大津エリア' },
-    { label: '由美浜・におの浜エリア１', value: '由美浜・におの浜エリア１' },
-    { label: '由美浜・におの浜エリア２', value: '由美浜・におの浜エリア２' },
-    { label: '膳所港・城跡公園周辺エリア', value: '膳所港・城跡公園周辺エリア' },
-    { label: 'なぎさ公園・青嵐の道エリア', value: 'なぎさ公園・青嵐の道エリア' }
+  const nannkoWarea: Area[] = [
+    { label: 'カヤ池エリア', value: 'カヤ池エリア', latitude: 35.1177, longitude: 135.922 },
+    { label: '堅田港エリア', value: '堅田港エリア', latitude: 35.115, longitude: 135.924 },
+    { label: 'なぎさ漁港エリア', value: 'なぎさ漁港エリア', latitude: 35.1088, longitude: 135.92 },
+    { label: '天神川河口エリア', value: '天神川河口エリア', latitude: 35.1026, longitude: 135.915 },
+    { label: '山ノ下湾エリア', value: '山ノ下湾エリア', latitude: 35.101, longitude: 135.907 },
+    { label: '雄琴港エリア', value: '雄琴港エリア', latitude: 35.087, longitude: 135.896 },
+    { label: 'カネカ石積み護岸エリア', value: 'カネカ石積み護岸エリア', latitude: 35.0729, longitude: 135.891 },
+    { label: '阪本赤鳥居エリア', value: '阪本赤鳥居エリア', latitude: 35.0574, longitude: 135.879 },
+    { label: 'KKRホテルびわこエリア', value: 'KKRホテルびわこエリア', latitude: 35.0531, longitude: 135.876 },
+    { label: '浜大津エリア', value: '浜大津エリア', latitude: 35.0113, longitude: 135.871 },
+    { label: '由美浜・におの浜エリア１', value: '由美浜・におの浜エリア１', latitude: 35.0072, longitude: 135.883 },
+    { label: '由美浜・におの浜エリア２', value: '由美浜・におの浜エリア２', latitude: 35.0056, longitude: 135.892 },
+    { label: '膳所港・城跡公園周辺エリア', value: '膳所港・城跡公園周辺エリア', latitude: 34.9951, longitude: 135.896 },
+    { label: 'なぎさ公園・青嵐の道エリア', value: 'なぎさ公園・青嵐の道エリア', latitude: 34.9868, longitude: 135.901 }
   ]
 
   const softLures = [
@@ -336,15 +357,15 @@ const Edit = (): JSX.Element => {
   ]
 
   const areaOptions =
-  fishArea === '北湖北'
+  fishArea === '北湖北岸'
     ? hokkoNarea
-    : fishArea === '北湖東'
+    : fishArea === '北湖東岸'
       ? hokkoEarea
-      : fishArea === '北湖西'
+      : fishArea === '北湖西岸'
         ? hokkoWarea
-        : fishArea === '南湖東'
+        : fishArea === '南湖東岸'
           ? nannkoEarea
-          : fishArea === '南湖西'
+          : fishArea === '南湖西岸'
             ? nannkoWarea
             : fishArea === null || fishArea === undefined
               ? []
@@ -417,11 +438,13 @@ const Edit = (): JSX.Element => {
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
       <ScrollView style={styles.inner}>
+
         <Text style={styles.title}>釣果編集</Text>
+
         <Text style={styles.textTitle}>ファイルを選択</Text>
         <Button
           label="釣果画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#F0F0F0' }}
+          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
           labelStyle={{ lineHeight: 16, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
@@ -445,20 +468,22 @@ const Edit = (): JSX.Element => {
             </View>
           ))}
         </View>
+
         <Text style={styles.textTitle}>釣果エリア</Text>
         <RNPickerSelect
           value={fishArea}
           onValueChange={(value: string | null) => {
             if (value !== null) {
               setFishArea(value)
+              setArea(value)
             }
           }}
           items={[
-            { label: '北湖北', value: '北湖北' },
-            { label: '北湖東', value: '北湖東' },
-            { label: '北湖西', value: '北湖西' },
-            { label: '南湖東', value: '南湖東' },
-            { label: '南湖西', value: '南湖西' }
+            { label: '北湖北岸', value: '北湖北岸' },
+            { label: '北湖東岸', value: '北湖東岸' },
+            { label: '北湖西岸', value: '北湖西岸' },
+            { label: '南湖東岸', value: '南湖東岸' },
+            { label: '南湖西岸', value: '南湖西岸' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: '' }}
@@ -476,6 +501,7 @@ const Edit = (): JSX.Element => {
             style={pickerSelectStyles}
           />
         )}
+
         <Text style={styles.textTitle}>天気を選択</Text>
         <RNPickerSelect
           value={weather}
@@ -490,9 +516,10 @@ const Edit = (): JSX.Element => {
             { label: '雨', value: '雨' },
             { label: '雪', value: '雪' }
           ]}
-          style={pickerSelectStyles}
           placeholder={{ label: '天気を選択してください', value: '' }}
+          style={pickerSelectStyles}
         />
+
         <Text style={styles.textTitle}>ルアーを選択</Text>
         <RNPickerSelect
           value={category}
@@ -550,7 +577,8 @@ const Edit = (): JSX.Element => {
             style={pickerSelectStyles}
           />
         )}
-        <Text style={styles.textTitle}>ストラクチャー（地形変化）を選択</Text>
+
+        <Text style={styles.textTitle}>ストラクチャー（水中の地形変化）を選択</Text>
         <RNPickerSelect
           value={structure}
           onValueChange={(value: string | null) => {
@@ -568,9 +596,11 @@ const Edit = (): JSX.Element => {
             { label: 'チャンネル', value: 'チャンネル' },
             { label: 'サンドバー', value: 'サンドバー' },
             { label: '浚渫跡', value: '浚渫跡' },
-            { label: 'ゴロタ石', value: 'ゴロタ石' },
             { label: 'リップラップ', value: 'リップラップ' },
-            { label: '流れ込み', value: '流れ込み' }
+            { label: '流れ込み', value: '流れ込み' },
+            { label: '河口', value: '河口' },
+            { label: '漁港', value: '漁港' }
+
           ]}
           placeholder={{ label: 'ストラクチャーを選択してください', value: '' }}
           style={pickerSelectStyles}
@@ -596,34 +626,49 @@ const Edit = (): JSX.Element => {
             { label: 'ブッシュ', value: 'ブッシュ' },
             { label: 'レイダウン', value: 'レイダウン' },
             { label: 'リリーパッド', value: 'リリーパッド' },
+            { label: 'ゴミ溜まり', value: 'ゴミ溜まり' },
             { label: 'オダ', value: 'オダ' },
             { label: '水門', value: '水門' },
             { label: '漁礁', value: '漁礁' },
-            { label: 'テトラ帯', value: 'テトラ帯' },
+            { label: '消波ブロック', value: '消波ブロック' },
+            { label: 'ゴロタ石', value: 'ゴロタ石' },
             { label: '大岩', value: '大岩' },
             { label: '沈船', value: '沈船' }
           ]}
           placeholder={{ label: 'カバーを選択してください', value: '' }}
           style={pickerSelectStyles}
         />
+
         <Text style={styles.textTitle}>長さを入力(cm)</Text>
         <TextInput
           value={length !== null ? String(length) : ''}
           style={styles.input}
-          onChangeText={(text) => { setLength(Number(text)) }}
-          placeholder='長さを入力してください'
-          keyboardType='numeric'
-          returnKeyType='done'
-        />
-        <Text style={styles.textTitle}>重さを入力(g)</Text>
-        <TextInput
-          value={weight !== null ? String(weight) : ''}
-          style={styles.input}
-          onChangeText={(text) => { setWeight(Number(text)) }}
-          placeholder='重さを入力してください'
+          onChangeText={(text) => {
+            const numericValue = Number(text)
+            if (!isNaN(numericValue)) {
+              setLength(Number(text))
+            }
+          }}
+          placeholder='長さ(cm)を入力してください'
           keyboardType='number-pad'
           returnKeyType='done'
         />
+
+        <Text style={styles.textTitle}>重さを入力(g)</Text>
+        <TextInput
+          style={styles.input}
+          value={weight !== null ? String(weight) : ''}
+          onChangeText={(text) => {
+            const numericValue = Number(text)
+            if (!isNaN(numericValue)) {
+              setWeight(Number(text))
+            }
+          }}
+          placeholder='重さ(g)を入力してください'
+          keyboardType='number-pad'
+          returnKeyType='done'
+        />
+
         <Text style={styles.textTitle}>釣果数</Text>
         <TextInput
           style={styles.input}
@@ -638,6 +683,7 @@ const Edit = (): JSX.Element => {
           keyboardType='number-pad'
           returnKeyType='done'
         />
+
         <Button label='投稿' onPress={() => {
           void handlePress(
             id,
@@ -652,7 +698,12 @@ const Edit = (): JSX.Element => {
             cover,
             length,
             weight,
-            catchFish
+            catchFish,
+            hokkoNarea,
+            hokkoEarea,
+            hokkoWarea,
+            nannkoEarea,
+            nannkoWarea
           )
         }}
           buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
@@ -666,7 +717,7 @@ const Edit = (): JSX.Element => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#f8f8f8'
+    backgroundColor: '#F0F4F8'
   },
   inner: {
     marginVertical: 24,
@@ -698,6 +749,7 @@ const styles = StyleSheet.create({
   },
   charCount: {
     textAlign: 'right',
+    justifyContent: 'center',
     color: 'gray'
   },
   textTitle: {
