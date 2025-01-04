@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, StyleSheet } from 'react-native'
 import { Link } from 'expo-router'
 import { type FishMap } from '../../types/fishmap'
 import Map from '../components/Map'
@@ -16,13 +16,15 @@ const MapListItem = (props: Props): JSX.Element | null => {
       href={{ pathname: '/map/detail', params: { id: map.id } }}
       asChild
     >
-      <TouchableOpacity style={styles.listItem}>
-        <Text style={styles.listItemTitle}>{map.title}</Text>
-        <Map
-          latitude={map.latitude ?? 0}
-          longitude={map.longitude ?? 0}
-        />
-      </TouchableOpacity>
+      <TouchableWithoutFeedback>
+        <View style={styles.listItem}>
+          <Text style={styles.listItemTitle}>{map.title}</Text>
+          <Map
+            latitude={map.latitude ?? 0}
+            longitude={map.longitude ?? 0}
+          />
+        </View>
+      </TouchableWithoutFeedback>
     </Link>
   )
 }

@@ -15,7 +15,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "jp.gyotan.gyotanapp",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "config": {
+        "googleMapsApiKey": "AIzaSyB7IrFyCeBW2OFun1nKRRitv3jM8Vvckqk"
+      }
     },
     "android": {
       "package": "jp.gyotan.Gyotan",
@@ -24,6 +27,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive_foreground.png",
         "backgroundColor": "./assets/icon_adaptive_background.png"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB7IrFyCeBW2OFun1nKRRitv3jM8Vvckqk"
+        }
       }
     },
     "web": {

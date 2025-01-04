@@ -248,8 +248,8 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userImage: {
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 160,
     borderWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 150,

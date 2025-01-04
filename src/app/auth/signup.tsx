@@ -91,7 +91,7 @@ const SignUp = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
-        <Text style={styles.title}>会員登録</Text>
+        <Text style={styles.title}>新規登録</Text>
         <TextInput
           style={styles.input}
           value={userName}
@@ -161,7 +161,7 @@ const SignUp = (): JSX.Element => {
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}
         </View>
 
-        <Button label='会員登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
+        <Button label='新規登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
         <View style={styles.footer}>
           <Link replace href='/auth/login' asChild >
             <TouchableOpacity>

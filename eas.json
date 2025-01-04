@@ -1,4 +1,7 @@
 {
+  "cli": {
+    "version": ">= 3.13.0"
+  },
   "build": {
     "production": {
       "env": {
@@ -10,6 +13,10 @@
         "EXPO_PUBLIC_FB_APP_ID": "1:898177848651:web:c65629cac07bec432a44ce",
         "EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY": "118feebc1d67a0c61dbea53591f85cf2"
       }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
     },
     "preview": {
       "extends": "production",

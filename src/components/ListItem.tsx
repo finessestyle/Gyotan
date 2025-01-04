@@ -1,5 +1,5 @@
 import {
-  View, Text, TouchableOpacity, StyleSheet, Image
+  View, Text, TouchableWithoutFeedback, StyleSheet, Image
 } from 'react-native'
 import { Link } from 'expo-router'
 import { type Post } from '../../types/post'
@@ -19,21 +19,24 @@ const ListItem = (props: Props): JSX.Element | null => {
       href={{ pathname: '/post/detail', params: { id: post.id } }}
       asChild
     >
-      <TouchableOpacity style={styles.listItem}>
-        <View style={styles.fishImage}>
-          <View>
-            <Text style={styles.area}>{post?.area}</Text>
-          </View>
-          <Image
-            style={styles.listItemImage}
-            source={{ uri: imageUri }}
-          />
-          <View style={styles.fishInfo}>
-            <Text style={styles.length}>{post?.length}cm / </Text>
-            <Text style={styles.weight}>{post?.weight}g</Text>
+      <TouchableWithoutFeedback>
+        <View style={styles.listItem}>
+          <View style={styles.fishImage}>
+            <View>
+              <Text style={styles.area}>{post?.area}</Text>
+            </View>
+            <Image
+              style={styles.listItemImage}
+              source={{ uri: imageUri }}
+            />
+            <View style={styles.fishInfo}>
+              <Text style={styles.length}>{post?.length}cm / </Text>
+              <Text style={styles.weight}>{post?.weight}g</Text>
+            </View>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableWithoutFeedback>
+
     </Link>
   )
 }

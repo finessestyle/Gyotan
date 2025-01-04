@@ -64,7 +64,7 @@ const LogIn = (): JSX.Element => {
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >
             <TouchableOpacity>
-              <Text style={styles.footerLink}>新規会員登録はこちらをクリック</Text>
+              <Text style={styles.footerLink}>新規登録はこちらをクリック</Text>
             </TouchableOpacity>
           </Link>
         </View>
