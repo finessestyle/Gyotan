@@ -121,11 +121,11 @@ const Edit = (): JSX.Element => {
             }
           }}
           items={[
-            { label: '北湖北', value: '北湖北' },
-            { label: '北湖東', value: '北湖東' },
-            { label: '北湖西', value: '北湖西' },
-            { label: '南湖東', value: '南湖東' },
-            { label: '南湖西', value: '南湖西' }
+            { label: '北湖北岸', value: '北湖北岸' },
+            { label: '北湖東岸', value: '北湖東岸' },
+            { label: '北湖西岸', value: '北湖西岸' },
+            { label: '南湖東岸', value: '南湖東岸' },
+            { label: '南湖西岸', value: '南湖西岸' }
           ]}
           style={pickerSelectStyles}
           placeholder={{ label: 'エリアを選択してください', value: '' }}
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   title: {
     fontSize: 24,

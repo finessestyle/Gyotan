@@ -24,8 +24,8 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, lureColor, structure, cover, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
-      let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}（${lureColor}）を使用して${structure}にある${cover}を狙いました。\n`
+      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, structure, cover, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
+      let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
         newContent += `${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした！`
       } else {
@@ -47,7 +47,6 @@ const Detail = (): JSX.Element => {
         cover,
         lure,
         lureAction,
-        lureColor,
         catchFish,
         content: newContent,
         updatedAt
@@ -70,14 +69,7 @@ const Detail = (): JSX.Element => {
             </TouchableOpacity>
           </Link>
           {post !== null && <DeleteButton post={post} />}
-          <View style={styles.fishArea}>
-            <Text>{post?.fishArea} | {post?.area}</Text>
-          </View>
-          <Map
-            latitude={post?.exifData[0]?.latitude ?? 0}
-            longitude={post?.exifData[0]?.longitude ?? 0}
-          />
-          <Swiper style={styles.swiper} showsButtons={true}>
+          <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
               <Image key={index} source={{ uri }} style={styles.fishImage} />
             ))}
@@ -87,10 +79,39 @@ const Detail = (): JSX.Element => {
               釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP', {
               year: 'numeric',
               month: 'long',
-              day: '2-digit'
+              day: '2-digit',
+              hour: '2-digit'
             })}
             </Text>
           </View>
+          <View style={styles.fishingInfomation}>
+            <View style={styles.leftInfo}>
+              <Text>天気 : {post?.weather}</Text>
+            </View>
+            <View style={styles.rightInfo}>
+              <Text>釣果数 : {post?.catchFish}匹</Text>
+            </View>
+          </View>
+          <View style={styles.fishingInfomation}>
+            <View style={styles.leftInfo}>
+              <Text>サイズ : {post?.length}cm</Text>
+            </View>
+            <View style={styles.rightInfo}>
+              <Text>重さ : {post?.weight}g</Text>
+            </View>
+          </View>
+          <View style={styles.fishingInfomation}>
+            <View style={styles.leftInfo}>
+              <Text>ルアー : {post?.lure}/ {post?.lureAction}</Text>
+            </View>
+          </View>
+          <View style={styles.fishArea}>
+            <Text>{post?.fishArea} : {post?.area}</Text>
+          </View>
+          <Map
+            latitude={post?.exifData[0]?.latitude ?? 0}
+            longitude={post?.exifData[0]?.longitude ?? 0}
+          />
           <View style={styles.fishInfo}>
             <Text>-釣果状況-</Text>
             <Text style={styles.fishText}>

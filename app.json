@@ -26,7 +26,7 @@
       "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon_adaptive_foreground.png",
-        "backgroundColor": "./assets/icon_adaptive_background.png"
+        "backgroundColor": "#000000"
       },
       "config": {
         "googleMaps": {

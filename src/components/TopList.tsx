@@ -39,10 +39,10 @@ const TopList = (props: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   listItem: {
     borderRadius: 8,
-    width: '49%',
+    width: '48%',
     height: 'auto',
     marginBottom: 8,
-    marginHorizontal: 2
+    marginHorizontal: 4
   },
   fishImage: {
     position: 'relative'

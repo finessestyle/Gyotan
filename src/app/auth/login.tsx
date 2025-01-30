@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingVertical: 24,
-    paddingHorizontal: 27
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -89,15 +89,14 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   input: {
-    position: 'relative',
     borderWidth: 1,
+    borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
     height: 48,
     padding: 8,
     fontSize: 16,
-    marginBottom: 16,
-    color: '#000000'
+    marginBottom: 16
   },
   inputcontainer: {
     position: 'relative'

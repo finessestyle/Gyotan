@@ -26,7 +26,6 @@ const handlePress = async (
   fishArea: string,
   weather: string,
   lure: string,
-  lureColor: string,
   lureAction: string,
   structure: string,
   cover: string,
@@ -80,10 +79,6 @@ const handlePress = async (
       Alert.alert('エラー', 'ルアーアクションを選択してください')
       return
     }
-    if (lureColor === '') {
-      Alert.alert('エラー', 'ルアーカラーを選択してください')
-      return
-    }
     if (catchFish === null) {
       Alert.alert('エラー', '釣果数を選択してください')
       return
@@ -129,7 +124,6 @@ const handlePress = async (
       area,
       fishArea,
       lure,
-      lureColor,
       lureAction,
       weather,
       structure,
@@ -154,7 +148,6 @@ const Edit = (): JSX.Element => {
   const [weather, setWeather] = useState('')
   const [lure, setLure] = useState('')
   const [lureAction, setLureAction] = useState('')
-  const [lureColor, setLureColor] = useState('')
   const [structure, setStructure] = useState('')
   const [cover, setCover] = useState('')
   const [length, setLength] = useState<number | null>(null)
@@ -319,43 +312,6 @@ const Edit = (): JSX.Element => {
     { label: 'ドッグウォーク', value: 'ドッグウォーク' }
   ]
 
-  const softLureColors = [
-    { label: 'ウォーターメロン', value: 'ウォーターメロン' },
-    { label: 'グリパン', value: 'グリパン' },
-    { label: 'スカッパノン', value: 'スカッパノン' },
-    { label: 'スモーク', value: 'スモーク' },
-    { label: 'クリア', value: 'クリア' },
-    { label: 'ホワイト', value: 'ホワイト' },
-    { label: 'ブラック', value: 'ブラック' },
-    { label: 'ツートン', value: 'ツートン' },
-    { label: 'レッド', value: 'レッド' },
-    { label: 'ブルー', value: 'ブルー' },
-    { label: 'チャート', value: 'チャート' },
-    { label: 'パープル', value: 'パープル' },
-    { label: 'ピンク', value: 'ピンク' },
-    { label: 'ゴールド', value: 'ゴールド' },
-    { label: 'シルバー', value: 'シルバー' },
-    { label: 'ゴースト', value: 'ゴースト' }
-  ]
-
-  const hardLureColors = [
-    { label: 'ゴールド', value: 'ゴールド' },
-    { label: 'シルバー', value: 'シルバー' },
-    { label: 'レッド', value: 'レッド' },
-    { label: 'ブルー', value: 'ブルー' },
-    { label: 'チャート', value: 'チャート' },
-    { label: 'パープル', value: 'パープル' },
-    { label: 'ゴースト', value: 'ゴースト' },
-    { label: 'ピンク', value: 'ピンク' },
-    { label: 'ホワイト', value: 'ホワイト' },
-    { label: 'ブラック', value: 'ブラック' },
-    { label: 'クロー', value: 'クロー' },
-    { label: 'ホロ', value: 'ホロ' },
-    { label: 'インナープレート', value: 'インナープレート' },
-    { label: 'クリア', value: 'クリア' },
-    { label: 'ツートン', value: 'ツートン' }
-  ]
-
   const areaOptions =
   fishArea === '北湖北岸'
     ? hokkoNarea
@@ -372,7 +328,6 @@ const Edit = (): JSX.Element => {
               : []
 
   const lureOptions = category === 'ソフトルアー' ? softLures : hardLures
-  const lureColorOptions = category === 'ソフトルアー' ? softLureColors : hardLureColors
   const lureActionOptions = category === 'ソフトルアー' ? softLureActions : hardLureActions
 
   const pickImage = async (): Promise<void> => {
@@ -408,7 +363,6 @@ const Edit = (): JSX.Element => {
           fishArea?: string
           weather?: string
           lure?: string
-          lureColor?: string
           lureAction?: string
           structure?: string
           cover?: string
@@ -421,7 +375,6 @@ const Edit = (): JSX.Element => {
         setFishArea(data.fishArea ?? '')
         setWeather(data.weather ?? '')
         setLure(data?.lure ?? '')
-        setLureColor(data?.lureColor ?? '')
         setLureAction(data?.lureAction ?? '')
         setStructure(data?.structure ?? '')
         setCover(data?.cover ?? '')
@@ -527,7 +480,6 @@ const Edit = (): JSX.Element => {
             if (value !== null) {
               setCategory(value)
               setLure(value)
-              setLureColor(value)
               setLureAction(value)
             }
           }}
@@ -548,19 +500,6 @@ const Edit = (): JSX.Element => {
             }}
             items={lureOptions}
             placeholder={{ label: 'ルアーを選択してください', value: '' }}
-            style={pickerSelectStyles}
-          />
-        )}
-        {category !== null && (
-          <RNPickerSelect
-            value={lureColor}
-            onValueChange={(value: string | null) => {
-              if (value !== null) {
-                setLureColor(value)
-              }
-            }}
-            items={lureColorOptions}
-            placeholder={{ label: 'ルアーカラーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
         )}
@@ -592,11 +531,12 @@ const Edit = (): JSX.Element => {
             { label: 'ディープ', value: 'ディープ' },
             { label: '岬', value: '岬' },
             { label: 'ワンド', value: 'ワンド' },
-            { label: 'ハンプ', value: 'ハンプ' },
-            { label: 'チャンネル', value: 'チャンネル' },
+            { label: 'ゴロタ石', value: 'ゴロタ石' },
+            { label: 'リップラップ', value: 'リップラップ' },
+            { label: 'チャネル', value: 'チャネル' },
             { label: 'サンドバー', value: 'サンドバー' },
             { label: '浚渫跡', value: '浚渫跡' },
-            { label: 'リップラップ', value: 'リップラップ' },
+            { label: 'ハンプ', value: 'ハンプ' },
             { label: '流れ込み', value: '流れ込み' },
             { label: '河口', value: '河口' },
             { label: '漁港', value: '漁港' }
@@ -615,12 +555,11 @@ const Edit = (): JSX.Element => {
             }
           }}
           items={[
-            { label: '護岸際', value: '護岸際' },
             { label: 'ウィード', value: 'ウィード' },
-            { label: '杭', value: '杭' },
             { label: '取水塔', value: '取水塔' },
             { label: '桟橋', value: '桟橋' },
             { label: '橋脚', value: '橋脚' },
+            { label: '護岸際', value: '護岸際' },
             { label: 'オーバーハング', value: 'オーバーハング' },
             { label: '立木', value: '立木' },
             { label: 'ブッシュ', value: 'ブッシュ' },
@@ -628,10 +567,10 @@ const Edit = (): JSX.Element => {
             { label: 'リリーパッド', value: 'リリーパッド' },
             { label: 'ゴミ溜まり', value: 'ゴミ溜まり' },
             { label: 'オダ', value: 'オダ' },
+            { label: '杭', value: '杭' },
             { label: '水門', value: '水門' },
             { label: '漁礁', value: '漁礁' },
             { label: '消波ブロック', value: '消波ブロック' },
-            { label: 'ゴロタ石', value: 'ゴロタ石' },
             { label: '大岩', value: '大岩' },
             { label: '沈船', value: '沈船' }
           ]}
@@ -692,7 +631,6 @@ const Edit = (): JSX.Element => {
             fishArea,
             weather,
             lure,
-            lureColor,
             lureAction,
             structure,
             cover,
@@ -721,7 +659,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   title: {
     fontSize: 24,

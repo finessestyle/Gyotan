@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 16
+    marginHorizontal: 8
   },
   subInner: {
     flex: 1,

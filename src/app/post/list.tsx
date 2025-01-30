@@ -1,6 +1,7 @@
 import {
   View, FlatList, StyleSheet, Text, TouchableOpacity
 } from 'react-native'
+import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
@@ -19,7 +20,7 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureColor, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -31,7 +32,6 @@ const List = (): JSX.Element => {
           length,
           weight,
           lure,
-          lureColor,
           lureAction,
           structure,
           cover,
@@ -83,6 +83,16 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     marginVertical: 24,
     marginHorizontal: 16
+  },
+  mapLink: {
+    fontSize: 16,
+    lineHeight: 32,
+    color: '#467FD3',
+    marginBottom: 24,
+    marginVertical: 24,
+    marginHorizontal: 50,
+    borderWidth: 0.5,
+    borderRadius: 8
   },
   tabs: {
     flexDirection: 'row',

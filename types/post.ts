@@ -17,7 +17,6 @@ interface Post {
   fishArea: string
   weather: string
   lure: string
-  lureColor: string
   lureAction: string
   structure: string
   cover: string

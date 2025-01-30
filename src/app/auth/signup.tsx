@@ -148,7 +148,7 @@ const SignUp = (): JSX.Element => {
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 24, backgroundColor: '#F0F0F0' }}
+          buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
           labelStyle={{ lineHeight: 12, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingVertical: 24,
-    paddingHorizontal: 27
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -190,9 +190,10 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   input: {
-    backgroundColor: '#ffffff',
     borderWidth: 1,
+    borderRadius: 8,
     borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
     height: 48,
     padding: 8,
     fontSize: 16,
@@ -207,19 +208,19 @@ const styles = StyleSheet.create({
     top: 24,
     transform: [{ translateY: -12 }]
   },
-  imagePicker: {
-    fontSize: 16
-  },
   image: {
     width: 100,
-    height: 100
+    height: 100,
+    borderRadius: 8
   },
   imageBox: {
     borderWidth: 1,
+    borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 'auto',
-    width: 'auto',
+    height: 100,
+    width: 100,
+    marginTop: 4,
     marginBottom: 16
   },
   footer: {
