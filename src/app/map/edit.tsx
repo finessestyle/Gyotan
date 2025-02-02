@@ -90,7 +90,7 @@ const Edit = (): JSX.Element => {
         setArea(data.area ?? '')
         setSeason(data.season ?? '')
         setLatitude(data?.latitude !== undefined && data.latitude !== '' ? parseFloat(data.latitude) : null)
-        setLongitude(data?.longitude !== undefined && data.latitude !== '' ? parseFloat(data.longitude) : null)
+        setLongitude(data?.longitude !== undefined && data.longitude !== '' ? parseFloat(data.longitude) : null)
         setContent(data.content ?? '')
       })
       .catch((error) => {
@@ -153,18 +153,18 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           onChangeText={(text) => { setLatitude(Number(text)) }}
           placeholder='緯度を入力してください'
-          keyboardType='numeric'
+          keyboardType='decimal-pad'
           returnKeyType='done'
-          value={latitude !== null ? latitude.toString() : ''}
+          value={latitude}
         />
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
           style={styles.input}
           onChangeText={(text) => { setLongitude(Number(text)) }}
           placeholder='経度を入力してください'
-          keyboardType='numeric'
+          keyboardType='decimal-pad'
           returnKeyType='done'
-          value={longitude !== null ? longitude.toString() : ''}
+          value={longitude}
         />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput

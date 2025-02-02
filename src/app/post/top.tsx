@@ -1,118 +1,169 @@
-import { View, StyleSheet, Text, Image } from 'react-native'
-import { useState, useEffect } from 'react'
-import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore'
+import {
+  View, FlatList, StyleSheet, Text, TouchableOpacity
+} from 'react-native'
+import { Link } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
-import MapView, { Marker, Callout } from 'react-native-maps'
+import { type Post } from '../../../types/post'
+import ListItem from '../../components/ListItem'
+import ListSizeItem from '../../components/ListSizeItem'
 
-interface ExifData {
-  latitude: number
-  longitude: number
-}
-
-interface Post {
-  id: string
-  exifData?: ExifData
-  length?: number
-  lure?: string
-  updatedAt?: any
-  [key: string]: any
-}
+const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
 
 const Top = (): JSX.Element => {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [initialRegion, setInitialRegion] = useState({
-    latitude: 35.25020910118615,
-    longitude: 136.08555032486245,
-    latitudeDelta: 0.5,
-    longitudeDelta: 0.5
-  })
+  const [latestPosts, setLatestPosts] = useState<Post[]>([])
+  const [largestPosts, setLargestPosts] = useState<Post[]>([])
+  const [latestArea, setLatestArea] = useState<string>(areas[0])
+  const [largestArea, setLargestArea] = useState<string>(areas[0])
 
   useEffect(() => {
-    const oneMonthAgo = new Date()
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
-    const oneMonthAgoTimestamp = oneMonthAgo.getTime()
-
     const ref = collection(db, 'posts')
-    const q = query(
-      ref,
-      where('updatedAt', '>=', oneMonthAgoTimestamp),
-      orderBy('updatedAt', 'desc')
-    )
-
+    const q = query(ref, where('fishArea', '==', latestArea), orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const {
-          userId, userName, userImage, images, weather, length, weight, lure,
-          lureAction, catchFish, fishArea, area, structure, cover, exifData, updatedAt, content
-        } = doc.data()
-        console.log(exifData)
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
           userName,
           userImage,
           images,
-          exifData,
-          area,
-          fishArea,
           weather,
+          content,
+          length,
+          weight,
           lure,
           lureAction,
           structure,
           cover,
-          length,
-          weight,
           catchFish,
-          content,
-          updatedAt
+          area,
+          fishArea,
+          updatedAt,
+          exifData
         })
       })
-      setPosts(remotePosts)
+      setLatestPosts(remotePosts)
     })
-
     return unsubscribe
-  }, [])
+  }, [latestArea])
+
+  useEffect(() => {
+    const ref = collection(db, 'posts')
+    const q = query(ref, where('fishArea', '==', largestArea), orderBy('length', 'desc'))
+    const unsubscribe = onSnapshot(q, (snapShot) => {
+      const remotePosts: Post[] = []
+      snapShot.forEach((doc) => {
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        remotePosts.push({
+          id: doc.id,
+          userId,
+          userName,
+          userImage,
+          images,
+          weather,
+          content,
+          length,
+          weight,
+          lure,
+          lureAction,
+          structure,
+          cover,
+          catchFish,
+          area,
+          fishArea,
+          updatedAt,
+          exifData
+        })
+      })
+      setLargestPosts(remotePosts)
+    })
+    return unsubscribe
+  }, [largestArea])
 
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={initialRegion}>
-        {posts.map((post) => {
-          const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
-          if (!exif?.latitude || !exif?.longitude) return null
-          return (
-            <Marker
-              key={post.id}
-              coordinate={{
-                latitude: exif.latitude,
-                longitude: exif.longitude
-              }}
-            >
-              <Callout>
-                <View style={{ alignItems: 'center' }}>
-                  <Image
-                    source={{ uri: post.images?.[0] }}
-                    style={{ width: 100, height: 100, borderRadius: 10 }}
-                    resizeMode="cover"
-                  />
-                  <Text>{`${post.length ?? '-'}cmバス`}</Text>
-                  <Text>{`ヒットルアー: ${post.lure ?? '不明'}`}</Text>
-                </View>
-             </Callout>
-            </Marker>
-          )
-        })}
-      </MapView>
+      <Text style={styles.title}>最新釣果</Text>
+      <View style={styles.tabs}>
+        {areas.map((area) => (
+          <TouchableOpacity
+            key={area}
+            style={[styles.tab, latestArea === area && styles.selectedTab]}
+            onPress={() => { setLatestArea(area) }}
+          >
+            <Text style={styles.tabText}>{area}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <FlatList
+        data={latestPosts}
+        numColumns={2}
+        renderItem={({ item }) => <ListItem post={item} />}
+        style={{ marginHorizontal: 8 }}
+      />
+
+      <Text style={styles.title}>最大サイズ釣果</Text>
+      <View style={styles.tabs}>
+        {areas.map((area) => (
+          <TouchableOpacity
+            key={area}
+            style={[styles.tab, largestArea === area && styles.selectedTab]}
+            onPress={() => { setLargestArea(area) }}
+          >
+            <Text style={styles.tabText}>{area}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <FlatList
+        data={largestPosts}
+        numColumns={2}
+        renderItem={({ item }) => <ListSizeItem post={item} />}
+        style={{ marginHorizontal: 8 }}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: '#F0F4F8'
   },
-  map: {
-    flex: 1
+  title: {
+    fontSize: 24,
+    lineHeight: 32,
+    fontWeight: 'bold',
+    marginVertical: 8,
+    marginHorizontal: 16
+  },
+  mapLink: {
+    fontSize: 16,
+    lineHeight: 32,
+    color: '#467FD3',
+    marginBottom: 24,
+    marginVertical: 24,
+    marginHorizontal: 50,
+    borderWidth: 0.5,
+    borderRadius: 8
+  },
+  tabs: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 16
+  },
+  tab: {
+    padding: 8,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent'
+  },
+  selectedTab: {
+    borderBottomColor: '#467FD3'
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#467FD3'
   }
 })
 

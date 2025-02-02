@@ -102,7 +102,7 @@ const Detail = (): JSX.Element => {
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>ルアー : {post?.lure}/ {post?.lureAction}</Text>
+              <Text>ルアー : {post?.lure} / {post?.lureAction}</Text>
             </View>
           </View>
           <View style={styles.fishArea}>

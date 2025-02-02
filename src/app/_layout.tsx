@@ -30,15 +30,15 @@ const Layout = (): JSX.Element => {
         <Tabs.Screen
           name="post/top"
           options={{
-            title: '最新釣果',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
+            title: '釣果情報',
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="list" color={color} />
           }}
         />
         <Tabs.Screen
-          name="post/list"
+          name="post/map"
           options={{
-            title: 'エリア釣果',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="list" color={color} />
+            title: '釣果MAP',
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
           }}
         />
         <Tabs.Screen
@@ -60,7 +60,7 @@ const Layout = (): JSX.Element => {
         <Tabs.Screen
           name="map/list"
           options={{
-            title: '釣り場一覧',
+            title: '釣り場MAP',
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="map" color={color} />
           }}
         />
