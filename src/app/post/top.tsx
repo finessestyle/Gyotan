@@ -1,7 +1,6 @@
 import {
   View, FlatList, StyleSheet, Text, TouchableOpacity
 } from 'react-native'
-import { Link } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
@@ -103,7 +102,6 @@ const Top = (): JSX.Element => {
         renderItem={({ item }) => <ListItem post={item} />}
         style={{ marginHorizontal: 8 }}
       />
-
       <Text style={styles.title}>最大サイズ釣果</Text>
       <View style={styles.tabs}>
         {areas.map((area) => (
