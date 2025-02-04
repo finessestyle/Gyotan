@@ -91,6 +91,7 @@ const Top = (): JSX.Element => {
             key={area}
             style={[styles.tab, latestArea === area && styles.selectedTab]}
             onPress={() => { setLatestArea(area) }}
+            activeOpacity={0.7}
           >
             <Text style={styles.tabText}>{area}</Text>
           </TouchableOpacity>
@@ -98,9 +99,12 @@ const Top = (): JSX.Element => {
       </View>
       <FlatList
         data={latestPosts}
-        numColumns={2}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ListItem post={item} />}
-        style={{ marginHorizontal: 8 }}
+        horizontal
+        showsHorizontalScrollIndicator={false} // ← 横スクロールバーを非表示
+        keyboardShouldPersistTaps='always' // ← タップが無視されないようにする
+        contentContainerStyle={styles.listContainer}
       />
       <Text style={styles.title}>最大サイズ釣果</Text>
       <View style={styles.tabs}>
@@ -109,6 +113,7 @@ const Top = (): JSX.Element => {
             key={area}
             style={[styles.tab, largestArea === area && styles.selectedTab]}
             onPress={() => { setLargestArea(area) }}
+            activeOpacity={0.7}
           >
             <Text style={styles.tabText}>{area}</Text>
           </TouchableOpacity>
@@ -116,9 +121,12 @@ const Top = (): JSX.Element => {
       </View>
       <FlatList
         data={largestPosts}
-        numColumns={2}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <ListSizeItem post={item} />}
-        style={{ marginHorizontal: 8 }}
+        horizontal
+        showsHorizontalScrollIndicator={false} // ← 横スクロールバーを非表示
+        keyboardShouldPersistTaps="always" // ← タップが無視されないようにする
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   )
@@ -127,7 +135,8 @@ const Top = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8'
+    backgroundColor: '#F0F4F8',
+    paddingVertical: 16
   },
   title: {
     fontSize: 24,
@@ -162,6 +171,9 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     color: '#467FD3'
+  },
+  listContainer: {
+    paddingHorizontal: 8
   }
 })
 
