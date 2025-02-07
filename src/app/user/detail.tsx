@@ -12,9 +12,9 @@ import ListItem from '../../components/ListItem'
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
-  const areas = ['北湖北', '北湖東', '北湖西', '南湖東', '南湖西']
-  const [posts, setPosts] = useState<Post[]>([])
+  const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
+  const [posts, setPosts] = useState<Post[]>([])
 
   useEffect(() => {
     const userRef = doc(db, 'users', id)
@@ -34,7 +34,7 @@ const Detail = (): JSX.Element => {
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureColor, lureAction, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -46,7 +46,6 @@ const Detail = (): JSX.Element => {
           length,
           weight,
           lure,
-          lureColor,
           lureAction,
           structure,
           cover,
@@ -93,8 +92,12 @@ const Detail = (): JSX.Element => {
         </View>
         <FlatList
           data={posts}
-          renderItem={({ item }) => <ListItem post={item} /> }
           keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ListItem post={item} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps='always'
+          contentContainerStyle={styles.listContainer}
         />
       </View>
     </View>
@@ -156,6 +159,10 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 16,
     color: '#467FD3'
+  },
+  listContainer: {
+    height: 170,
+    marginBottom: 16
   }
 })
 export default Detail

@@ -1,12 +1,14 @@
 import {
-  View, FlatList, StyleSheet, Text, TouchableOpacity
+  View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView
 } from 'react-native'
 import { useEffect, useState } from 'react'
+import { Link } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
 import ListSizeItem from '../../components/ListSizeItem'
+import Icon from '../../components/Icon'
 
 const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
 
@@ -84,66 +86,86 @@ const Top = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>最新釣果</Text>
-      <View style={styles.tabs}>
-        {areas.map((area) => (
-          <TouchableOpacity
-            key={area}
-            style={[styles.tab, latestArea === area && styles.selectedTab]}
-            onPress={() => { setLatestArea(area) }}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.tabText}>{area}</Text>
+      <ScrollView style={styles.inner}>
+        <Text style={styles.title}>最新釣果</Text>
+        <View style={styles.tabs}>
+          {areas.map((area) => (
+            <TouchableOpacity
+              key={area}
+              style={[styles.tab, latestArea === area && styles.selectedTab]}
+              onPress={() => { setLatestArea(area) }}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.tabText}>{area}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <FlatList
+          data={latestPosts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <ListItem post={item} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps='always'
+          contentContainerStyle={styles.listContainer}
+        />
+        <View style={styles.fishNow}>
+          <Text style={styles.title}>今釣れてる釣り方</Text>
+          {latestPosts.length > 0 && (
+            <View style={styles.fishingNow}>
+              <Text style={styles.now}>{latestPosts[0].structure}</Text>
+              <Icon name="delete" size={32} color="#888" />
+              <Text style={styles.now}>{latestPosts[0].cover}</Text>
+              <Icon name="delete" size={32} color="#888" />
+              <Text style={styles.now}>{latestPosts[0].lure}</Text>
+            </View>
+          )}
+        </View>
+        <Text style={styles.title}>釣果ランキング[長さ]</Text>
+        <View style={styles.tabs}>
+          {areas.map((area) => (
+            <TouchableOpacity
+              key={area}
+              style={[styles.tab, largestArea === area && styles.selectedTab]}
+              onPress={() => { setLargestArea(area) }}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.tabText}>{area}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <FlatList
+          data={largestPosts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item, index }) => <ListSizeItem post={item} index={index} />}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps="always"
+          contentContainerStyle={styles.listContainer}
+        />
+        <Link replace href='/post/rule' asChild >
+          <TouchableOpacity>
+            <Text style={styles.footerLink}>琵琶湖バス釣りルール</Text>
           </TouchableOpacity>
-        ))}
-      </View>
-      <FlatList
-        data={latestPosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ListItem post={item} />}
-        horizontal
-        showsHorizontalScrollIndicator={false} // ← 横スクロールバーを非表示
-        keyboardShouldPersistTaps='always' // ← タップが無視されないようにする
-        contentContainerStyle={styles.listContainer}
-      />
-      <Text style={styles.title}>最大サイズ釣果</Text>
-      <View style={styles.tabs}>
-        {areas.map((area) => (
-          <TouchableOpacity
-            key={area}
-            style={[styles.tab, largestArea === area && styles.selectedTab]}
-            onPress={() => { setLargestArea(area) }}
-            activeOpacity={0.7}
-          >
-            <Text style={styles.tabText}>{area}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <FlatList
-        data={largestPosts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <ListSizeItem post={item} />}
-        horizontal
-        showsHorizontalScrollIndicator={false} // ← 横スクロールバーを非表示
-        keyboardShouldPersistTaps="always" // ← タップが無視されないようにする
-        contentContainerStyle={styles.listContainer}
-      />
+        </Link>
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#F0F4F8',
-    paddingVertical: 16
+    backgroundColor: '#F0F4F8'
+  },
+  inner: {
+    marginVertical: 24,
+    paddingHorizontal: 8
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginVertical: 8,
-    marginHorizontal: 16
+    marginBottom: 24
   },
   mapLink: {
     fontSize: 16,
@@ -161,7 +183,6 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   tab: {
-    padding: 8,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent'
   },
@@ -173,7 +194,36 @@ const styles = StyleSheet.create({
     color: '#467FD3'
   },
   listContainer: {
-    paddingHorizontal: 8
+    height: 170,
+    marginBottom: 16
+  },
+  fishNow: {
+    marginBottom: 24
+  },
+  fishingNow: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  now: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    marginHorizontal: 8,
+    backgroundColor: '#D0D0D0',
+    overflow: 'hidden'
+  },
+  footerLink: {
+    borderWidth: 1,
+    borderRadius: 8,
+    backgroundColor: '#467FD3',
+    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#fffff',
+    overflow: 'hidden'
   }
 })
 

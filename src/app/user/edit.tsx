@@ -106,6 +106,7 @@ const Edit = (): JSX.Element => {
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー編集</Text>
+        <Text style={styles.textTitle}>天気を選択</Text>
         <TextInput
           style={styles.input}
           value={userName}
@@ -114,6 +115,7 @@ const Edit = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
+        <Text style={styles.textTitle}>天気を選択</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -123,6 +125,7 @@ const Edit = (): JSX.Element => {
           textContentType='emailAddress'
           returnKeyType='done'
         />
+        <Text style={styles.textTitle}>天気を選択</Text>
         <TextInput
           style={styles.input}
           value={profile}
@@ -182,7 +185,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 27
+    marginHorizontal: 8
   },
   title: {
     fontSize: 24,
@@ -190,11 +193,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 24
   },
+  textTitle: {
+    paddingVertical: 4,
+    fontWeight: 'bold'
+  },
   input: {
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 4,
-    height: 48,
+    height: 32,
     marginVertical: 4,
     alignItems: 'flex-start',
     justifyContent: 'center',

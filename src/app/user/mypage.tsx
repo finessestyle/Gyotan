@@ -1,6 +1,6 @@
 import {
   View, Text, StyleSheet, Image,
-  FlatList, TouchableOpacity, Alert
+  FlatList, TouchableOpacity, Alert, ScrollView
 } from 'react-native'
 import { router, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -161,7 +161,7 @@ const Mypage = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inner}>
+      <ScrollView style={styles.inner}>
         <View style={styles.innerTitle}>
           <Text style={styles.title}>マイページ</Text>
           {auth.currentUser?.uid === user?.id && (
@@ -190,34 +190,41 @@ const Mypage = (): JSX.Element => {
             </>)
           }
         </View>
-      </View>
-      <View style={styles.subInner}>
-        <View style={styles.tabs}>
-          {areas.map((area) => (
+        <View style={styles.subInner}>
+          <View style={styles.tabs}>
+            {areas.map((area) => (
 
-            <TouchableOpacity
-              key={area}
-              style={[styles.tab, selectedArea === area && styles.selectedTab]}
-              onPress={() => { setSelectedArea(area) }}
-            >
-              <Text style={styles.tabText}>{area}</Text>
-            </TouchableOpacity>
-          ))}
+              <TouchableOpacity
+                key={area}
+                style={[styles.tab, selectedArea === area && styles.selectedTab]}
+                onPress={() => { setSelectedArea(area) }}
+              >
+                <Text style={styles.tabText}>{area}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <FlatList
+            data={posts}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => <ListItem post={item} />}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyboardShouldPersistTaps='always'
+            contentContainerStyle={styles.listContainer}
+          />
         </View>
-        <FlatList
-          data={posts}
-          numColumns={2}
-          renderItem={({ item }) => <ListItem post={item} />}
-        />
-      </View>
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#F0F4F8'
+  },
+  inner: {
+    marginVertical: 24,
+    paddingHorizontal: 8
   },
   innerTitle: {
     flexDirection: 'row'
@@ -227,13 +234,8 @@ const styles = StyleSheet.create({
     marginRight: 16,
     marginTop: 4
   },
-  inner: {
-    marginTop: 24,
-    marginHorizontal: 16
-  },
   subInner: {
-    flex: 1,
-    marginVertical: 12,
+    marginVertical: 24,
     marginHorizontal: 8
   },
   title: {
@@ -292,6 +294,10 @@ const styles = StyleSheet.create({
   buttonStyle: {
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  listContainer: {
+    height: 170,
+    marginBottom: 16
   }
 })
 

@@ -4,10 +4,11 @@ import { type Post } from '../../types/post'
 
 interface Props {
   post: Post
+  index: number
 }
 
 const ListSizeItem = (props: Props): JSX.Element | null => {
-  const { post } = props
+  const { post, index } = props
   const { images } = post
 
   return (
@@ -29,6 +30,7 @@ const ListSizeItem = (props: Props): JSX.Element | null => {
                 style={styles.listItemImage}
                 source= {{ uri: images[0] }}
               />
+              <Text style={styles.imageNumber}>{index + 1}</Text>
               <Text style={styles.length}>
                 {post?.length}cm / {post?.weight}g
               </Text>
@@ -62,7 +64,17 @@ const styles = StyleSheet.create({
   },
   listItemImage: {
     width: 160,
-    height: 120
+    height: 120,
+    position: 'relative'
+  },
+  imageNumber: {
+    position: 'absolute',
+    top: 19,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    paddingHorizontal: 4,
+    fontSize: 16
   },
   length: {
     color: '#D0D0D0',

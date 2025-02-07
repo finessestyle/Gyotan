@@ -161,6 +161,19 @@ const SignUp = (): JSX.Element => {
         {userImage !== null && <Image source={{ uri: userImage }} style={styles.image} />}
         </View>
 
+        <View style={styles.subFooter}>
+          <Link replace href='/auth/term' asChild >
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>利用規約</Text>
+            </TouchableOpacity>
+          </Link>
+          <Link replace href='/auth/privacy' asChild >
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>プライバシーポリシー</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+
         <Button label='新規登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
         <View style={styles.footer}>
           <Link replace href='/auth/login' asChild >
@@ -225,6 +238,10 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row'
+  },
+  subFooter: {
+    flexDirection: 'column',
+    marginBottom: 16
   },
   footerText: {
     fontSize: 14,

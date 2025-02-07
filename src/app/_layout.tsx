@@ -116,6 +116,21 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
+          name="post/rule"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/top')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
           name="map/create"
           options={{
             href: null,
@@ -193,6 +208,36 @@ const Layout = (): JSX.Element => {
         />
         <Tabs.Screen
           name="user/list"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/auth/signup')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="auth/privacy"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/auth/signup')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="auth/term"
           options={{
             href: null,
             headerLeft: () => {
