@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   fishArea: {
-    height: 48,
+    height: 32,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

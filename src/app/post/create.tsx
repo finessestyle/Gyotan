@@ -633,11 +633,6 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     fontSize: 16
   },
-  charCount: {
-    textAlign: 'right',
-    justifyContent: 'center',
-    color: 'gray'
-  },
   textTitle: {
     paddingVertical: 4
   },

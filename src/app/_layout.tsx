@@ -107,7 +107,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/post/list')
+                  router.replace('/post/map')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>
@@ -183,7 +183,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/post/list')
+                  router.replace('/user/mypage')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>
@@ -213,7 +213,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/auth/signup')
+                  router.replace('/user/mypage')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>

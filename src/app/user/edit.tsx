@@ -106,7 +106,7 @@ const Edit = (): JSX.Element => {
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー編集</Text>
-        <Text style={styles.textTitle}>天気を選択</Text>
+        <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
           style={styles.input}
           value={userName}
@@ -115,7 +115,7 @@ const Edit = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>天気を選択</Text>
+        <Text style={styles.textTitle}>メールアドレス</Text>
         <TextInput
           style={styles.input}
           value={email}
@@ -125,13 +125,14 @@ const Edit = (): JSX.Element => {
           textContentType='emailAddress'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>天気を選択</Text>
+        <Text style={styles.textTitle}>プロフィール</Text>
         <TextInput
           style={styles.input}
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
           placeholder='プロフィールを入力'
           keyboardType='default'
+          maxLength={30}
           returnKeyType='done'
         />
         <Button

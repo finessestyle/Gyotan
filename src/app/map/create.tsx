@@ -203,19 +203,6 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     paddingVertical: 4
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    flexDirection: 'row'
-  },
-  imageWrapper: {
-    position: 'relative',
-    margin: 6
-  },
-  image: {
-    width: 100,
-    height: 100
   }
 })
 

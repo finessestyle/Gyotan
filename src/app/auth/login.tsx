@@ -60,7 +60,15 @@ const LogIn = (): JSX.Element => {
             />
           </TouchableOpacity>
         </View>
-        <Button label='ログイン' onPress={() => { void handlePress(email, password) }} />
+        <Button label='ログイン' onPress={() => {
+          void handlePress(
+            email,
+            password
+          )
+        }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+        />
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >
             <TouchableOpacity>
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 48,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16
@@ -104,7 +112,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 24,
+    top: 16,
     transform: [{ translateY: -12 }]
   },
   footer: {

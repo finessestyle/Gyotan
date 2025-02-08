@@ -117,7 +117,7 @@ const Top = (): JSX.Element => {
               <Icon name="delete" size={32} color="#888" />
               <Text style={styles.now}>{latestPosts[0].cover}</Text>
               <Icon name="delete" size={32} color="#888" />
-              <Text style={styles.now}>{latestPosts[0].lure}</Text>
+              <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
             </View>
           )}
         </View>
@@ -145,7 +145,9 @@ const Top = (): JSX.Element => {
         />
         <Link replace href='/post/rule' asChild >
           <TouchableOpacity>
-            <Text style={styles.footerLink}>琵琶湖バス釣りルール</Text>
+            <View style={styles.fishingNow}>
+              <Text style={styles.now}>琵琶湖バス釣りルール</Text>
+            </View>
           </TouchableOpacity>
         </Link>
       </ScrollView>
@@ -201,19 +203,20 @@ const styles = StyleSheet.create({
     marginBottom: 24
   },
   fishingNow: {
-    flexDirection: 'row',
-    justifyContent: 'center'
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   now: {
     fontSize: 16,
     fontWeight: 'bold',
+    width: 300,
+    justifyContent: 'center',
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginHorizontal: 8,
-    backgroundColor: '#D0D0D0',
-    overflow: 'hidden'
+    backgroundColor: '#467FD3',
+    overflow: 'hidden',
+    textAlign: 'center'
   },
   footerLink: {
     borderWidth: 1,

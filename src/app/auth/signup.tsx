@@ -20,16 +20,16 @@ const handlePress = async (
   userImage: string | null
 ): Promise<void> => {
   try {
+    if (userName === '') {
+      Alert.alert('エラー', 'ユーザーネームを入力してください')
+      return
+    }
     if (email === '') {
       Alert.alert('エラー', 'メールアドレスを入力してください')
       return
     }
     if (password === '') {
       Alert.alert('エラー', 'パスワードを入力してください')
-      return
-    }
-    if (userName === '') {
-      Alert.alert('エラー', 'ユーザーネームを入力してください')
       return
     }
     if (profile === '') {
@@ -174,7 +174,18 @@ const SignUp = (): JSX.Element => {
           </Link>
         </View>
 
-        <Button label='新規登録' onPress={() => { void handlePress(email, password, userName, profile, userImage) }} />
+        <Button label='新規登録' onPress={() => {
+          void handlePress(
+            email,
+            password,
+            userName,
+            profile,
+            userImage
+          )
+        }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+        />
         <View style={styles.footer}>
           <Link replace href='/auth/login' asChild >
             <TouchableOpacity>
@@ -207,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 48,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 24,
+    top: 16,
     transform: [{ translateY: -12 }]
   },
   image: {
@@ -234,19 +245,13 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     marginTop: 4,
-    marginBottom: 16
+    marginBottom: 8
   },
   footer: {
     flexDirection: 'row'
   },
   subFooter: {
-    flexDirection: 'column',
-    marginBottom: 16
-  },
-  footerText: {
-    fontSize: 14,
-    lineHeight: 24,
-    marginRight: 8
+    flexDirection: 'column'
   },
   footerLink: {
     marginTop: 8,

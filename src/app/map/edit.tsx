@@ -168,7 +168,7 @@ const Edit = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
-          style={styles.mapInput}
+          style={styles.contentInput}
           value={content}
           onChangeText={(text) => { setContent(text) }}
           placeholder='釣り場内容を入力してください'
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     fontSize: 16
   },
-  mapInput: {
+  contentInput: {
     borderBottomWidth: 1,
     borderColor: '#D0D0D0',
     height: 'auto',
@@ -233,18 +233,6 @@ const styles = StyleSheet.create({
 
   textTitle: {
     paddingVertical: 4
-  },
-  imageContainer: {
-    borderWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    flexDirection: 'row',
-    flexWrap: 'wrap'
-  },
-  image: {
-    width: 100,
-    height: 100,
-    margin: 6.5
   }
 })
 

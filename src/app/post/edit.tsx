@@ -691,8 +691,7 @@ const styles = StyleSheet.create({
     color: 'gray'
   },
   textTitle: {
-    paddingVertical: 4,
-    fontWeight: 'bold'
+    paddingVertical: 4
   },
   imageContainer: {
     borderWidth: 1,
