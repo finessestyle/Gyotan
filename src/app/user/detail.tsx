@@ -25,6 +25,10 @@ const Detail = (): JSX.Element => {
         userName: data.userName,
         profile: data.profile,
         userImage: data.userImage,
+        userYoutube: data.userYoutube,
+        userInstagram: data.userInstagram,
+        userTiktok: data.userTiktok,
+        userX: data.userX,
         updatedAt: data.updatedAt
       })
     })
@@ -34,7 +38,7 @@ const Detail = (): JSX.Element => {
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -47,6 +51,7 @@ const Detail = (): JSX.Element => {
           weight,
           lure,
           lureAction,
+          waterDepth,
           structure,
           cover,
           catchFish,
@@ -65,6 +70,13 @@ const Detail = (): JSX.Element => {
     }
   }, [selectedArea, id])
 
+  const socialLinks = [
+    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
+    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
+    { name: 'x-twitter', url: user?.userX, color: '#000000' },
+    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
+  ]
+
   return (
     <View style={styles.container}>
       <View style={styles.inner}>
@@ -77,6 +89,15 @@ const Detail = (): JSX.Element => {
           <Text style={styles.userName}>{user?.userName}さん</Text>
           <Text style={styles.userProfile}>{user?.profile}</Text>
         </View>
+      </View>
+      <View style={styles.userSnsTop}>
+        {socialLinks.map((social, index) =>
+          social.url ? (
+            <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url)} style={styles.userSns}>
+              <FontAwesome6 size={30} name={social.name} color={social.color} />
+            </TouchableOpacity>
+          ) : null
+        )}
       </View>
       <View style={styles.subInner}>
         <View style={styles.tabs}>

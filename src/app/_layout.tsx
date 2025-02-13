@@ -1,6 +1,6 @@
 import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { View, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 
 const Layout = (): JSX.Element => {
   const renderBackButton = (): JSX.Element => {
@@ -45,17 +45,22 @@ const Layout = (): JSX.Element => {
           name="post/create"
           options={{
             title: '釣果投稿',
-            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="plus" color={color} />,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/post/top')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="plus" color={color} />
+          }}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              e.preventDefault() // ← デフォルトのタブ遷移を防ぐ
+
+              Alert.alert(
+                '確認',
+                '位置データがない写真は投稿できません',
+                [
+                  { text: 'キャンセル', style: 'cancel' },
+                  { text: 'OK', onPress: () => navigation.navigate('post/create') } // OKなら遷移
+                ]
               )
             }
-          }}
+          })}
         />
         <Tabs.Screen
           name="map/list"
@@ -225,6 +230,7 @@ const Layout = (): JSX.Element => {
           name="auth/privacy"
           options={{
             href: null,
+            tabBarStyle: { display: 'none' },
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
@@ -240,6 +246,7 @@ const Layout = (): JSX.Element => {
           name="auth/term"
           options={{
             href: null,
+            tabBarStyle: { display: 'none' },
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {

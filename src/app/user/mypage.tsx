@@ -1,6 +1,6 @@
 import {
   View, Text, StyleSheet, Image,
-  FlatList, TouchableOpacity, Alert, ScrollView
+  FlatList, TouchableOpacity, Alert, ScrollView, Linking
 } from 'react-native'
 import { router, useNavigation } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -25,6 +25,12 @@ const handlePress = (): void => {
         text: '編集',
         onPress: () => {
           router.push({ pathname: 'user/edit', params: { id: userId } })
+        }
+      },
+      {
+        text: '問い合わせ',
+        onPress: () => {
+          Linking.openURL('https://forms.gle/2apUPegk4WrNiMUv5')
         }
       },
       {
@@ -114,6 +120,10 @@ const Mypage = (): JSX.Element => {
         userName: data.userName,
         profile: data.profile,
         userImage: data.userImage,
+        userYoutube: data.userYoutube,
+        userTiktok: data.userTiktok,
+        userInstagram: data.userInstagram,
+        userX: data.userX,
         updatedAt: data.updatedAt
       })
     })
@@ -125,7 +135,7 @@ const Mypage = (): JSX.Element => {
       snapshot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length,
-          weight, lure, lureAction, structure, cover, catchFish, fishArea, area, exifData, updatedAt
+          weight, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt
         } = doc.data()
         userPost.push({
           id: doc.id,
@@ -139,6 +149,7 @@ const Mypage = (): JSX.Element => {
           weight,
           lure,
           lureAction,
+          waterDepth,
           structure,
           cover,
           catchFish,
@@ -158,6 +169,13 @@ const Mypage = (): JSX.Element => {
   }, [selectedArea])
 
   const isAnonymous = auth.currentUser?.isAnonymous === true
+
+  const socialLinks = [
+    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
+    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
+    { name: 'x-twitter', url: user?.userX, color: '#000000' },
+    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
+  ]
 
   return (
     <View style={styles.container}>
@@ -189,6 +207,16 @@ const Mypage = (): JSX.Element => {
             <Text style={styles.userProfile}>{user?.profile}</Text>
             </>)
           }
+        </View>
+
+        <View style={styles.userSnsTop}>
+          {socialLinks.map((social, index) =>
+            social.url ? (
+              <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url)} style={styles.userSns}>
+                <FontAwesome6 size={30} name={social.name} color={social.color} />
+              </TouchableOpacity>
+            ) : null
+          )}
         </View>
         <View style={styles.subInner}>
           <View style={styles.tabs}>
@@ -273,6 +301,21 @@ const styles = StyleSheet.create({
   },
   userProfile: {
     fontSize: 14
+  },
+  userSnsTop: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  userSns: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    backgroundColor: '#D0D0D0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 150,
+    margin: 8
   },
   tabs: {
     flexDirection: 'row',

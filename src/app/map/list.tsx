@@ -65,15 +65,17 @@ const List = (): JSX.Element => {
               }}
             >
               <Callout>
-              <Link href={{ pathname: '/map/detail', params: { id: map.id } }}>
-                <View style={{ alignItems: 'center' }}>
-                  <Text>{map.title}</Text>
-                  <View style={styles.submap} pointerEvents="none">
-                    <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
+                <Link
+                  href={{ pathname: '/map/detail', params: { id: map.id } }}
+                >
+                  <View style={{ alignItems: 'center', position: 'relative' }}>
+                    <Text>{map.title}</Text>
+                    <View style={styles.submap} pointerEvents="none">
+                      <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
+                    </View>
                   </View>
-                </View>
-              </Link>
-             </Callout>
+                </Link>
+              </Callout>
             </Marker>
           )
         })}

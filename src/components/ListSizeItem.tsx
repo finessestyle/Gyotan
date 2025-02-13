@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   item: {
-    width: 160,
-    height: 160,
+    width: 'auto',
+    height: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
@@ -64,13 +64,13 @@ const styles = StyleSheet.create({
   },
   listItemImage: {
     width: 160,
-    height: 120,
+    height: 130,
     position: 'relative'
   },
   imageNumber: {
     position: 'absolute',
-    top: 19,
-    right: 0,
+    top: 17,
+    left: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     color: 'white',
     paddingHorizontal: 4,

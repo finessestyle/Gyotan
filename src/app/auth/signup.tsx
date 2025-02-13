@@ -148,8 +148,8 @@ const SignUp = (): JSX.Element => {
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
-          labelStyle={{ lineHeight: 12, color: '#000000' }}
+          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
             }).catch((error) => {
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 32,
+    height: 40,
     padding: 8,
     fontSize: 16,
     marginBottom: 16

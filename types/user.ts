@@ -5,6 +5,10 @@ interface User {
   userName: string
   profile: string
   userImage: string
+  userYoutube: string
+  userTiktok: string
+  userInstagram: string
+  userX: string
   updatedAt: Timestamp
 }
 

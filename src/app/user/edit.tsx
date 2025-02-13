@@ -14,6 +14,10 @@ const handlePress = async (
   id: string,
   email: string,
   userImage: string | null,
+  userYoutube: string | null,
+  userTiktok: string | null,
+  userInstagram: string | null,
+  userX: string | null,
   userName: string,
   profile: string
 ): Promise<void> => {
@@ -51,6 +55,10 @@ const handlePress = async (
       userImage,
       userName,
       profile,
+      userYoutube,
+      userTiktok,
+      userInstagram,
+      userX,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
     router.back()
@@ -63,6 +71,10 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
+  const [userYoutube, setUserYoutube] = useState('')
+  const [userTiktok, setUserTiktok] = useState('')
+  const [userInstagram, setUserInstagram] = useState('')
+  const [userX, setUserX] = useState('')
   const [userName, setUserName] = useState('')
   const [profile, setProfile] = useState('')
 
@@ -125,6 +137,46 @@ const Edit = (): JSX.Element => {
           textContentType='emailAddress'
           returnKeyType='done'
         />
+        <Text style={styles.textTitle}>Youtube</Text>
+        <TextInput
+          style={styles.input}
+          value={userYoutube}
+          onChangeText={(text) => { setUserYoutube(text) }}
+          keyboardType='url'
+          placeholder='URLを入力'
+          textContentType='URL'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>Tiktok</Text>
+        <TextInput
+          style={styles.input}
+          value={userTiktok}
+          onChangeText={(text) => { setUserTiktok(text) }}
+          keyboardType='url'
+          placeholder='URLを入力'
+          textContentType='URL'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>Instagram</Text>
+        <TextInput
+          style={styles.input}
+          value={userInstagram}
+          onChangeText={(text) => { setUserInstagram(text) }}
+          keyboardType='url'
+          placeholder='URLを入力'
+          textContentType='URL'
+          returnKeyType='done'
+        />
+        <Text style={styles.textTitle}>X</Text>
+        <TextInput
+          style={styles.input}
+          value={userX}
+          onChangeText={(text) => { setUserX(text) }}
+          keyboardType='url'
+          placeholder='URLを入力'
+          textContentType='URL'
+          returnKeyType='done'
+        />
         <Text style={styles.textTitle}>プロフィール</Text>
         <TextInput
           style={styles.input}
@@ -158,6 +210,10 @@ const Edit = (): JSX.Element => {
                 auth.currentUser.uid,
                 email,
                 userImage,
+                userYoutube,
+                userTiktok,
+                userInstagram,
+                userX,
                 userName,
                 profile
               )
@@ -210,16 +266,18 @@ const styles = StyleSheet.create({
   },
   imageBox: {
     borderWidth: 1,
+    borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 'auto',
-    width: 'auto',
-    marginBottom: 16
+    height: 100,
+    width: 100,
+    marginTop: 4,
+    marginBottom: 8
   },
   userImage: {
     width: 100,
     height: 100,
-    margin: 5
+    borderRadius: 8
   }
 })
 

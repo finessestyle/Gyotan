@@ -24,7 +24,7 @@ const Top = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -37,6 +37,7 @@ const Top = (): JSX.Element => {
           weight,
           lure,
           lureAction,
+          waterDepth,
           structure,
           cover,
           catchFish,
@@ -57,7 +58,7 @@ const Top = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -70,6 +71,7 @@ const Top = (): JSX.Element => {
           weight,
           lure,
           lureAction,
+          waterDepth,
           structure,
           cover,
           catchFish,
@@ -86,6 +88,13 @@ const Top = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
+      <Link replace href='/post/rule' asChild >
+        <TouchableOpacity>
+          <View style={styles.rule}>
+            <Text style={styles.ruleText}>琵琶湖バス釣りルール</Text>
+          </View>
+        </TouchableOpacity>
+      </Link>
       <ScrollView style={styles.inner}>
         <Text style={styles.title}>最新釣果</Text>
         <View style={styles.tabs}>
@@ -110,7 +119,7 @@ const Top = (): JSX.Element => {
           contentContainerStyle={styles.listContainer}
         />
         <View style={styles.fishNow}>
-          <Text style={styles.title}>今釣れてる釣り方</Text>
+          <Text style={styles.title}>今釣れてる!?</Text>
           {latestPosts.length > 0 && (
             <View style={styles.fishingNow}>
               <Text style={styles.now}>{latestPosts[0].structure}</Text>
@@ -121,7 +130,7 @@ const Top = (): JSX.Element => {
             </View>
           )}
         </View>
-        <Text style={styles.title}>釣果ランキング[長さ]</Text>
+        <Text style={styles.title}>ランキング[長さ]</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
             <TouchableOpacity
@@ -143,13 +152,6 @@ const Top = (): JSX.Element => {
           keyboardShouldPersistTaps="always"
           contentContainerStyle={styles.listContainer}
         />
-        <Link replace href='/post/rule' asChild >
-          <TouchableOpacity>
-            <View style={styles.fishingNow}>
-              <Text style={styles.now}>琵琶湖バス釣りルール</Text>
-            </View>
-          </TouchableOpacity>
-        </Link>
       </ScrollView>
     </View>
   )
@@ -162,6 +164,17 @@ const styles = StyleSheet.create({
   inner: {
     marginVertical: 24,
     paddingHorizontal: 8
+  },
+  rule: {
+    height: 'auto',
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#fffff',
+    backgroundColor: 'yellow'
+  },
+  ruleText: {
+    fontSize: 16,
+    textAlign: 'center'
   },
   title: {
     fontSize: 24,

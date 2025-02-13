@@ -18,6 +18,7 @@ interface Post {
   weather: string
   lure: string
   lureAction: string
+  waterDepth: string
   structure: string
   cover: string
   length: number

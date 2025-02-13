@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   item: {
-    width: 160,
-    height: 160,
+    width: 'auto',
+    height: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   listItemImage: {
     width: 160,
-    height: 120
+    height: 130
   },
   length: {
     color: '#D0D0D0',

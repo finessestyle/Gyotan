@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { View, Text, ScrollView, StyleSheet, Linking } from 'react-native'
 
 const Privacy = (): JSX.Element => {
   return (
@@ -33,9 +33,16 @@ const Privacy = (): JSX.Element => {
 
         <Text style={styles.sectionTitle}>（お問い合わせ窓口）</Text>
         <Text style={styles.text}>
-          本プライバシーポリシーに関するお問い合わせは、下記の窓口までお願いいたします。
+          本プライバシーポリシーに関するお問い合わせは、
+        <Text
+          style={{ color: 'blue', textDecorationLine: 'underline' }}
+          onPress={() => Linking.openURL('https://forms.gle/2apUPegk4WrNiMUv5')}
+        >
+          こちらのフォーム
         </Text>
-        <Text style={styles.contact}>当サイト管理者：フィネススタイル</Text>
+          までお願いいたします。
+        </Text>
+        <Text style={styles.contact}>当アプリ管理者：フィネススタイル</Text>
       </ScrollView>
     </View>
   )

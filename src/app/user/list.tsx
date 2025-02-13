@@ -14,12 +14,16 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
-        const { userName, profile, userImage, updatedAt } = doc.data()
+        const { userName, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt } = doc.data()
         remoteUsers.push({
           id: doc.id,
           userName,
           profile,
           userImage,
+          userYoutube,
+          userTiktok,
+          userInstagram,
+          userX,
           updatedAt
         })
       })

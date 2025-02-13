@@ -91,18 +91,14 @@ const Map = (): JSX.Element => {
               <Callout>
                 <Link
                   href={{ pathname: '/post/detail', params: { id: post.id } }}
-                  asChild
                 >
-                  <TouchableWithoutFeedback>
-                    <View style={{ alignItems: 'center' }}>
-                      <Image
-                        source={{ uri: post.images?.[0] }}
-                        style={{ width: 130, height: 130, borderRadius: 10 }}
-                        resizeMode="cover"
-                      />
-                      <Text>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
-                    </View>
-                  </TouchableWithoutFeedback>
+                  <View style={{ alignItems: 'center', position: 'relative' }}>
+                    <Image
+                      source={{ uri: post.images?.[0] }}
+                      style={{ width: 200, height: 200, borderRadius: 10 }}
+                    />
+                    <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
+                  </View>
                 </Link>
              </Callout>
             </Marker>
@@ -119,6 +115,12 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1
+  },
+  length: {
+    color: '#ffffff',
+    position: 'absolute',
+    bottom: 0,
+    right: 8
   }
 })
 

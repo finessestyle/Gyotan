@@ -25,6 +25,7 @@ const handlePress = async (
   weather: string,
   lure: string,
   lureAction: string,
+  waterDepth: string,
   structure: string,
   cover: string,
   length: number | null,
@@ -53,6 +54,18 @@ const handlePress = async (
       Alert.alert('エラー', '天気を選択してください')
       return
     }
+    if (lure === '') {
+      Alert.alert('エラー', 'ルアーを選択してください')
+      return
+    }
+    if (lureAction === '') {
+      Alert.alert('エラー', 'ルアーアクションを選択してください')
+      return
+    }
+    if (waterDepth === '') {
+      Alert.alert('エラー', '水深を選択してください')
+      return
+    }
     if (structure === '') {
       Alert.alert('エラー', 'ストラクチャーを選択してください')
       return
@@ -67,14 +80,6 @@ const handlePress = async (
     }
     if (weight === null) {
       Alert.alert('エラー', '重さを入力してください')
-      return
-    }
-    if (lure === '') {
-      Alert.alert('エラー', 'ルアーを選択してください')
-      return
-    }
-    if (lureAction === '') {
-      Alert.alert('エラー', 'ルアーアクションを選択してください')
       return
     }
     if (catchFish === null) {
@@ -125,6 +130,7 @@ const handlePress = async (
       fishArea,
       lure,
       lureAction,
+      waterDepth,
       weather,
       structure,
       cover,
@@ -147,6 +153,7 @@ const Create = (): JSX.Element => {
   const [weather, setWeather] = useState('')
   const [lure, setLure] = useState('')
   const [lureAction, setLureAction] = useState('')
+  const [waterDepth, setWaterDepth] = useState('')
   const [structure, setStructure] = useState('')
   const [cover, setCover] = useState('')
   const [length, setLength] = useState<number | null>(null)
@@ -299,16 +306,10 @@ const Create = (): JSX.Element => {
   const hardLureActions = [
     { label: 'ただ巻き', value: 'ただ巻き' },
     { label: 'ストップアンドゴー', value: 'ストップアンドゴー' },
-    { label: 'トウィッチング', value: 'トウィッチング' },
+    { label: 'トゥイッチング', value: 'トゥイッチング' },
     { label: 'ジャーキング', value: 'ジャーキング' },
     { label: 'リフトアンドフォール', value: 'リフトアンドフォール' },
     { label: 'ドッグウォーク', value: 'ドッグウォーク' }
-  ]
-
-  const waterDepth = [
-    { label: 'トップ', value: 'トップ' },
-    { label: 'ミドル', value: 'ミドル' },
-    { label: 'ボトム', value: 'ボトム' }
   ]
 
   const areaOptions =
@@ -466,6 +467,23 @@ const Create = (): JSX.Element => {
           />
         )}
 
+        <Text style={styles.textTitle}>水深を選択</Text>
+        <RNPickerSelect
+          value={waterDepth}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setWaterDepth(value)
+            }
+          }}
+          items={[
+            { label: 'トップ', value: 'トップ' },
+            { label: 'ミドル', value: 'ミドル' },
+            { label: 'ボトム', value: 'ボトム' }
+          ]}
+          placeholder={{ label: '水深を選択してください', value: '' }}
+          style={pickerSelectStyles}
+        />
+
         <Text style={styles.textTitle}>ストラクチャー（地形変化）を選択</Text>
         <RNPickerSelect
           value={structure}
@@ -580,6 +598,7 @@ const Create = (): JSX.Element => {
             weather,
             lure,
             lureAction,
+            waterDepth,
             structure,
             cover,
             length,
