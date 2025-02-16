@@ -22,7 +22,7 @@ const Rule = (): JSX.Element => {
         <Text style={styles.text}>バスアングラーの最低限のマナーとしてゴミは持ち帰りましょう。</Text>
 
         <Text style={styles.subtitle}>駐車禁止の場所には車を止めない</Text>
-        <Text style={styles.text}>琵琶湖には住宅近くのポイントもあります。駐車禁止の場所には車を止めないようにしましょう。</Text>
+        <Text style={styles.text}>琵琶湖には住宅近くのポイントもあります、駐車禁止の場所には車を止めないようにしましょう。</Text>
         <Text style={styles.text}>違法駐車が原因で立ち入り禁止になったポイントもあります。</Text>
 
         <Text style={styles.subtitle}>迷惑行為は絶対に慎みましょう</Text>

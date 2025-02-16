@@ -20,11 +20,11 @@ const Top = (): JSX.Element => {
 
   useEffect(() => {
     const ref = collection(db, 'posts')
-    const q = query(ref, where('fishArea', '==', latestArea), orderBy('updatedAt', 'desc'))
+    const q = query(ref, where('fishArea', '==', latestArea), orderBy('createdAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -43,6 +43,7 @@ const Top = (): JSX.Element => {
           catchFish,
           area,
           fishArea,
+          createdAt,
           updatedAt,
           exifData
         })
@@ -58,7 +59,7 @@ const Top = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -77,6 +78,7 @@ const Top = (): JSX.Element => {
           catchFish,
           area,
           fishArea,
+          createdAt,
           updatedAt,
           exifData
         })

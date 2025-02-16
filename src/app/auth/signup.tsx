@@ -1,6 +1,6 @@
 import {
   View, Text, TextInput, Alert,
-  StyleSheet, TouchableOpacity, Image
+  StyleSheet, TouchableOpacity, Image, ScrollView
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -11,6 +11,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 import Icon from 'react-native-vector-icons/Ionicons'
+import CheckBox from 'expo-checkbox'
 
 const handlePress = async (
   email: string,
@@ -74,6 +75,8 @@ const SignUp = (): JSX.Element => {
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
+  const [termsChecked, setTermsChecked] = useState(false)
+  const [privacyChecked, setPrivacyChecked] = useState(false)
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -90,7 +93,7 @@ const SignUp = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inner}>
+      <ScrollView style={styles.inner}>
         <Text style={styles.title}>新規登録</Text>
         <TextInput
           style={styles.input}
@@ -162,16 +165,28 @@ const SignUp = (): JSX.Element => {
         </View>
 
         <View style={styles.subFooter}>
-          <Link replace href='/auth/term' asChild >
-            <TouchableOpacity>
-              <Text style={styles.footerLink}>利用規約</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link replace href='/auth/privacy' asChild >
-            <TouchableOpacity>
-              <Text style={styles.footerLink}>プライバシーポリシー</Text>
-            </TouchableOpacity>
-          </Link>
+          <View style={styles.checkBox}>
+            <CheckBox
+              value={termsChecked}
+              onValueChange={setTermsChecked}
+            />
+            <Link replace href='/auth/term' asChild >
+              <TouchableOpacity>
+                <Text style={styles.footerLink}>利用規約に同意する</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+          <View style={styles.checkBox}>
+            <CheckBox
+              value={privacyChecked}
+              onValueChange={setPrivacyChecked}
+            />
+            <Link replace href='/auth/privacy' asChild >
+              <TouchableOpacity>
+                <Text style={styles.footerLink}>プライバシーポリシーに同意する</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
 
         <Button label='新規登録' onPress={() => {
@@ -193,7 +208,7 @@ const SignUp = (): JSX.Element => {
             </TouchableOpacity>
           </Link>
         </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }
@@ -247,17 +262,21 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 8
   },
-  footer: {
-    flexDirection: 'row'
-  },
   subFooter: {
     flexDirection: 'column'
   },
   footerLink: {
-    marginTop: 8,
+    marginLeft: 8,
     fontSize: 14,
-    lineHeight: 24,
+    lineHeight: 28,
     color: '#467FD3'
+  },
+  checkBox: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  footer: {
+    flexDirection: 'row'
   }
 })
 

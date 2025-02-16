@@ -1,5 +1,5 @@
 import {
-  View, Text, TextInput, StyleSheet, Alert, Image
+  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image
 } from 'react-native'
 import { router } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -115,8 +115,8 @@ const Edit = (): JSX.Element => {
   }, [])
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.inner}>
+    <View style={styles.container}>
+      <ScrollView style={styles.inner}>
         <Text style={styles.title}>ユーザー編集</Text>
         <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
@@ -135,6 +135,30 @@ const Edit = (): JSX.Element => {
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
+          returnKeyType='done'
+        />
+        <Button
+          label="ユーザー画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
+        />
+        <View style={styles.imageBox}>
+          {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
+        </View>
+        <Text style={styles.textTitle}>プロフィール</Text>
+        <TextInput
+          style={styles.input}
+          value={profile}
+          onChangeText={(text) => { setProfile(text) }}
+          placeholder='プロフィールを入力'
+          keyboardType='default'
+          maxLength={30}
           returnKeyType='done'
         />
         <Text style={styles.textTitle}>Youtube</Text>
@@ -177,31 +201,6 @@ const Edit = (): JSX.Element => {
           textContentType='URL'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>プロフィール</Text>
-        <TextInput
-          style={styles.input}
-          value={profile}
-          onChangeText={(text) => { setProfile(text) }}
-          placeholder='プロフィールを入力'
-          keyboardType='default'
-          maxLength={30}
-          returnKeyType='done'
-        />
-        <Button
-          label="ユーザー画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={() => {
-            pickImage().then(() => {
-            }).catch((error) => {
-              console.error('Error picking image:', error)
-            })
-          }}
-        />
-        <View style={styles.imageBox}>
-          {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
-        </View>
-
         <Button
           label='編集'
           onPress={() => {
@@ -230,8 +229,8 @@ const Edit = (): JSX.Element => {
             lineHeight: 21
           }}
         />
-      </View>
-    </KeyboardAvoidingView>
+      </ScrollView>
+    </View>
   )
 }
 

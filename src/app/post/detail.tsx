@@ -9,7 +9,7 @@ import { type Post } from '../../../types/post'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
 import Swiper from 'react-native-swiper'
-import DeleteButton from '../../components/DeleteButton'
+// import DeleteButton from '../../components/DeleteButton'
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'post/edit', params: { id } })
@@ -19,15 +19,14 @@ const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [post, setPost] = useState<Post | null>(null)
   const postImages = post !== null && Array.isArray(post.images) ? post.images : []
-
   useEffect(() => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, createdAt } = postDoc.data() as Post
       let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
-        newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした！`
+        newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
       } else {
         newContent += '残念ながら今回は釣果がありませんでしたが、次回に期待です！'
       }
@@ -50,6 +49,7 @@ const Detail = (): JSX.Element => {
         waterDepth,
         catchFish,
         content: newContent,
+        createdAt,
         updatedAt
       })
     })
@@ -60,16 +60,16 @@ const Detail = (): JSX.Element => {
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
         <View style={styles.postBody}>
-          <Link href={{ pathname: '/user/detail', params: { id: post?.userId } }} asChild>
+          <Link href={{ pathname: '/user/detail', params: { id: post?.userId ?? 'default-id' } }} asChild>
             <TouchableOpacity>
               <View style={styles.userInfo} >
-                <Text>投稿者 : </Text>
+                <Text>投稿者  :  </Text>
                 {post?.userImage !== null && <Image source={{ uri: post?.userImage }} style={styles.userImage} />}
                 <Text style={styles.userName}>{post?.userName}さん</Text>
               </View>
             </TouchableOpacity>
           </Link>
-          {post !== null && <DeleteButton post={post} />}
+          {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
               <Image key={index} source={{ uri }} style={styles.fishImage} />
@@ -77,37 +77,32 @@ const Detail = (): JSX.Element => {
           </Swiper>
           <View style={styles.fishTime}>
             <Text>
-              釣果日時 : {post?.exifData[0]?.dateTime ?? post?.updatedAt.toDate().toLocaleString('ja-JP', {
-              year: 'numeric',
-              month: 'long',
-              day: '2-digit',
-              hour: '2-digit'
-            })}
+              釣果日時  :  {post?.exifData[0]?.dateTime}
             </Text>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>天気 : {post?.weather}</Text>
+              <Text>天気  :  {post?.weather}</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>釣果数 : {post?.catchFish}匹</Text>
+              <Text>釣果数  :  {post?.catchFish}匹</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>サイズ : {post?.length}cm</Text>
+              <Text>サイズ  :  {post?.length}cm</Text>
             </View>
             <View style={styles.rightInfo}>
-              <Text>重さ : {post?.weight}g</Text>
+              <Text>重さ  :  {post?.weight}g</Text>
             </View>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
-              <Text>ルアー : {post?.lure} / {post?.lureAction}</Text>
+              <Text>ルアー  :  {post?.lure} / {post?.lureAction}</Text>
             </View>
           </View>
           <View style={styles.fishArea}>
-            <Text>{post?.fishArea} : {post?.area}</Text>
+            <Text>{post?.fishArea}  :  {post?.area}</Text>
           </View>
           <Map
             latitude={post?.exifData[0]?.latitude ?? 0}

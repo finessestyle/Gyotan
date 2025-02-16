@@ -1,4 +1,5 @@
 import { TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { router } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
 import { auth, db, storage } from '../config'
@@ -10,17 +11,17 @@ interface Props {
 }
 
 const deleteFiles = async (postId: string): Promise<void> => {
+  router.replace('/post/top')
   try {
     const postRef = doc(db, 'posts', postId)
     await deleteDoc(postRef)
-
     const postRefInStorage = ref(storage, `posts/${postId}`)
     const { items } = await listAll(postRefInStorage)
 
     for (const itemRef of items) {
       await deleteObject(itemRef)
     }
-
+    router.replace('/post/top')
     Alert.alert('削除が完了しました')
   } catch (error) {
     console.log(error)

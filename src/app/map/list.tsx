@@ -52,6 +52,17 @@ const List = (): JSX.Element => {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    if (maps.length > 0) {
+      setInitialRegion({
+        latitude: maps[0].latitude,
+        longitude: maps[0].longitude,
+        latitudeDelta: 0.5,
+        longitudeDelta: 0.5
+      })
+    }
+  }, [maps])
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={initialRegion}>
@@ -79,12 +90,12 @@ const List = (): JSX.Element => {
             </Marker>
           )
         })}
-        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
-          <CircleButton onPress={handlePress}>
-            <Icon name='plus' size={40} color='#ffffff' />
-          </CircleButton>
-        )}
       </MapView>
+      {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
+        <CircleButton onPress={handlePress}>
+          <Icon name='plus' size={40} color='#ffffff' />
+        </CircleButton>
+      )}
     </View>
   )
 }

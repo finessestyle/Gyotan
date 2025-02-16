@@ -88,6 +88,7 @@ const handlePress = async (
       Alert.alert('エラー', '釣果数を選択してください')
       return
     }
+
     if (auth.currentUser === null) return
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId))
@@ -268,6 +269,8 @@ const Edit = (): JSX.Element => {
     { label: '虫系', value: '虫系' },
     { label: 'ヘビキャロ', value: 'ヘビキャロ' },
     { label: 'テキサスリグ', value: 'テキサスリグ' },
+    { label: 'ラバージグ', value: 'ラバージグ' },
+    { label: 'フットボールジグ', value: 'フットボールジグ' },
     { label: 'スイムベイト', value: 'スイムベイト' },
     { label: 'シャッドテール', value: 'シャッドテール' }
   ]
@@ -279,23 +282,15 @@ const Edit = (): JSX.Element => {
     { label: 'シャッド', value: 'シャッド' },
     { label: 'バイブレーション', value: 'バイブレーション' },
     { label: 'スピナーベイト', value: 'スピナーベイト' },
-    { label: 'クランクベイト', value: 'クランクベイト' },
-    { label: 'ディープクランク', value: 'ディープクランク' },
-    { label: 'ミノー', value: 'ミノー' },
-    { label: 'シャッド', value: 'シャッド' },
-    { label: 'バイブレーション', value: 'バイブレーション' },
-    { label: 'スピナーベイト', value: 'スピナーベイト' },
     { label: 'バズベイト', value: 'バズベイト' },
     { label: 'チャターベイト', value: 'チャターベイト' },
     { label: 'ビッグベイト', value: 'ビッグベイト' },
     { label: 'I字系', value: 'I字系' },
-    { label: 'ラバージグ', value: 'ラバージグ' },
-    { label: 'フットボールジグ', value: 'フットボールジグ' },
     { label: 'メタルバイブ', value: 'メタルバイブ' },
-    { label: 'ウェイクベイト', value: 'ウェイクベイト' },
     { label: 'ポッパー', value: 'ポッパー' },
     { label: 'ペンシルベイト', value: 'ペンシルベイト' },
     { label: 'プロップベイト', value: 'プロップベイト' },
+    { label: 'ウェイクベイト', value: 'ウェイクベイト' },
     { label: 'ハネモノ', value: 'ハネモノ' },
     { label: 'フロッグ', value: 'フロッグ' }
   ]

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Map = ({ latitude, longitude }: Props): JSX.Element => {
-  const nRadiusHalfKm = 400
+  const nRadiusHalfKm = 500
 
   return (
     <View style={styles.container}>
@@ -25,7 +25,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
       >
         <UrlTile
           urlTemplate="https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png" // Google MapsタイルURL
-          maximumZ={19}
+          maximumZ={20}
           flipY={false} // 必要に応じて設定
         />
         <Circle

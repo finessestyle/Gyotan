@@ -129,13 +129,13 @@ const Mypage = (): JSX.Element => {
     })
 
     const postRef = collection(db, 'posts')
-    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', auth.currentUser.uid), orderBy('updatedAt', 'desc'))
+    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', auth.currentUser.uid), orderBy('createdAt', 'desc'))
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length,
-          weight, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt
+          weight, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, createdAt, updatedAt
         } = doc.data()
         userPost.push({
           id: doc.id,
@@ -155,6 +155,7 @@ const Mypage = (): JSX.Element => {
           catchFish,
           fishArea,
           area,
+          createdAt,
           updatedAt,
           exifData
         })
@@ -211,11 +212,12 @@ const Mypage = (): JSX.Element => {
 
         <View style={styles.userSnsTop}>
           {socialLinks.map((social, index) =>
-            social.url ? (
-              <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url)} style={styles.userSns}>
+            social.url
+              ? (
+              <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url) } style={styles.userSns}>
                 <FontAwesome6 size={30} name={social.name} color={social.color} />
-              </TouchableOpacity>
-            ) : null
+              </TouchableOpacity>)
+              : null
           )}
         </View>
         <View style={styles.subInner}>

@@ -24,6 +24,7 @@ interface Post {
   length: number
   weight: number
   catchFish: number
+  createdAt: Timestamp
   updatedAt: Timestamp
   content: string
 }

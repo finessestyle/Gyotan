@@ -1,5 +1,5 @@
 import {
-  View, Text, StyleSheet, Image, FlatList, TouchableOpacity
+  View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView, Linking
 } from 'react-native'
 import { useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
@@ -8,6 +8,7 @@ import { db } from '../../config'
 import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
+import { FontAwesome6 } from '@expo/vector-icons'
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
@@ -34,11 +35,11 @@ const Detail = (): JSX.Element => {
     })
 
     const postRef = collection(db, 'posts')
-    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', id), orderBy('updatedAt', 'desc'))
+    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', id), orderBy('createdAt', 'desc'))
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, createdAt, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -57,6 +58,7 @@ const Detail = (): JSX.Element => {
           catchFish,
           fishArea,
           area,
+          createdAt,
           updatedAt,
           exifData
         })
@@ -78,7 +80,7 @@ const Detail = (): JSX.Element => {
   ]
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
         <View style={styles.userTop}>
@@ -92,11 +94,12 @@ const Detail = (): JSX.Element => {
       </View>
       <View style={styles.userSnsTop}>
         {socialLinks.map((social, index) =>
-          social.url ? (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url)} style={styles.userSns}>
+          social.url
+            ? (
+            <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url) } style={styles.userSns}>
               <FontAwesome6 size={30} name={social.name} color={social.color} />
-            </TouchableOpacity>
-          ) : null
+            </TouchableOpacity>)
+            : null
         )}
       </View>
       <View style={styles.subInner}>
@@ -121,7 +124,7 @@ const Detail = (): JSX.Element => {
           contentContainerStyle={styles.listContainer}
         />
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -135,7 +138,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 8
   },
   subInner: {
-    flex: 1,
     marginVertical: 12,
     marginHorizontal: 8
   },
@@ -163,6 +165,21 @@ const styles = StyleSheet.create({
   },
   userProfile: {
     fontSize: 14
+  },
+  userSnsTop: {
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  userSns: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    backgroundColor: '#D0D0D0',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 150,
+    margin: 8
   },
   tabs: {
     flexDirection: 'row',

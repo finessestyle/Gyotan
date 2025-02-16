@@ -5,11 +5,11 @@ import { router } from 'expo-router'
 import { useState } from 'react'
 import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
 import { db, auth, storage } from '../../config'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImageMultiplePicker from 'expo-image-picker'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface Area {
   label: string
@@ -137,7 +137,7 @@ const handlePress = async (
       length,
       weight,
       catchFish,
-      updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
+      createdAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
     router.back()
   } catch (error) {
@@ -267,6 +267,8 @@ const Create = (): JSX.Element => {
     { label: '虫系', value: '虫系' },
     { label: 'ヘビキャロ', value: 'ヘビキャロ' },
     { label: 'テキサスリグ', value: 'テキサスリグ' },
+    { label: 'ラバージグ', value: 'ラバージグ' },
+    { label: 'フットボールジグ', value: 'フットボールジグ' },
     { label: 'スイムベイト', value: 'スイムベイト' },
     { label: 'シャッドテール', value: 'シャッドテール' }
   ]
@@ -282,13 +284,11 @@ const Create = (): JSX.Element => {
     { label: 'チャターベイト', value: 'チャターベイト' },
     { label: 'ビッグベイト', value: 'ビッグベイト' },
     { label: 'I字系', value: 'I字系' },
-    { label: 'ラバージグ', value: 'ラバージグ' },
-    { label: 'フットボールジグ', value: 'フットボールジグ' },
     { label: 'メタルバイブ', value: 'メタルバイブ' },
-    { label: 'ウェイクベイト', value: 'ウェイクベイト' },
     { label: 'ポッパー', value: 'ポッパー' },
     { label: 'ペンシルベイト', value: 'ペンシルベイト' },
     { label: 'プロップベイト', value: 'プロップベイト' },
+    { label: 'ウェイクベイト', value: 'ウェイクベイト' },
     { label: 'ハネモノ', value: 'ハネモノ' },
     { label: 'フロッグ', value: 'フロッグ' }
   ]
