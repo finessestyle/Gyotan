@@ -9,7 +9,17 @@ import { type Post } from '../../../types/post'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
 import Swiper from 'react-native-swiper'
+import { format } from 'date-fns'
+
 // import DeleteButton from '../../components/DeleteButton'
+
+const formatExifDateTime = (dateTime: unknown): string => {
+  if (typeof dateTime !== 'string' || dateTime === null) return '不明'
+  const properDateStr = dateTime.replace(/^(\d{4}):(\d{2}):(\d{2})/, '$1-$2-$3').replace(' ', 'T')
+  const date = new Date(properDateStr)
+  if (isNaN(date.getTime())) return '不明'
+  return format(date, 'yyyy年 M月 d日 H時')
+}
 
 const handlePress = (id: string): void => {
   router.push({ pathname: 'post/edit', params: { id } })
@@ -77,7 +87,11 @@ const Detail = (): JSX.Element => {
           </Swiper>
           <View style={styles.fishTime}>
             <Text>
-              釣果日時  :  {post?.exifData[0]?.dateTime}
+              釣果日時  :  {
+                post?.exifData && post.exifData.length > 0
+                  ? formatExifDateTime(post.exifData[0]?.dateTime)
+                  : '不明'
+              }
             </Text>
           </View>
           <View style={styles.fishingInfomation}>

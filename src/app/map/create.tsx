@@ -122,7 +122,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>緯度</Text>
         <TextInput
-          value={latitude}
+          value={latitude !== null ? String(latitude) : ''}
           style={styles.input}
           onChangeText={(text) => { setLatitude(Number(text)) }}
           placeholder='緯度を入力してください'
@@ -131,7 +131,7 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
-          value={longitude}
+          value={longitude !== null ? String(longitude) : ''}
           style={styles.input}
           onChangeText={(text) => { setLongitude(Number(text)) }}
           placeholder='経度を入力してください'

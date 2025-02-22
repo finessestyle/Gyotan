@@ -116,7 +116,7 @@ const SignUp = (): JSX.Element => {
           returnKeyType='done'
         />
 
-        <View style={styles.inputcontainer}>
+        <View>
           <TextInput
             style={styles.input}
             value={password}
@@ -238,13 +238,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16
   },
-  inputcontainer: {
-    position: 'relative'
-  },
   icon: {
     position: 'absolute',
     right: 16,
-    top: 16,
+    top: 20,
     transform: [{ translateY: -12 }]
   },
   image: {
