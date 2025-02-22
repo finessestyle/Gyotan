@@ -1,5 +1,5 @@
-import { View, StyleSheet, Text, Image, TouchableWithoutFeedback } from 'react-native'
-import { useState, useEffect } from 'react'
+import { View, StyleSheet, Text, Image, Button } from 'react-native'
+import { useState, useEffect, useRef } from 'react'
 import { collection, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore'
 import { db } from '../../config'
 import { Link } from 'expo-router'
@@ -21,12 +21,13 @@ interface Post {
 
 const Map = (): JSX.Element => {
   const [posts, setPosts] = useState<Post[]>([])
-  const [initialRegion, setInitialRegion] = useState({
+  const [mapRegion, setMapRegion] = useState({
     latitude: 35.25020910118615,
     longitude: 136.08555032486245,
     latitudeDelta: 0.5,
     longitudeDelta: 0.5
   })
+  const mapRef = useRef<MapView | null>(null)
 
   useEffect(() => {
     const oneMonthAgo = new Date()
@@ -75,9 +76,31 @@ const Map = (): JSX.Element => {
     return unsubscribe
   }, [])
 
+  useEffect(() => {
+    if (posts.length > 0) {
+      setMapRegion({
+        latitude: posts[0].latitude,
+        longitude: posts[0].longitude,
+        latitudeDelta: 0.5,
+        longitudeDelta: 0.5
+      })
+    }
+  }, [posts])
+
+  const resetMapRegion = (): void => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: 35.25020910118615,
+        longitude: 136.08555032486245,
+        latitudeDelta: 0.5,
+        longitudeDelta: 0.5
+      })
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={initialRegion}>
+      <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion}>
         {posts.map((post) => {
           const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
           if (!exif?.latitude || !exif?.longitude) return null
@@ -106,6 +129,9 @@ const Map = (): JSX.Element => {
           )
         })}
       </MapView>
+      <View style={styles.buttonContainer}>
+        <Button title='リセット' onPress={resetMapRegion} />
+      </View>
     </View>
   )
 }
@@ -122,6 +148,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 8
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{ translateX: -50 }],
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 3
   }
 })
 

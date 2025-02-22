@@ -172,7 +172,7 @@ const SignUp = (): JSX.Element => {
             />
             <Link replace href='/auth/term' asChild >
               <TouchableOpacity>
-                <Text style={styles.footerLink}>利用規約に同意する</Text>
+                <Text style={styles.subFooterLink}>利用規約に同意する</Text>
               </TouchableOpacity>
             </Link>
           </View>
@@ -183,7 +183,7 @@ const SignUp = (): JSX.Element => {
             />
             <Link replace href='/auth/privacy' asChild >
               <TouchableOpacity>
-                <Text style={styles.footerLink}>プライバシーポリシーに同意する</Text>
+                <Text style={styles.subFooterLink}>プライバシーポリシーに同意する</Text>
               </TouchableOpacity>
             </Link>
           </View>
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
   subFooter: {
     flexDirection: 'column'
   },
-  footerLink: {
+  subFooterLink: {
     marginLeft: 8,
     fontSize: 14,
     lineHeight: 28,
@@ -274,6 +274,12 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: 'row'
+  },
+  footerLink: {
+    marginTop: 8,
+    fontSize: 14,
+    lineHeight: 24,
+    color: '#467FD3'
   }
 })
 

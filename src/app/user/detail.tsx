@@ -94,7 +94,7 @@ const Detail = (): JSX.Element => {
       </View>
       <View style={styles.userSnsTop}>
         {socialLinks.map((social, index) =>
-          social.url
+          social.url === null
             ? (
             <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url) } style={styles.userSns}>
               <FontAwesome6 size={30} name={social.name} color={social.color} />

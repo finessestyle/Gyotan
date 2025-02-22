@@ -77,9 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   length: {
-    color: '#D0D0D0',
-    fontSize: 16,
-    lineHeight: 20
+    color: '#B0B0B0'
   }
 })
 

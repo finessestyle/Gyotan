@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: '100%',
     borderWidth: 1,
-    borderColor: '#fffff',
+    borderColor: '#B0B0B0',
     backgroundColor: 'yellow'
   },
   ruleText: {

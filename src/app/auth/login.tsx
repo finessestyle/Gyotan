@@ -1,6 +1,5 @@
 import {
-  View, Text, TextInput, Alert,
-  TouchableOpacity, StyleSheet
+  View, Text, TextInput, Alert, TouchableOpacity, StyleSheet
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -9,8 +8,19 @@ import { auth } from '../../config'
 import Button from '../../components/Button'
 import Icon from 'react-native-vector-icons/Ionicons'
 
-const handlePress = async (email: string, password: string): Promise<void> => {
+const handlePress = async (
+  email: string,
+  password: string
+): Promise<void> => {
   try {
+    if (email === '') {
+      Alert.alert('エラー', 'メールアドレスを入力してください')
+      return
+    }
+    if (password === '') {
+      Alert.alert('エラー', 'パスワードを入力してください')
+      return
+    }
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     console.log(userCredential.user.uid)
     router.replace('post/top')

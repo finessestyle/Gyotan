@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableWithoutFeedback } from 'react-native'
+import {
+  View, Text, StyleSheet, Image, TouchableWithoutFeedback, ScrollView
+} from 'react-native'
 import { Link } from 'expo-router'
 import { type Post } from '../../types/post'
 
@@ -63,9 +65,7 @@ const styles = StyleSheet.create({
     height: 130
   },
   length: {
-    color: '#D0D0D0',
-    fontSize: 16,
-    lineHeight: 20
+    color: '#B0B0B0'
   }
 })
 

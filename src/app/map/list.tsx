@@ -1,7 +1,7 @@
 import {
-  View, StyleSheet, Text
+  View, StyleSheet, Text, Button
 } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
@@ -17,12 +17,13 @@ const handlePress = (): void => {
 
 const List = (): JSX.Element => {
   const [maps, setMaps] = useState<FishMap[]>([])
-  const [initialRegion, setInitialRegion] = useState({
+  const [mapRegion, setMapRegion] = useState({
     latitude: 35.25020910118615,
     longitude: 136.08555032486245,
     latitudeDelta: 0.5,
     longitudeDelta: 0.5
   })
+  const mapRef = useRef<MapView | null>(null)
 
   useEffect(() => {
     if (auth.currentUser === null) return
@@ -54,7 +55,7 @@ const List = (): JSX.Element => {
 
   useEffect(() => {
     if (maps.length > 0) {
-      setInitialRegion({
+      setMapRegion({
         latitude: maps[0].latitude,
         longitude: maps[0].longitude,
         latitudeDelta: 0.5,
@@ -63,9 +64,20 @@ const List = (): JSX.Element => {
     }
   }, [maps])
 
+  const resetMapRegion = (): void => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: 35.25020910118615,
+        longitude: 136.08555032486245,
+        latitudeDelta: 0.5,
+        longitudeDelta: 0.5
+      })
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <MapView style={styles.map} initialRegion={initialRegion}>
+      <MapView ref={mapRef} style={styles.map} region={mapRegion}>
         {maps.map((map) => {
           return (
             <Marker
@@ -80,7 +92,7 @@ const List = (): JSX.Element => {
                   href={{ pathname: '/map/detail', params: { id: map.id } }}
                 >
                   <View style={{ alignItems: 'center', position: 'relative' }}>
-                    <Text>{map.title}</Text>
+                    <Text style={styles.mapTitle}>{map.title}</Text>
                     <View style={styles.submap} pointerEvents="none">
                       <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
                     </View>
@@ -91,6 +103,9 @@ const List = (): JSX.Element => {
           )
         })}
       </MapView>
+      <View style={styles.buttonContainer}>
+        <Button title='リセット' onPress={resetMapRegion} />
+      </View>
       {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
         <CircleButton onPress={handlePress}>
           <Icon name='plus' size={40} color='#ffffff' />
@@ -107,9 +122,22 @@ const styles = StyleSheet.create({
   map: {
     flex: 1
   },
+  mapTitle: {
+    color: '#B0B0B0'
+  },
   submap: {
     width: 200,
     height: 200
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: '50%',
+    transform: [{ translateX: -50 }],
+    backgroundColor: '#ffffff',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 3
   }
 })
 
