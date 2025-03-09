@@ -24,7 +24,10 @@ const Top = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt } = doc.data()
+        const {
+          userId, userName, userImage, images, weather, content, length, weight, structure, cover,
+          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt
+        } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -35,6 +38,7 @@ const Top = (): JSX.Element => {
           content,
           length,
           weight,
+          category,
           lure,
           lureAction,
           waterDepth,
@@ -59,7 +63,10 @@ const Top = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remotePosts: Post[] = []
       snapShot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt } = doc.data()
+        const {
+          userId, userName, userImage, images, weather, content, length, weight, structure, cover,
+          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, createdAt, updatedAt
+        } = doc.data()
         remotePosts.push({
           id: doc.id,
           userId,
@@ -70,6 +77,7 @@ const Top = (): JSX.Element => {
           content,
           length,
           weight,
+          category,
           lure,
           lureAction,
           waterDepth,
@@ -161,11 +169,8 @@ const Top = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#F0F4F8'
-  },
-  inner: {
-    marginVertical: 24,
-    paddingHorizontal: 8
   },
   rule: {
     height: 'auto',
@@ -178,21 +183,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center'
   },
+  inner: {
+    paddingHorizontal: 8,
+    marginVertical: 8
+  },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
-  },
-  mapLink: {
-    fontSize: 16,
-    lineHeight: 32,
-    color: '#467FD3',
-    marginBottom: 24,
-    marginVertical: 24,
-    marginHorizontal: 50,
-    borderWidth: 0.5,
-    borderRadius: 8
+    marginVertical: 16
   },
   tabs: {
     flexDirection: 'row',
@@ -211,8 +210,7 @@ const styles = StyleSheet.create({
     color: '#467FD3'
   },
   listContainer: {
-    height: 170,
-    marginBottom: 16
+    height: 170
   },
   fishNow: {
     marginBottom: 24

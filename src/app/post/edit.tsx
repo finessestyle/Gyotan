@@ -25,6 +25,7 @@ const handlePress = async (
   area: string,
   fishArea: string,
   weather: string,
+  category: string,
   lure: string,
   lureAction: string,
   waterDepth: string,
@@ -54,6 +55,10 @@ const handlePress = async (
     }
     if (weather === '') {
       Alert.alert('エラー', '天気を選択してください')
+      return
+    }
+    if (category === '') {
+      Alert.alert('エラー', 'カテゴリーを選択してください')
       return
     }
     if (lure === '') {
@@ -129,6 +134,7 @@ const handlePress = async (
       exifData: exifData.length > 0 ? exifData : null,
       area,
       fishArea,
+      category,
       lure,
       lureAction,
       waterDepth,
@@ -153,6 +159,7 @@ const Edit = (): JSX.Element => {
   const [area, setArea] = useState('')
   const [fishArea, setFishArea] = useState('')
   const [weather, setWeather] = useState('')
+  const [category, setCategory] = useState('')
   const [lure, setLure] = useState('')
   const [lureAction, setLureAction] = useState('')
   const [waterDepth, setWaterDepth] = useState('')
@@ -161,7 +168,6 @@ const Edit = (): JSX.Element => {
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
-  const [category, setCategory] = useState<string | null>(null)
 
   const hokkoNarea: Area[] = [
     { label: '海津大崎エリア', value: '海津大崎エリア', latitude: 35.4463, longitude: 136.091 },
@@ -364,6 +370,7 @@ const Edit = (): JSX.Element => {
           area?: string
           fishArea?: string
           weather?: string
+          category?: string
           lure?: string
           lureAction?: string
           waterDepth?: string
@@ -377,6 +384,7 @@ const Edit = (): JSX.Element => {
         setArea(data.area ?? '')
         setFishArea(data.fishArea ?? '')
         setWeather(data.weather ?? '')
+        setCategory(data.category ?? '')
         setLure(data?.lure ?? '')
         setLureAction(data?.lureAction ?? '')
         setWaterDepth(data.waterDepth ?? '')
@@ -442,8 +450,8 @@ const Edit = (): JSX.Element => {
             { label: '南湖東岸', value: '南湖東岸' },
             { label: '南湖西岸', value: '南湖西岸' }
           ]}
-          style={pickerSelectStyles}
           placeholder={{ label: '釣果エリアを選択してください', value: '' }}
+          style={pickerSelectStyles}
         />
         {fishArea !== null && (
           <RNPickerSelect
@@ -651,6 +659,7 @@ const Edit = (): JSX.Element => {
             area,
             fishArea,
             weather,
+            category,
             lure,
             lureAction,
             waterDepth,

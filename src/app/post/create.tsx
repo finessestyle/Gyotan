@@ -23,6 +23,7 @@ const handlePress = async (
   area: string,
   fishArea: string,
   weather: string,
+  category: string,
   lure: string,
   lureAction: string,
   waterDepth: string,
@@ -52,6 +53,10 @@ const handlePress = async (
     }
     if (weather === '') {
       Alert.alert('エラー', '天気を選択してください')
+      return
+    }
+    if (category === '') {
+      Alert.alert('エラー', 'カテゴリーを選択してください')
       return
     }
     if (lure === '') {
@@ -128,6 +133,7 @@ const handlePress = async (
       exifData: exifData.length > 0 ? exifData : null,
       area,
       fishArea,
+      category,
       lure,
       lureAction,
       waterDepth,
@@ -151,6 +157,7 @@ const Create = (): JSX.Element => {
   const [area, setArea] = useState('')
   const [fishArea, setFishArea] = useState('')
   const [weather, setWeather] = useState('')
+  const [category, setCategory] = useState('')
   const [lure, setLure] = useState('')
   const [lureAction, setLureAction] = useState('')
   const [waterDepth, setWaterDepth] = useState('')
@@ -159,7 +166,6 @@ const Create = (): JSX.Element => {
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
-  const [category, setCategory] = useState<string | null>(null)
 
   const hokkoNarea: Area[] = [
     { label: '海津大崎エリア', value: '海津大崎エリア', latitude: 35.4463, longitude: 136.091 },
@@ -596,6 +602,7 @@ const Create = (): JSX.Element => {
             area,
             fishArea,
             weather,
+            category,
             lure,
             lureAction,
             waterDepth,
@@ -611,7 +618,7 @@ const Create = (): JSX.Element => {
             nannkoWarea
           )
         }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
           labelStyle={{ fontSize: 24, lineHeight: 21 }}
         />
       </ScrollView>
@@ -625,14 +632,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 24,
     paddingHorizontal: 8
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 16
   },
   input: {
     borderBottomWidth: 1,

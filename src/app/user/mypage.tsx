@@ -253,7 +253,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 24,
     paddingHorizontal: 8
   },
   innerTitle: {
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
   setting: {
     marginLeft: 'auto',
     marginRight: 16,
-    marginTop: 4
+    marginTop: 24
   },
   subInner: {
     marginVertical: 24,
@@ -272,7 +271,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 16
   },
   userTop: {
     alignItems: 'center',

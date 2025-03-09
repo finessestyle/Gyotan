@@ -155,7 +155,7 @@ const Edit = (): JSX.Element => {
           placeholder='緯度を入力してください'
           keyboardType='decimal-pad'
           returnKeyType='done'
-          value={latitude}
+          value={latitude !== null ? String(latitude) : ''}
         />
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
@@ -164,7 +164,7 @@ const Edit = (): JSX.Element => {
           placeholder='経度を入力してください'
           keyboardType='decimal-pad'
           returnKeyType='done'
-          value={longitude}
+          value={longitude !== null ? String(longitude) : ''}
         />
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput

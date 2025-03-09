@@ -104,7 +104,7 @@ const List = (): JSX.Element => {
         })}
       </MapView>
       <View style={styles.buttonContainer}>
-        <Button title='リセット' onPress={resetMapRegion} />
+        <Button title='MAPを戻す' onPress={resetMapRegion} />
       </View>
       {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
         <CircleButton onPress={handlePress}>
@@ -131,13 +131,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: 'absolute',
-    bottom: 20,
-    left: '50%',
-    transform: [{ translateX: -50 }],
-    backgroundColor: '#ffffff',
-    padding: 10,
-    borderRadius: 8,
-    elevation: 3
+    bottom: 30,
+    left: '35%',
+    backgroundColor: 'rgba(250, 250, 250, 0.8)',
+    borderRadius: 8
   }
 })
 

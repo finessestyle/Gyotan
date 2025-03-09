@@ -174,14 +174,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 24,
     marginHorizontal: 8
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 16
   },
   input: {
     borderBottomWidth: 1,

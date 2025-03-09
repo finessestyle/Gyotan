@@ -42,28 +42,26 @@ const Rule = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff'
+    backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingVertical: 24,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
+    paddingVertical: 8
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
+    margin: 16,
     textAlign: 'center'
   },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginTop: 16,
-    marginBottom: 8
+    marginVertical: 16
   },
   text: {
     fontSize: 16,
-    lineHeight: 24,
-    marginBottom: 8
+    lineHeight: 24
   }
 })
 

@@ -33,7 +33,7 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, images, weather, length, weight, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, createdAt } = postDoc.data() as Post
+      const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, createdAt } = postDoc.data() as Post
       let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
         newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
@@ -54,6 +54,7 @@ const Detail = (): JSX.Element => {
         weight,
         structure,
         cover,
+        category,
         lure,
         lureAction,
         waterDepth,
@@ -154,7 +155,6 @@ const styles = StyleSheet.create({
   postBody: {
     borderWidth: 1,
     borderColor: '#B0B0B0',
-    marginBottom: 10,
     height: 'auto',
     borderRadius: 8
   },
