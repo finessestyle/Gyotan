@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   length: {
+    fontSize: 18,
     color: '#ffffff',
     position: 'absolute',
     bottom: 0,

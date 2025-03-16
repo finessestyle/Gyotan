@@ -161,7 +161,9 @@ const styles = StyleSheet.create({
   fishArea: {
     height: 32,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#B0B0B0'
   },
   fishAreaImage: {
     height: 175,
@@ -226,6 +228,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   fishText: {
+    paddingHorizontal: 8,
+    paddingVertical: 8,
     fontSize: 16,
     lineHeight: 24,
     color: '#000000'

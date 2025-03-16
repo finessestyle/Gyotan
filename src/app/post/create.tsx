@@ -18,6 +18,10 @@ interface Area {
   longitude: number
 }
 
+// () 関数の呼び出し
+// {} オブジェクトの定義
+// [] 配列の定義
+
 const handlePress = async (
   images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
   area: string,
@@ -145,7 +149,7 @@ const handlePress = async (
       catchFish,
       createdAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
-    router.back()
+    router.replace('/post/top')
   } catch (error) {
     console.log(error)
     Alert.alert('投稿に失敗しました')

@@ -79,16 +79,16 @@ const styles = StyleSheet.create({
   areaBody: {
     borderWidth: 1,
     borderColor: '#B0B0B0',
+    borderRadius: 8,
     marginBottom: 8,
-    height: 'auto',
-    borderRadius: 8
+    height: 'auto'
   },
   fishArea: {
     height: 32,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 8
+    paddingHorizontal: 8
   },
   title: {
     fontSize: 18,
@@ -105,7 +105,8 @@ const styles = StyleSheet.create({
   fishText: {
     fontSize: 16,
     lineHeight: 24,
-    marginHorizontal: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
     color: '#000000'
   },
   swiper: {

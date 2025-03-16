@@ -28,6 +28,7 @@ interface Post {
   createdAt: Timestamp
   updatedAt: Timestamp
   content: string
+  [key: string]: any
 }
 
 export type { Post }
