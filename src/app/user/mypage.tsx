@@ -135,7 +135,7 @@ const Mypage = (): JSX.Element => {
       snapshot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length,
-          weight, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, createdAt, updatedAt
+          weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, createdAt, updatedAt
         } = doc.data()
         userPost.push({
           id: doc.id,
@@ -147,6 +147,7 @@ const Mypage = (): JSX.Element => {
           content,
           length,
           weight,
+          category,
           lure,
           lureAction,
           waterDepth,

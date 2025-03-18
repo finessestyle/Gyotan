@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, Button } from 'react-native'
+import { View, StyleSheet, Text, Image, Button, TouchableWithoutFeedback } from 'react-native'
 import { useState, useEffect, useRef } from 'react'
 import { collection, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore'
 import { db } from '../../config'
@@ -88,7 +88,7 @@ const Map = (): JSX.Element => {
   }, [posts])
 
   const resetMapRegion = (): void => {
-    if (mapRef.current) {
+    if (mapRef.current !== null) {
       mapRef.current.animateToRegion({
         latitude: 35.25020910118615,
         longitude: 136.08555032486245,
@@ -111,19 +111,22 @@ const Map = (): JSX.Element => {
                 latitude: exif.latitude,
                 longitude: exif.longitude
               }}
+              style={{ zIndex: 1 }}
             >
               <Callout>
-                <Link
-                  href={{ pathname: '/post/detail', params: { id: post.id } }}
-                >
-                  <View style={{ alignItems: 'center', position: 'relative' }}>
-                    <Image
-                      source={{ uri: post.images?.[0] }}
-                      style={{ width: 200, height: 200, borderRadius: 10 }}
-                    />
-                    <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
-                  </View>
-                </Link>
+                <TouchableWithoutFeedback>
+                  <Link
+                    href={{ pathname: '/post/detail', params: { id: post.id } }}
+                  >
+                    <View style={{ alignItems: 'center', position: 'relative' }}>
+                      <Image
+                        source={{ uri: post.images?.[0] }}
+                        style={{ width: 200, height: 200, borderRadius: 10 }}
+                      />
+                      <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
+                    </View>
+                  </Link>
+                </TouchableWithoutFeedback>
              </Callout>
             </Marker>
           )

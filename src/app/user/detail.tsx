@@ -39,7 +39,7 @@ const Detail = (): JSX.Element => {
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, createdAt, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, category, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, createdAt, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -51,6 +51,7 @@ const Detail = (): JSX.Element => {
           length,
           weight,
           lure,
+          category,
           lureAction,
           waterDepth,
           structure,

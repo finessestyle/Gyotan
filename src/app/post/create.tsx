@@ -4,9 +4,9 @@ import {
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
@@ -714,7 +714,8 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 4,
     color: 'black',
     paddingRight: 30,
-    marginVertical: 4
+    marginVertical: 4,
+    pointerEvents: 'none'
   },
   inputAndroid: {
     fontSize: 16,
@@ -724,7 +725,8 @@ const pickerSelectStyles = StyleSheet.create({
     borderBottomColor: '#D0D0D0',
     borderRadius: 8,
     color: 'black',
-    paddingRight: 30
+    paddingRight: 30,
+    pointerEvents: 'none'
   }
 })
 

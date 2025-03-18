@@ -6,9 +6,9 @@ import { Link, router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
+import MapView, { Marker, Callout } from 'react-native-maps'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
-import MapView, { Marker, Callout } from 'react-native-maps'
 import Map from '../../components/Map'
 
 const handlePress = (): void => {
@@ -65,7 +65,7 @@ const List = (): JSX.Element => {
   }, [maps])
 
   const resetMapRegion = (): void => {
-    if (mapRef.current) {
+    if (mapRef.current !== null) {
       mapRef.current.animateToRegion({
         latitude: 35.25020910118615,
         longitude: 136.08555032486245,

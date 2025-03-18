@@ -6,10 +6,10 @@ import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
-import Button from '../../components/Button'
-import Map from '../../components/Map'
 import Swiper from 'react-native-swiper'
 import { format } from 'date-fns'
+import Button from '../../components/Button'
+import Map from '../../components/Map'
 
 // import DeleteButton from '../../components/DeleteButton'
 
@@ -29,6 +29,7 @@ const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [post, setPost] = useState<Post | null>(null)
   const postImages = post !== null && Array.isArray(post.images) ? post.images : []
+
   useEffect(() => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
@@ -87,13 +88,26 @@ const Detail = (): JSX.Element => {
             ))}
           </Swiper>
           <View style={styles.fishTime}>
-            <Text>
-              釣果日時  :  {
-                post?.exifData && post.exifData.length > 0
-                  ? formatExifDateTime(post.exifData[0]?.dateTime)
-                  : '不明'
-              }
-            </Text>
+          <Text>
+            {post?.exifData && post.exifData.length > 0 && post.exifData[0]?.dateTime
+              ? `釣果日時: ${formatExifDateTime(post.exifData[0]?.dateTime)}`
+              : post?.updatedAt || post?.createdAt
+                ? `投稿日時: ${post?.updatedAt
+                    ? post.updatedAt.toDate().toLocaleString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: '2-digit',
+                        hour: '2-digit'
+                      })
+                    : post.createdAt.toDate().toLocaleString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: '2-digit',
+                        hour: '2-digit'
+                      })}`
+                : '日時不明'
+            }
+          </Text>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>

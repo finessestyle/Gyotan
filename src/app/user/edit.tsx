@@ -7,7 +7,6 @@ import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import KeyboardAvoidingView from '../../components/KeybordAvoidingView'
 import Button from '../../components/Button'
 
 const handlePress = async (
