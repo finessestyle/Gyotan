@@ -25,10 +25,9 @@ interface Post {
   length: number
   weight: number
   catchFish: number
-  createdAt: Timestamp
   updatedAt: Timestamp
   content: string
   [key: string]: any
 }
 
-export type { Post }
+export type { Post, ExifData }

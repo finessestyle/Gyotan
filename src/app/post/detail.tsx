@@ -34,7 +34,7 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, createdAt } = postDoc.data() as Post
+      const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
       let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
         newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
@@ -61,7 +61,6 @@ const Detail = (): JSX.Element => {
         waterDepth,
         catchFish,
         content: newContent,
-        createdAt,
         updatedAt
       })
     })
@@ -90,23 +89,16 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishTime}>
           <Text>
             {post?.exifData && post.exifData.length > 0 && post.exifData[0]?.dateTime
-              ? `釣果日時: ${formatExifDateTime(post.exifData[0]?.dateTime)}`
-              : post?.updatedAt || post?.createdAt
-                ? `投稿日時: ${post?.updatedAt
-                    ? post.updatedAt.toDate().toLocaleString('ja-JP', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: '2-digit',
-                        hour: '2-digit'
-                      })
-                    : post.createdAt.toDate().toLocaleString('ja-JP', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: '2-digit',
-                        hour: '2-digit'
-                      })}`
-                : '日時不明'
-            }
+              ? `釣果日時: ${formatExifDateTime(post.exifData[0].dateTime)}`
+              : post?.updatedAt
+                ? `投稿日時: ${post.updatedAt.toDate().toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}`
+                : '日時不明'}
           </Text>
           </View>
           <View style={styles.fishingInfomation}>
@@ -226,8 +218,7 @@ const styles = StyleSheet.create({
   userImage: {
     width: 20,
     height: 20,
-    borderRadius: 20,
-    paddingLeft: 8
+    borderRadius: 20
   },
   userName: {
     paddingLeft: 8,

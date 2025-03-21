@@ -65,7 +65,7 @@ const List = (): JSX.Element => {
   }, [maps])
 
   const resetMapRegion = (): void => {
-    if (mapRef.current !== null) {
+    if (mapRef.current) {
       mapRef.current.animateToRegion({
         latitude: 35.25020910118615,
         longitude: 136.08555032486245,

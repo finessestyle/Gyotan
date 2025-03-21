@@ -35,11 +35,11 @@ const Detail = (): JSX.Element => {
     })
 
     const postRef = collection(db, 'posts')
-    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', id), orderBy('createdAt', 'desc'))
+    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', id), orderBy('updatedAt', 'desc'))
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, category, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, createdAt, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, category, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -59,7 +59,6 @@ const Detail = (): JSX.Element => {
           catchFish,
           fishArea,
           area,
-          createdAt,
           updatedAt,
           exifData
         })
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   tab: {
-    padding: 8,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent'
   },

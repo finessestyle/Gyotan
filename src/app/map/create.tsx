@@ -122,22 +122,34 @@ const Create = (): JSX.Element => {
         />
         <Text style={styles.textTitle}>緯度</Text>
         <TextInput
-          value={latitude !== null ? String(latitude) : ''}
           style={styles.input}
-          onChangeText={(text) => { setLatitude(Number(text)) }}
+          value={latitude !== null ? String(latitude) : ''}
+          onChangeText={(text) => {
+            const numericValue = Number(text)
+            if (!isNaN(numericValue)) {
+              setLatitude(numericValue)
+            }
+          }}
           placeholder='緯度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>経度</Text>
+
+        <Text style={styles.textTitle}>緯度</Text>
         <TextInput
-          value={longitude !== null ? String(longitude) : ''}
           style={styles.input}
-          onChangeText={(text) => { setLongitude(Number(text)) }}
-          placeholder='経度を入力してください'
+          value={longitude !== null ? String(longitude) : ''}
+          onChangeText={(text) => {
+            const numericValue = Number(text)
+            if (!isNaN(numericValue)) {
+              setLongitude(numericValue)
+            }
+          }}
+          placeholder='緯度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
         />
+
         <Text style={styles.textTitle}>釣り場内容</Text>
         <TextInput
           style={styles.contentInput}

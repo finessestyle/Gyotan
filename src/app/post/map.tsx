@@ -37,8 +37,8 @@ const Map = (): JSX.Element => {
     const ref = collection(db, 'posts')
     const q = query(
       ref,
-      where('createdAt', '>=', oneMonthAgoTimestamp),
-      orderBy('createdAt', 'desc')
+      where('updatedAt', '>=', oneMonthAgoTimestamp),
+      orderBy('updatedAt', 'desc')
     )
 
     const unsubscribe = onSnapshot(q, (snapShot) => {
@@ -46,7 +46,7 @@ const Map = (): JSX.Element => {
       snapShot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, length, weight, lure,
-          lureAction, catchFish, fishArea, area, structure, cover, exifData, updatedAt, createdAt, content
+          lureAction, catchFish, fishArea, area, structure, cover, exifData, updatedAt, content
         } = doc.data()
         remotePosts.push({
           id: doc.id,
@@ -66,7 +66,6 @@ const Map = (): JSX.Element => {
           weight,
           catchFish,
           content,
-          createdAt,
           updatedAt
         })
       })
