@@ -1,6 +1,4 @@
-import {
-  View, StyleSheet, Text, Button
-} from 'react-native'
+import { View, StyleSheet, Text, Button } from 'react-native'
 import { useState, useEffect, useRef } from 'react'
 import { Link, router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
@@ -35,7 +33,9 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
-        const { userId, title, area, season, latitude, longitude, content, updatedAt } = doc.data()
+        const {
+          userId, title, area, season, latitude, longitude, content, updatedAt
+        } = doc.data()
         remoteMaps.push({
           id: doc.id,
           userId,
@@ -65,7 +65,7 @@ const List = (): JSX.Element => {
   }, [maps])
 
   const resetMapRegion = (): void => {
-    if (mapRef.current) {
+    if (mapRef.current !== null) {
       mapRef.current.animateToRegion({
         latitude: 35.25020910118615,
         longitude: 136.08555032486245,
@@ -88,10 +88,8 @@ const List = (): JSX.Element => {
               }}
             >
               <Callout>
-                <Link
-                  href={{ pathname: '/map/detail', params: { id: map.id } }}
-                >
-                  <View style={{ alignItems: 'center', position: 'relative' }}>
+                <Link href={{ pathname: '/map/detail', params: { id: map.id } }}>
+                  <View style={{ alignItems: 'center' }}>
                     <Text style={styles.mapTitle}>{map.title}</Text>
                     <View style={styles.submap} pointerEvents="none">
                       <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />

@@ -26,7 +26,7 @@ const Top = (): JSX.Element => {
       snapShot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length, weight, structure, cover,
-          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt
+          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
         } = doc.data()
         remotePosts.push({
           id: doc.id,
@@ -48,7 +48,8 @@ const Top = (): JSX.Element => {
           area,
           fishArea,
           updatedAt,
-          exifData
+          exifData,
+          likes
         })
       })
       setLatestPosts(remotePosts)
@@ -64,7 +65,7 @@ const Top = (): JSX.Element => {
       snapShot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length, weight, structure, cover,
-          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt
+          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
         } = doc.data()
         remotePosts.push({
           id: doc.id,
@@ -86,7 +87,8 @@ const Top = (): JSX.Element => {
           area,
           fishArea,
           updatedAt,
-          exifData
+          exifData,
+          likes
         })
       })
       setLargestPosts(remotePosts)

@@ -10,7 +10,7 @@ import Swiper from 'react-native-swiper'
 import { format } from 'date-fns'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
-
+import LikeButton from '../../components/LikeButton'
 // import DeleteButton from '../../components/DeleteButton'
 
 const formatExifDateTime = (dateTime: unknown): string => {
@@ -34,7 +34,7 @@ const Detail = (): JSX.Element => {
     if (auth.currentUser === null) return
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
-      const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt } = postDoc.data() as Post
+      const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, likes } = postDoc.data() as Post
       let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
         newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
@@ -61,7 +61,8 @@ const Detail = (): JSX.Element => {
         waterDepth,
         catchFish,
         content: newContent,
-        updatedAt
+        updatedAt,
+        likes
       })
     })
     return unsubscribe
@@ -80,6 +81,7 @@ const Detail = (): JSX.Element => {
               </View>
             </TouchableOpacity>
           </Link>
+          <LikeButton />
           {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
@@ -89,9 +91,9 @@ const Detail = (): JSX.Element => {
           <View style={styles.fishTime}>
           <Text>
             {post?.exifData && post.exifData.length > 0 && post.exifData[0]?.dateTime
-              ? `釣果日時: ${formatExifDateTime(post.exifData[0].dateTime)}`
+              ? `釣果日時  :  ${formatExifDateTime(post.exifData[0].dateTime)}`
               : post?.updatedAt
-                ? `投稿日時: ${post.updatedAt.toDate().toLocaleString('ja-JP', {
+                ? `投稿日時  :  ${post.updatedAt.toDate().toLocaleString('ja-JP', {
                     year: 'numeric',
                     month: 'long',
                     day: '2-digit',

@@ -27,7 +27,7 @@ interface Post {
   catchFish: number
   updatedAt: Timestamp
   content: string
-  [key: string]: any
+  likes: string[]
 }
 
 export type { Post, ExifData }

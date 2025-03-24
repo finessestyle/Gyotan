@@ -1,62 +1,105 @@
-import { TouchableOpacity, Text } from 'react-native'
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
 import { useState, useEffect } from 'react'
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore'
+import { doc, updateDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../config'
-import { type Post } from '../../types/post'
 import { FontAwesome6 } from '@expo/vector-icons'
 
-interface Props {
-  post: Post
+interface Post {
+  likes: string[]
+  likesCount: number
 }
 
-interface Likes {
-  count: number
-  users: string[]
-}
+const LikeButton = ({ postId, userId }: { postId: string, userId: string }): JSX.Element => {
+  const [liked, setLiked] = useState(false)
+  const [count, setCount] = useState<number>(0)
 
-const LikeButton = ({ post }: Props): JSX.Element => {
-  const [likes, setLikes] = useState<{ count: number, users: string[] }>({ count: 0, users: [] })
-  const currentUser = auth.currentUser
-
+  // useEffect(() => {
+  //   const postRef = doc(db, 'posts', postId)
+  //   const unsubscribe = onSnapshot(postRef, (docSnap) => {
+  //     if (docSnap.exists()) {
+  //       const data = docSnap.data() as Post
+  //       const likes = Array.isArray(data?.likes) ? data.likes : []
+  //       setCount(likes.length)
+  //       setLiked(likes.includes(userId))
+  //     } else {
+  //       console.log('No such document')
+  //     }
+  //   })
+  //   return unsubscribe
+  // }, [postId, userId])
   useEffect(() => {
-    if (post.id === null) return
-    const fetchLikes = async (): Promise<void> => {
-      const postRef = doc(db, 'posts', post.id)
-      const postSnap = await getDoc(postRef)
-      if (postSnap.exists()) {
-        const data = postSnap.data().likes as Likes
-        setLikes(data || { count: 0, users: [] })
+    const postRef = doc(db, 'posts', postId)
+    const unsubscribe = onSnapshot(postRef, (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data() as Post
+        console.log('Fetched data:', data) // データをログに出力
+        const likes = Array.isArray(data?.likes) ? data.likes : []
+        console.log('Likes:', likes) // likesをログに出力
+        setCount(likes.length)
+        setLiked(likes.includes(userId))
+      } else {
+        console.log('No such document!')
       }
-    }
-    void fetchLikes()
-  }, [post.id])
-
-  const toggleLike = async (): Promise<void> => {
-    if (currentUser?.uid !== post.userId) return
-    const postRef = doc(db, 'posts', post.id)
-    const isLiked = likes.users.includes(currentUser.uid)
-
-    await updateDoc(postRef, {
-      'likes.count': isLiked ? likes.count - 1 : likes.count + 1,
-      'likes.users': isLiked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
     })
+    return unsubscribe
+  }, [postId, userId])
 
-    setLikes(prev => ({
-      count: isLiked ? prev.count - 1 : prev.count + 1,
-      users: isLiked ? prev.users.filter(uid => uid !== currentUser.uid) : [...prev.users, currentUser.uid]
-    }))
+  const handlePress = async (): Promise<void> => {
+    if (auth.currentUser?.uid === userId) return
+    const postRef = doc(db, 'posts', postId)
+    if (liked) {
+      await updateDoc(postRef, {
+        likesCount: count - 1,
+        likes: arrayRemove(userId)
+      })
+    } else {
+      await updateDoc(postRef, {
+        likesCount: count + 1,
+        likes: arrayUnion(userId)
+      })
+    }
+    setLiked(!liked)
   }
 
   return (
-    <TouchableOpacity onPress={() => { void toggleLike() }} style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <FontAwesome6
-        icon={likes.users.includes(currentUser?.uid) ? faThumbsUp : faThumbsDown}
-        size="lg" // アイコンサイズ
-        style={{ marginRight: 5 }}
-      />
-      <Text>{likes.count}</Text>
-    </TouchableOpacity>
+    <View style={styles.likeButtonContainer}>
+      <TouchableOpacity style={styles.likeButton} onPress={handlePress}>
+        <FontAwesome6
+          name='heart'
+          size={18}
+          color='red'
+          solid={liked}
+        />
+        <Text style={styles.likeButtonCount}>{count}</Text>
+      </TouchableOpacity>
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  likeButtonContainer: {
+    height: 60,
+    width: 60,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 4,
+    right: 10,
+    zIndex: 10
+  },
+  likeButton: {
+    flexDirection: 'row',
+    marginHorizontal: 8
+  },
+  likeButtonCount: {
+    paddingLeft: 4,
+    fontSize: 18,
+    alignItems: 'center'
+  }
+})
 
 export default LikeButton

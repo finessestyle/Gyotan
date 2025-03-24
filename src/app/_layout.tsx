@@ -1,6 +1,6 @@
+import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
-import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 
 const Layout = (): JSX.Element => {
   const renderBackButton = (): JSX.Element => {

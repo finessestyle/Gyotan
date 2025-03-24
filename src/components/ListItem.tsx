@@ -31,7 +31,9 @@ const ListItem = (props: Props): JSX.Element | null => {
                 style={styles.listItemImage}
                 source= {{ uri: images[0] }}
               />
-              <Text style={styles.length}>{post?.length}cm / {post?.weight}g</Text>
+              <View style={styles.listItemImageFooter}>
+                <Text style={styles.length}>{post?.length}cm / {post?.weight}g</Text>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </Link>
@@ -66,6 +68,9 @@ const styles = StyleSheet.create({
   },
   length: {
     color: '#B0B0B0'
+  },
+  listItemImageFooter: {
+    flexDirection: 'row'
   }
 })
 
