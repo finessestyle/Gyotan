@@ -13,39 +13,22 @@ const LikeButton = ({ postId, userId }: { postId: string, userId: string }): JSX
   const [liked, setLiked] = useState(false)
   const [count, setCount] = useState<number>(0)
 
-  // useEffect(() => {
-  //   const postRef = doc(db, 'posts', postId)
-  //   const unsubscribe = onSnapshot(postRef, (docSnap) => {
-  //     if (docSnap.exists()) {
-  //       const data = docSnap.data() as Post
-  //       const likes = Array.isArray(data?.likes) ? data.likes : []
-  //       setCount(likes.length)
-  //       setLiked(likes.includes(userId))
-  //     } else {
-  //       console.log('No such document')
-  //     }
-  //   })
-  //   return unsubscribe
-  // }, [postId, userId])
   useEffect(() => {
     const postRef = doc(db, 'posts', postId)
     const unsubscribe = onSnapshot(postRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as Post
-        console.log('Fetched data:', data) // データをログに出力
         const likes = Array.isArray(data?.likes) ? data.likes : []
-        console.log('Likes:', likes) // likesをログに出力
         setCount(likes.length)
         setLiked(likes.includes(userId))
       } else {
-        console.log('No such document!')
+        console.log('No such document')
       }
     })
     return unsubscribe
   }, [postId, userId])
 
   const handlePress = async (): Promise<void> => {
-    if (auth.currentUser?.uid === userId) return
     const postRef = doc(db, 'posts', postId)
     if (liked) {
       await updateDoc(postRef, {

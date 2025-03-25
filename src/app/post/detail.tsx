@@ -81,7 +81,7 @@ const Detail = (): JSX.Element => {
               </View>
             </TouchableOpacity>
           </Link>
-          <LikeButton />
+          <LikeButton postId={id} userId={auth.currentUser.uid}/>
           {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
