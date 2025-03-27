@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
 import { useState, useEffect } from 'react'
 import { doc, updateDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore'
-import { db, auth } from '../config'
+import { db } from '../config'
 import { FontAwesome6 } from '@expo/vector-icons'
 
 interface Post {

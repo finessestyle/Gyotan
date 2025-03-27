@@ -8,7 +8,7 @@ interface Props {
   user: User
 }
 
-const UserImageButton = (props: Props): JSX.Element => {
+const FollowUser = (props: Props): JSX.Element => {
   const { user } = props
   const imageUri = (user.userImage)
   console.log('UserImageButton imageUrl:', imageUri)
@@ -34,7 +34,7 @@ const UserImageButton = (props: Props): JSX.Element => {
 const styles = StyleSheet.create({
   userImageButton: {
     flex: 1,
-    margin: 8 // 上下の余白を追加
+    margin: 8
   },
   userImageContainer: {
     alignItems: 'center'
@@ -50,4 +50,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default UserImageButton
+export default FollowUser

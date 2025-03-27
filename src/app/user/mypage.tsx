@@ -28,6 +28,12 @@ const handlePress = (): void => {
         }
       },
       {
+        text: 'フォローユーザー',
+        onPress: () => {
+          router.push({ pathname: 'user/list', params: { id: userId } })
+        }
+      },
+      {
         text: '問い合わせ',
         onPress: () => {
           Linking.openURL('https://forms.gle/2apUPegk4WrNiMUv5')

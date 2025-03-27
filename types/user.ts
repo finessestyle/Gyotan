@@ -10,6 +10,7 @@ interface User {
   userInstagram: string
   userX: string
   updatedAt: Timestamp
+  follower: string[]
 }
 
 export type { User }

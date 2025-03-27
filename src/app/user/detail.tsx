@@ -7,8 +7,9 @@ import { collection, onSnapshot, query, where, orderBy, doc } from 'firebase/fir
 import { db } from '../../config'
 import { type User } from '../../../types/user'
 import { type Post } from '../../../types/post'
-import ListItem from '../../components/ListItem'
 import { FontAwesome6 } from '@expo/vector-icons'
+import ListItem from '../../components/ListItem'
+import FollowButton from '../../components/FollowButton'
 
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
@@ -30,7 +31,8 @@ const Detail = (): JSX.Element => {
         userInstagram: data.userInstagram,
         userTiktok: data.userTiktok,
         userX: data.userX,
-        updatedAt: data.updatedAt
+        updatedAt: data.updatedAt,
+        follower: data.follower
       })
     })
 
@@ -39,7 +41,7 @@ const Detail = (): JSX.Element => {
     const unsubscribePost = onSnapshot(q, (snapshot) => {
       const userPost: Post[] = []
       snapshot.forEach((doc) => {
-        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, category, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, updatedAt } = doc.data()
+        const { userId, userName, userImage, images, weather, content, length, weight, structure, cover, category, lure, lureAction, waterDepth, catchFish, fishArea, area, exifData, updatedAt, likes } = doc.data()
         userPost.push({
           id: doc.id,
           userId,
@@ -60,7 +62,8 @@ const Detail = (): JSX.Element => {
           fishArea,
           area,
           updatedAt,
-          exifData
+          exifData,
+          likes
         })
       })
       setPosts(userPost)
@@ -83,6 +86,7 @@ const Detail = (): JSX.Element => {
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
+        <FollowButton userId={id} />
         <View style={styles.userTop}>
           <Image
             source={{ uri: user?.userImage }}

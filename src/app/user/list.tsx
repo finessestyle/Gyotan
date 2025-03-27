@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
 import { type User } from '../../../types/user'
-import UserImageButton from '../../components/UserImageButton'
+import Follower from '../../components/FollowUser'
 
 const List = (): JSX.Element => {
   const [users, setUsers] = useState<User[]>([])
@@ -14,7 +14,7 @@ const List = (): JSX.Element => {
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
-        const { userName, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt } = doc.data()
+        const { userName, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, follower } = doc.data()
         remoteUsers.push({
           id: doc.id,
           userName,
@@ -24,7 +24,8 @@ const List = (): JSX.Element => {
           userTiktok,
           userInstagram,
           userX,
-          updatedAt
+          updatedAt,
+          follower
         })
       })
       setUsers(remoteUsers)
@@ -34,10 +35,10 @@ const List = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>ユーザー一覧</Text>
+      <Text style={styles.title}>フォローユーザー</Text>
       <FlatList
         data={users}
-        renderItem={({ item }) => <UserImageButton user={item} />}
+        renderItem={({ item }) => <Follower user={item} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
