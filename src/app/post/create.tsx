@@ -1,8 +1,8 @@
 import {
   View, Text, TextInput, Image, StyleSheet, Alert
 } from 'react-native'
-import { router } from 'expo-router'
-import { useState } from 'react'
+import { router, useFocusEffect } from 'expo-router'
+import { useState, useCallback } from 'react'
 import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
@@ -165,6 +165,24 @@ const Create = (): JSX.Element => {
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
+
+  useFocusEffect(
+    useCallback(() => {
+      setImages([])
+      setArea('')
+      setFishArea('')
+      setWeather('')
+      setCategory('')
+      setLure('')
+      setLureAction('')
+      setWaterDepth('')
+      setStructure('')
+      setCover('')
+      setLength(null)
+      setWeight(null)
+      setCatchFish(null)
+    }, [])
+  )
 
   const areaOptions =
   fishArea === '北湖北岸'

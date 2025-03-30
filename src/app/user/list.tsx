@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
-import { db } from '../../config'
+import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
 import Follower from '../../components/FollowUser'
 
@@ -15,18 +15,21 @@ const List = (): JSX.Element => {
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
         const { userName, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, follower } = doc.data()
-        remoteUsers.push({
-          id: doc.id,
-          userName,
-          profile,
-          userImage,
-          userYoutube,
-          userTiktok,
-          userInstagram,
-          userX,
-          updatedAt,
-          follower
-        })
+        const userId = doc.id
+        if (userId !== auth.currentUser?.uid) {
+          remoteUsers.push({
+            id: doc.id,
+            userName,
+            profile,
+            userImage,
+            userYoutube,
+            userTiktok,
+            userInstagram,
+            userX,
+            updatedAt,
+            follower
+          })
+        }
       })
       setUsers(remoteUsers)
     })

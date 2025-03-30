@@ -1,5 +1,5 @@
 import {
-  View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView
+  View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView /* Animated */
 } from 'react-native'
 import { useEffect, useState } from 'react'
 import { Link } from 'expo-router'
@@ -17,6 +17,15 @@ const Top = (): JSX.Element => {
   const [largestPosts, setLargestPosts] = useState<Post[]>([])
   const [latestArea, setLatestArea] = useState<string>(areas[0])
   const [largestArea, setLargestArea] = useState<string>(areas[0])
+  // const [fadeAnime] = useState(new Animated.Value(0))
+
+  // useEffect(() => {
+  //   Animated.timing(fadeAnime, {
+  //     toValue: 1,
+  //     duration: 1500,
+  //     useNativeDriver: true
+  //   }).start()
+  // }, [])
 
   useEffect(() => {
     const ref = collection(db, 'posts')
@@ -131,13 +140,20 @@ const Top = (): JSX.Element => {
         <View style={styles.fishNow}>
           <Text style={styles.title}>今釣れてる!?</Text>
           {latestPosts.length > 0 && (
+            // <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }] }>
+            //   <Text style={styles.now}>{latestPosts[0].structure}</Text>
+            //   <Icon name="delete" size={32} color="#888" />
+            //   <Text style={styles.now}>{latestPosts[0].cover}</Text>
+            //   <Icon name="delete" size={32} color="#888" />
+            //   <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
+            // </Animated.View>
             <View style={styles.fishingNow}>
-              <Text style={styles.now}>{latestPosts[0].structure}</Text>
-              <Icon name="delete" size={32} color="#888" />
-              <Text style={styles.now}>{latestPosts[0].cover}</Text>
-              <Icon name="delete" size={32} color="#888" />
-              <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
-            </View>
+            <Text style={styles.now}>{latestPosts[0].structure}</Text>
+            <Icon name="delete" size={32} color="#888" />
+            <Text style={styles.now}>{latestPosts[0].cover}</Text>
+            <Icon name="delete" size={32} color="#888" />
+            <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
+          </View>
           )}
         </View>
         <Text style={styles.title}>ランキング[長さ]</Text>

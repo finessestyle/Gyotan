@@ -10,8 +10,6 @@ interface Props {
 
 const FollowUser = (props: Props): JSX.Element => {
   const { user } = props
-  const imageUri = (user.userImage)
-  console.log('UserImageButton imageUrl:', imageUri)
 
   return (
     <Link
