@@ -1,43 +1,46 @@
-import {
-  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image
-} from 'react-native'
-import { router } from 'expo-router'
+import { ScrollView, View, Text, TextInput, StyleSheet, Alert, Image, TouchableOpacity } from 'react-native'
 import { useState, useEffect } from 'react'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
+import { Ionicons } from '@expo/vector-icons'
+import { updateProfile, linkWithCredential, EmailAuthProvider } from 'firebase/auth'
 
 const handlePress = async (
   id: string,
+  userName: string,
   email: string,
+  password: string,
   userImage: string | null,
+  profile: string,
   userYoutube: string | null,
   userTiktok: string | null,
   userInstagram: string | null,
-  userX: string | null,
-  userName: string,
-  profile: string
+  userX: string | null
 ): Promise<void> => {
   try {
+    if (userName === '') {
+      Alert.alert('エラー', 'ユーザーネームを入力してください')
+      return
+    }
     if (email === '') {
       Alert.alert('エラー', 'メールアドレスを入力してください')
       return
     }
-    if (userName === '') {
-      Alert.alert('エラー', 'ユーザーネームを入力してください')
+    if (password === '') {
+      Alert.alert('エラー', 'パスワードを入力してください')
+      return
+    }
+    if (userImage === null) {
+      Alert.alert('エラー', 'ユーザー画像を選択してください')
       return
     }
     if (profile === '') {
       Alert.alert('エラー', 'プロフィールを入力してください')
       return
     }
-    if (userImage === '') {
-      Alert.alert('エラー', 'ユーザー画像を選択してください')
-      return
-    }
-
     if (auth.currentUser === null) return
     const userId = auth.currentUser.uid
 
@@ -60,16 +63,32 @@ const handlePress = async (
       userX,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
-    router.back()
+    if (auth.currentUser.isAnonymous) {
+      const credential = EmailAuthProvider.credential(email, password)
+      await linkWithCredential(auth.currentUser, credential)
+        .then(() => {
+          // メール認証後、プロファイルを更新
+          return updateProfile(auth.currentUser, { displayName: userName })
+        })
+        .catch((error) => {
+          console.error('認証情報のリンクに失敗しました: ', error.message)
+          Alert.alert('認証情報のリンクに失敗しました')
+        })
+    } else {
+      // 既存のユーザーには直接プロフィール更新
+      await updateProfile(auth.currentUser, { displayName: userName })
+    }
   } catch (error) {
     console.log(error)
     Alert.alert('更新に失敗しました')
   }
 }
 
-const Edit = (): JSX.Element => {
+const anonymouseedit = () => {
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [userYoutube, setUserYoutube] = useState('')
@@ -96,24 +115,28 @@ const Edit = (): JSX.Element => {
     const ref = doc(db, 'users', userId)
     getDoc(ref)
       .then((docRef) => {
-        const data = docRef.data() as {
-          email?: string
-          userImage?: string
-          userName?: string
-          profile?: string
-          userYoutube?: string
-          userTiktok?: string
-          userInstagram?: string
-          userX?: string
+        if (docRef.exists()) {
+          const data = docRef.data() as {
+            email?: string
+            userImage?: string
+            userName?: string
+            password?: string
+            profile?: string
+            userYoutube?: string
+            userTiktok?: string
+            userInstagram?: string
+            userX?: string
+          }
+          setUserName(data.userName ?? '')
+          setEmail(data.email ?? '')
+          setPassword(data.password ?? '')
+          setUserImage(data.userImage ?? null)
+          setProfile(data.profile ?? '')
+          setUserYoutube(data.userYoutube ?? '')
+          setUserTiktok(data.userTiktok ?? '')
+          setUserInstagram(data.userInstagram ?? '')
+          setUserX(data.userX ?? '')
         }
-        setEmail(data.email ?? '')
-        setUserImage(data.userImage ?? null)
-        setUserName(data.userName ?? '')
-        setProfile(data.profile ?? '')
-        setUserYoutube(data.userYoutube ?? '')
-        setUserTiktok(data.userTiktok ?? '')
-        setUserInstagram(data.userInstagram ?? '')
-        setUserX(data.userX ?? '')
       })
       .catch((error) => {
         console.log(error)
@@ -143,7 +166,31 @@ const Edit = (): JSX.Element => {
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'
           returnKeyType='done'
+          autoCapitalize='none'
         />
+        <View>
+          <Text style={styles.textTitle}>パスワード</Text>
+          <TextInput
+            style={styles.input}
+            value={password}
+            autoCapitalize='none'
+            secureTextEntry={!isPasswordVisible}
+            placeholder='パスワードを入力'
+            textContentType='password'
+            returnKeyType='done'
+            onChangeText={(text) => { setPassword(text) }}
+          />
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
+          >
+            <Ionicons
+              name={isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
+              size={24}
+              color="gray"
+            />
+          </TouchableOpacity>
+        </View>
         <Button
           label="ユーザー画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
@@ -214,14 +261,15 @@ const Edit = (): JSX.Element => {
             if (auth.currentUser !== null) {
               void handlePress(
                 auth.currentUser.uid,
+                userName,
                 email,
+                password,
                 userImage,
+                profile,
                 userYoutube,
                 userTiktok,
                 userInstagram,
-                userX,
-                userName,
-                profile
+                userX
               )
             }
           }}
@@ -270,6 +318,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingLeft: 10
   },
+  icon: {
+    position: 'absolute',
+    right: 16,
+    top: 20,
+    transform: [{ translateY: -12 }]
+  },
   imageBox: {
     borderWidth: 1,
     borderRadius: 8,
@@ -287,4 +341,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Edit
+export default anonymouseedit

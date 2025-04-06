@@ -17,7 +17,7 @@
       "bundleIdentifier": "jp.gyotan.gyotanapp",
       "buildNumber": "1.0.0",
       "config": {
-        "googleMapsApiKey": "AIzaSyB7IrFyCeBW2OFun1nKRRitv3jM8Vvckqk"
+        "googleMapsApiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
       }
     },
     "android": {
@@ -30,7 +30,7 @@
       },
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyB7IrFyCeBW2OFun1nKRRitv3jM8Vvckqk"
+          "apiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
         }
       }
     },

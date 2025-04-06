@@ -95,8 +95,8 @@ const handlePress = async (
     const userId = auth.currentUser.uid
     const userDoc = await getDoc(doc(db, 'users', userId))
     const userData = userDoc.data()
-    const userName = userData?.userName ?? 'ゲスト'
-    const userImage = userData?.userImage ?? ''
+    const userName = userData?.userName
+    const userImage = userData?.userImage
     const postRef = collection(db, 'posts')
     const newPostRef = await addDoc(postRef, {})
     const postId = newPostRef.id
@@ -143,7 +143,7 @@ const handlePress = async (
       weight,
       catchFish,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
-    }, { merge: true })
+    })
     router.replace('/post/top')
   } catch (error) {
     console.log(error)

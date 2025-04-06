@@ -204,7 +204,7 @@ const Edit = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (auth.currentUser === null) { return }
+    if (auth.currentUser === null) return
     const ref = doc(db, 'posts', id)
     getDoc(ref)
       .then((docRef) => {

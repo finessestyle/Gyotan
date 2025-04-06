@@ -1,17 +1,14 @@
 import {
-  View, Text, TextInput, Alert, TouchableOpacity, StyleSheet
+  View, Text, TextInput, StyleSheet, Alert, TouchableOpacity
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../../config'
 import Button from '../../components/Button'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 
-const handlePress = async (
-  email: string,
-  password: string
-): Promise<void> => {
+const handlePress = async (email: string, password: string): Promise<void> => {
   try {
     if (email === '') {
       Alert.alert('エラー', 'メールアドレスを入力してください')
@@ -21,8 +18,7 @@ const handlePress = async (
       Alert.alert('エラー', 'パスワードを入力してください')
       return
     }
-    const userCredential = await signInWithEmailAndPassword(auth, email, password)
-    console.log(userCredential.user.uid)
+    await signInWithEmailAndPassword(auth, email, password)
     router.replace('post/top')
   } catch (error) {
     Alert.alert('ログインに失敗しました')
@@ -63,7 +59,7 @@ const LogIn = (): JSX.Element => {
             style={styles.icon}
             onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
           >
-            <Icon
+            <Ionicons
               name={isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
               size={24}
               color="gray"

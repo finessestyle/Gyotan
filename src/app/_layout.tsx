@@ -1,6 +1,7 @@
 import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
+import { auth } from '../config'
 
 const Layout = (): JSX.Element => {
   const renderBackButton = (): JSX.Element => {
@@ -51,14 +52,26 @@ const Layout = (): JSX.Element => {
             tabPress: (e) => {
               e.preventDefault() // ← デフォルトのタブ遷移を防ぐ
 
-              Alert.alert(
-                '確認',
-                '位置データがない写真は投稿できません',
-                [
-                  { text: 'キャンセル', style: 'cancel' },
-                  { text: 'OK', onPress: () => navigation.navigate('post/create') } // OKなら遷移
-                ]
-              )
+              if (auth.currentUser?.isAnonymous) {
+                // 匿名ユーザーには警告を表示
+                Alert.alert(
+                  '匿名ログイン中',
+                  '匿名ログインユーザーは投稿できません。',
+                  [
+                    { text: 'OK', onPress: () => navigation.navigate('user/anonymouseedit') }
+                  ]
+                )
+              } else {
+                // 位置データがない場合の警告
+                Alert.alert(
+                  '確認',
+                  '位置データがない写真は投稿できません。',
+                  [
+                    { text: 'キャンセル', style: 'cancel' },
+                    { text: 'OK', onPress: () => navigation.navigate('post/create') }
+                  ]
+                )
+              }
             }
           })}
         />
@@ -85,6 +98,13 @@ const Layout = (): JSX.Element => {
         />
         <Tabs.Screen
           name="auth/signup"
+          options={{
+            href: null,
+            tabBarStyle: { display: 'none' }
+          }}
+        />
+        <Tabs.Screen
+          name="auth/firststep"
           options={{
             href: null,
             tabBarStyle: { display: 'none' }
@@ -209,6 +229,13 @@ const Layout = (): JSX.Element => {
                 </TouchableOpacity>
               )
             }
+          }}
+        />
+        <Tabs.Screen
+          name="user/anonymouseedit"
+          options={{
+            href: null,
+            tabBarStyle: { display: 'none' }
           }}
         />
         <Tabs.Screen

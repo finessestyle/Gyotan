@@ -3,6 +3,8 @@ import { type Timestamp } from 'firebase/firestore'
 interface User {
   id: string
   userName: string
+  email: string
+  password: string
   profile: string
   userImage: string
   userYoutube: string

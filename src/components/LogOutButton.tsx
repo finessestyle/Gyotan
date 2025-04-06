@@ -1,6 +1,4 @@
-import {
-  TouchableOpacity, Text, StyleSheet, Alert
-} from 'react-native'
+import { TouchableOpacity, Text, StyleSheet, Alert } from 'react-native'
 import { signOut } from '@firebase/auth'
 import { router } from 'expo-router'
 import { auth } from '../config'

@@ -10,7 +10,7 @@ import { doc, setDoc } from 'firebase/firestore'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
-import Icon from 'react-native-vector-icons/Ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import CheckBox from 'expo-checkbox'
 
 const handlePress = async (
@@ -131,7 +131,7 @@ const SignUp = (): JSX.Element => {
             style={styles.icon}
             onPress={() => { setIsPasswordVisible(!isPasswordVisible) }}
           >
-            <Icon
+            <Ionicons
               name={isPasswordVisible ? 'eye-outline' : 'eye-off-outline'}
               size={24}
               color="gray"

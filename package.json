@@ -19,6 +19,7 @@
     "expo-font": "~12.0.7",
     "expo-image-multiple-picker": "^4.8.3",
     "expo-image-picker": "~15.1.0",
+    "expo-linking": "~6.3.1",
     "expo-optimize": "^0.2.20",
     "expo-router": "^3.5.20",
     "expo-status-bar": "~1.12.1",
@@ -31,8 +32,7 @@
     "react-native-maps": "^1.14.0",
     "react-native-picker": "^4.3.7",
     "react-native-picker-select": "^9.1.3",
-    "react-native-swiper": "^1.6.0",
-    "expo-linking": "~6.3.1"
+    "react-native-swiper": "^1.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

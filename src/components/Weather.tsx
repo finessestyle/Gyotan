@@ -38,7 +38,7 @@ const Weather: React.FC<Props> = ({ lat, lon }) => {
       }
     }
     void fetchWeather()
-  }, [lat, lon, openWeatherApiKey])
+  }, [lat, lon])
 
   const getWindDirection = (windDeg: number): string => {
     if (windDeg >= 11.25 && windDeg < 33.75) return '北北東風'

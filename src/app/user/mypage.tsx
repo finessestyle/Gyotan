@@ -107,30 +107,40 @@ const Mypage = (): JSX.Element => {
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
-  const navigation = useNavigation()
+  const isAnonymous = auth.currentUser?.isAnonymous === true
 
+  const socialLinks = [
+    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
+    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
+    { name: 'x-twitter', url: user?.userX, color: '#000000' },
+    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
+  ]
+
+  const navigation = useNavigation()
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => <LogOutButton />
     })
-  }, [navigation])
+  }, [])
 
   useEffect(() => {
     if (auth.currentUser === null) return
-
     const userRef = doc(db, 'users', auth.currentUser.uid)
     const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
       setUser({
         id: userDoc.id,
         userName: data.userName,
-        profile: data.profile,
+        email: data.email,
+        password: data.password,
         userImage: data.userImage,
+        profile: data.profile,
         userYoutube: data.userYoutube,
         userTiktok: data.userTiktok,
         userInstagram: data.userInstagram,
         userX: data.userX,
-        updatedAt: data.updatedAt
+        updatedAt: data.updatedAt,
+        follower: data.follower
       })
     })
 
@@ -141,7 +151,7 @@ const Mypage = (): JSX.Element => {
       snapshot.forEach((doc) => {
         const {
           userId, userName, userImage, images, weather, content, length,
-          weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt
+          weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt, likes
         } = doc.data()
         userPost.push({
           id: doc.id,
@@ -163,7 +173,8 @@ const Mypage = (): JSX.Element => {
           fishArea,
           area,
           updatedAt,
-          exifData
+          exifData,
+          likes
         })
       })
       setPosts(userPost)
@@ -174,15 +185,6 @@ const Mypage = (): JSX.Element => {
       unsubscribePost()
     }
   }, [selectedArea])
-
-  const isAnonymous = auth.currentUser?.isAnonymous === true
-
-  const socialLinks = [
-    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
-    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
-    { name: 'x-twitter', url: user?.userX, color: '#000000' },
-    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
-  ]
 
   return (
     <View style={styles.container}>
@@ -205,14 +207,14 @@ const Mypage = (): JSX.Element => {
               <Text style={styles.userName}>ゲストさん</Text>
             </View>)
             : (
-            <>
-            <Image
-              source={{ uri: user?.userImage }}
-              style={styles.userImage}
-            />
-            <Text style={styles.userName}>{user?.userName}さん</Text>
-            <Text style={styles.userProfile}>{user?.profile}</Text>
-            </>)
+            <View>
+              <Image
+                source={{ uri: user?.userImage }}
+                style={styles.userImage}
+              />
+              <Text style={styles.userName}>{user?.userName}さん</Text>
+              <Text style={styles.userProfile}>{user?.profile}</Text>
+            </View>)
           }
         </View>
 
