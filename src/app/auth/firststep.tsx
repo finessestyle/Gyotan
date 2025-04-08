@@ -83,8 +83,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '60%',
-    height: 60,
-    paddingVertical: 14,
+    height: 'auto',
     marginHorizontal: 'auto',
     borderRadius: 50,
     backgroundColor: 'rgba(60, 145, 224, 0.46)',
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   anonymousButton: {
-    backgroundColor: '#rgba(156, 207, 145, 0.6)' // Anonymous login button color
+    backgroundColor: '#rgba(156, 207, 145, 0.6)'
   }
 })
 

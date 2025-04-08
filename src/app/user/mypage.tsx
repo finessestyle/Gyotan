@@ -106,7 +106,7 @@ const Mypage = (): JSX.Element => {
   const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
   const [user, setUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
-  const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
+  const [selectedArea, setSelectedArea] = useState<string>(areas[0])
   const isAnonymous = auth.currentUser?.isAnonymous === true
 
   const socialLinks = [
@@ -128,20 +128,37 @@ const Mypage = (): JSX.Element => {
     const userRef = doc(db, 'users', auth.currentUser.uid)
     const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
       const data = userDoc.data() as User
-      setUser({
-        id: userDoc.id,
-        userName: data.userName,
-        email: data.email,
-        password: data.password,
-        userImage: data.userImage,
-        profile: data.profile,
-        userYoutube: data.userYoutube,
-        userTiktok: data.userTiktok,
-        userInstagram: data.userInstagram,
-        userX: data.userX,
-        updatedAt: data.updatedAt,
-        follower: data.follower
-      })
+
+      if (data === undefined || data === null) {
+        setUser({
+          id: auth.currentUser.uid,
+          userName: '',
+          email: '',
+          password: '',
+          userImage: '',
+          userYoutube: '',
+          userTiktok: '',
+          userInstagram: '',
+          userX: '',
+          updatedAt: '',
+          follower: ''
+        })
+      } else {
+        setUser({
+          id: userDoc.id,
+          userName: data.userName,
+          email: data.email,
+          password: data.password,
+          userImage: data.userImage,
+          profile: data.profile,
+          userYoutube: data.userYoutube,
+          userTiktok: data.userTiktok,
+          userInstagram: data.userInstagram,
+          userX: data.userX,
+          updatedAt: data.updatedAt,
+          follower: data.follower
+        })
+      }
     })
 
     const postRef = collection(db, 'posts')
@@ -198,23 +215,23 @@ const Mypage = (): JSX.Element => {
           )}
         </View>
         <View style={styles.userTop}>
-          {isAnonymous
+          {isAnonymous || auth.currentUser === null
             ? (
             <View style={styles.userTop}>
               <View style={styles.userImageContainer}>
-                <FontAwesome6 size={130} name='user' color={'#ffffff'}/>
+                <FontAwesome6 size={100} name='user' color={'#ffffff'}/>
               </View>
               <Text style={styles.userName}>ゲストさん</Text>
             </View>)
             : (
-            <View>
+            <>
               <Image
                 source={{ uri: user?.userImage }}
                 style={styles.userImage}
               />
               <Text style={styles.userName}>{user?.userName}さん</Text>
               <Text style={styles.userProfile}>{user?.profile}</Text>
-            </View>)
+            </>)
           }
         </View>
 
@@ -294,14 +311,15 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   userImageContainer: {
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 160,
     borderWidth: 1,
     borderColor: '#D0D0D0',
     backgroundColor: '#D0D0D0',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 150
+    borderRadius: 150,
+    marginBottom: 8
   },
   userName: {
     fontSize: 20,

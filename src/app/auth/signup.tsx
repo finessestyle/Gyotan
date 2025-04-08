@@ -2,8 +2,8 @@ import {
   View, Text, TextInput, Alert,
   StyleSheet, TouchableOpacity, Image, ScrollView
 } from 'react-native'
-import { Link, router } from 'expo-router'
-import { useState } from 'react'
+import { Link, router, useLocalSearchParams } from 'expo-router'
+import { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import { doc, setDoc } from 'firebase/firestore'
@@ -75,8 +75,17 @@ const SignUp = (): JSX.Element => {
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-  const [termsChecked, setTermsChecked] = useState(false)
-  const [privacyChecked, setPrivacyChecked] = useState(false)
+  const { termsAgreed, privacyAgreed } = useLocalSearchParams()
+  const [isTermsChecked, setIsTermsChecked] = useState(false)
+  const [isPrivacyChecked, setIsPrivacyChecked] = useState(false)
+
+  useEffect(() => {
+    if (termsAgreed === 'true') setIsTermsChecked(true)
+  }, [termsAgreed])
+
+  useEffect(() => {
+    if (privacyAgreed === 'true') setIsPrivacyChecked(true)
+  }, [privacyAgreed])
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -167,8 +176,8 @@ const SignUp = (): JSX.Element => {
         <View style={styles.subFooter}>
           <View style={styles.checkBox}>
             <CheckBox
-              value={termsChecked}
-              onValueChange={setTermsChecked}
+              value={isTermsChecked}
+              disabled={true}
             />
             <Link replace href='/auth/term' asChild >
               <TouchableOpacity>
@@ -178,8 +187,8 @@ const SignUp = (): JSX.Element => {
           </View>
           <View style={styles.checkBox}>
             <CheckBox
-              value={privacyChecked}
-              onValueChange={setPrivacyChecked}
+              value={isPrivacyChecked}
+              disabled={true}
             />
             <Link replace href='/auth/privacy' asChild >
               <TouchableOpacity>

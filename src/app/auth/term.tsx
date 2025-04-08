@@ -1,4 +1,10 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { router } from 'expo-router'
+import Button from '../../components/Button'
+
+const handleAgree = (): void => {
+  router.replace('/auth/signup?termsAgreed=true')
+}
 
 const TermsOfService = (): JSX.Element => {
   return (
@@ -82,6 +88,12 @@ const TermsOfService = (): JSX.Element => {
         <Text style={styles.text}>
           本規約の解釈には日本法を準拠法とし、本アプリに関する紛争は、運営者の所在地を管轄する裁判所を専属的合意管轄とします。
         </Text>
+        <Button
+          label={'同意する'}
+          buttonStyle={{ width: '100%', alignItems: 'center', marginVertical: 16 }}
+          labelStyle={{ fontSize: 20 }}
+          onPress={handleAgree}
+        />
       </ScrollView>
     </View>
   )

@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 import { Ionicons } from '@expo/vector-icons'
+import { type User } from '../../../types/user'
 import { updateProfile, linkWithCredential, EmailAuthProvider } from 'firebase/auth'
 
 const handlePress = async (
@@ -84,7 +85,7 @@ const handlePress = async (
   }
 }
 
-const anonymouseedit = () => {
+const anonymouseedit = (): JSX.Element => {
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -116,20 +117,10 @@ const anonymouseedit = () => {
     getDoc(ref)
       .then((docRef) => {
         if (docRef.exists()) {
-          const data = docRef.data() as {
-            email?: string
-            userImage?: string
-            userName?: string
-            password?: string
-            profile?: string
-            userYoutube?: string
-            userTiktok?: string
-            userInstagram?: string
-            userX?: string
-          }
+          const data = docRef.data() as User
           setUserName(data.userName ?? '')
           setEmail(data.email ?? '')
-          setPassword(data.password ?? '')
+          setPassword('')
           setUserImage(data.userImage ?? null)
           setProfile(data.profile ?? '')
           setUserYoutube(data.userYoutube ?? '')
@@ -147,7 +138,7 @@ const anonymouseedit = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
-        <Text style={styles.title}>ユーザー編集</Text>
+        <Text style={styles.title}>ユーザー情報を更新</Text>
         <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
           style={styles.input}

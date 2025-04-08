@@ -1,4 +1,10 @@
 import { View, Text, ScrollView, StyleSheet, Linking } from 'react-native'
+import { router } from 'expo-router'
+import Button from '../../components/Button'
+
+const handleAgree = (): void => {
+  router.replace('/auth/signup?privacyAgreed=true')
+}
 
 const Privacy = (): JSX.Element => {
   return (
@@ -43,6 +49,12 @@ const Privacy = (): JSX.Element => {
           までお願いいたします。
         </Text>
         <Text style={styles.contact}>当アプリ管理者：フィネススタイル</Text>
+        <Button
+          label={'同意する'}
+          buttonStyle={{ width: '100%', alignItems: 'center', marginVertical: 16 }}
+          labelStyle={{ fontSize: 20 }}
+          onPress={handleAgree}
+        />
       </ScrollView>
     </View>
   )

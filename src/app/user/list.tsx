@@ -11,24 +11,28 @@ const List = (): JSX.Element => {
   useEffect(() => {
     const ref = collection(db, 'users')
     const q = query(ref, orderBy('updatedAt', 'desc'))
+
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
-        const { userName, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, follower } = doc.data()
+        const { userName, email, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, followers } = doc.data()
         const userId = doc.id
         if (userId !== auth.currentUser?.uid) {
-          remoteUsers.push({
-            id: doc.id,
-            userName,
-            profile,
-            userImage,
-            userYoutube,
-            userTiktok,
-            userInstagram,
-            userX,
-            updatedAt,
-            follower
-          })
+          if (Array.isArray(followers) && followers.length > 0) {
+            remoteUsers.push({
+              id: doc.id,
+              userName,
+              email,
+              profile,
+              userImage,
+              userYoutube,
+              userTiktok,
+              userInstagram,
+              userX,
+              updatedAt,
+              followers
+            })
+          }
         }
       })
       setUsers(remoteUsers)
