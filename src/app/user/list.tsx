@@ -18,7 +18,7 @@ const List = (): JSX.Element => {
         const { userName, email, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, followers } = doc.data()
         const userId = doc.id
         if (userId !== auth.currentUser?.uid) {
-          if (Array.isArray(followers) && followers.length > 0) {
+          if (Array.isArray(followers) && followers.includes(auth.currentUser?.uid)) {
             remoteUsers.push({
               id: doc.id,
               userName,
