@@ -1,26 +1,23 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { useState, useEffect } from 'react'
 import { doc, updateDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../config'
 import { FontAwesome6 } from '@expo/vector-icons'
 
 interface User {
-  followers: string[]
-  followersCount: number
+  followed: string[]
 }
 
 const FollowButton = ({ userId }: { userId: string }): JSX.Element => {
   const [followed, setFollowed] = useState(false)
-  const [count, setCount] = useState<number>(0)
 
   useEffect(() => {
     const userRef = doc(db, 'users', userId)
     const unsubscribe = onSnapshot(userRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as User
-        const followers = Array.isArray(data?.followers) ? data.followers : []
-        setCount(followers.length)
-        setFollowed(followers.includes(userId))
+        const followed = Array.isArray(data?.followed) ? data.followed : []
+        setFollowed(followed.includes(userId))
       } else {
         console.log('No such document')
       }
@@ -29,17 +26,16 @@ const FollowButton = ({ userId }: { userId: string }): JSX.Element => {
   }, [userId])
 
   const handlePress = async (): Promise<void> => {
+    const currentUser = auth.currentUser?.uid
     if (userId === auth.currentUser?.uid) return
-    const userRef = doc(db, 'users', userId)
+    const userRef = doc(db, 'users', currentUser)
     if (followed) {
       await updateDoc(userRef, {
-        followersCount: count - 1,
-        followers: arrayRemove(userId)
+        followed: arrayRemove(userId)
       })
     } else {
       await updateDoc(userRef, {
-        followersCount: count + 1,
-        followers: arrayUnion(userId)
+        followed: arrayUnion(userId)
       })
     }
     setFollowed(!followed)
@@ -54,7 +50,6 @@ const FollowButton = ({ userId }: { userId: string }): JSX.Element => {
           color='red'
           solid={followed}
         />
-        <Text style={styles.followButtonCount}>{count}</Text>
       </TouchableOpacity>
     </View>
   )

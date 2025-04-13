@@ -8,7 +8,7 @@ interface Props {
   user: User
 }
 
-const FollowUser = (props: Props): JSX.Element => {
+const FollowedUser = (props: Props): JSX.Element => {
   const { user } = props
 
   return (
@@ -16,15 +16,15 @@ const FollowUser = (props: Props): JSX.Element => {
       href={{ pathname: '/user/detail', params: { id: user.id } }}
       asChild
     >
-    <TouchableOpacity style={styles.userImageButton}>
-      <View style={styles.userImageContainer}>
-        <Image
-          style={styles.userImage}
-          source={{ uri: user.userImage }}
-        />
-        <Text style={styles.userName}>{user.userName}</Text>
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity style={styles.userImageButton}>
+        <View style={styles.userImageContainer}>
+          <Image
+            style={styles.userImage}
+            source={{ uri: user.userImage }}
+          />
+          <Text style={styles.userName}>{user.userName}</Text>
+        </View>
+      </TouchableOpacity>
     </ Link>
   )
 }
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FollowUser
+export default FollowedUser

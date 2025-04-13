@@ -1,24 +1,25 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
+import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
-import Follower from '../../components/FollowUser'
+import FollowedUser from '../../components/FollowedUser'
 
 const List = (): JSX.Element => {
   const [users, setUsers] = useState<User[]>([])
 
   useEffect(() => {
+    if (auth.currentUser === null) return
     const ref = collection(db, 'users')
-    const q = query(ref, orderBy('updatedAt', 'desc'))
+    const q = query(ref, where('followed', 'array-contains', auth.currentUser?.uid), orderBy('updatedAt', 'desc'))
 
     const unsubscribe = onSnapshot(q, (snapShot) => {
       const remoteUsers: User[] = []
       snapShot.forEach((doc) => {
-        const { userName, email, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, followers } = doc.data()
+        const { userName, email, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, followed } = doc.data()
         const userId = doc.id
         if (userId !== auth.currentUser?.uid) {
-          if (Array.isArray(followers) && followers.includes(auth.currentUser?.uid)) {
+          if (Array.isArray(followed) && followed.includes(auth.currentUser?.uid)) {
             remoteUsers.push({
               id: doc.id,
               userName,
@@ -30,7 +31,7 @@ const List = (): JSX.Element => {
               userInstagram,
               userX,
               updatedAt,
-              followers
+              followed
             })
           }
         }
@@ -45,7 +46,7 @@ const List = (): JSX.Element => {
       <Text style={styles.title}>フォローユーザー</Text>
       <FlatList
         data={users}
-        renderItem={({ item }) => <Follower user={item} />}
+        renderItem={({ item }) => <FollowedUser user={item} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}

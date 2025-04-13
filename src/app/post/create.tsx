@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useCallback } from 'react'
-import { collection, Timestamp, getDoc, doc, setDoc, addDoc } from 'firebase/firestore'
+import { collection, Timestamp, getDoc, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -12,10 +12,6 @@ import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 import { hokkoNarea, hokkoEarea, hokkoWarea, nannkoEarea, nannkoWarea } from '../../../types/areas'
 import { softLures, hardLures, softLureActions, hardLureActions } from '../../../types/lure'
-
-// () 関数の呼び出し
-// {} オブジェクトの定義
-// [] 配列の定義
 
 const handlePress = async (
   images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
@@ -38,57 +34,26 @@ const handlePress = async (
   nannkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>
 ): Promise<void> => {
   try {
-    if (images.length === 0) {
-      Alert.alert('エラー', '釣果画像を選択してください')
-      return
-    }
-    if (area === '') {
-      Alert.alert('エラー', '釣果エリアを選択してください')
-      return
-    }
-    if (fishArea === '') {
-      Alert.alert('エラー', '釣果エリアを選択してください')
-      return
-    }
-    if (weather === '') {
-      Alert.alert('エラー', '天気を選択してください')
-      return
-    }
-    if (category === '') {
-      Alert.alert('エラー', 'カテゴリーを選択してください')
-      return
-    }
-    if (lure === '') {
-      Alert.alert('エラー', 'ルアーを選択してください')
-      return
-    }
-    if (lureAction === '') {
-      Alert.alert('エラー', 'ルアーアクションを選択してください')
-      return
-    }
-    if (waterDepth === '') {
-      Alert.alert('エラー', '水深を選択してください')
-      return
-    }
-    if (structure === '') {
-      Alert.alert('エラー', 'ストラクチャーを選択してください')
-      return
-    }
-    if (cover === '') {
-      Alert.alert('エラー', 'カバーを選択してください')
-      return
-    }
-    if (length === null) {
-      Alert.alert('エラー', '長さを入力してください')
-      return
-    }
-    if (weight === null) {
-      Alert.alert('エラー', '重さを入力してください')
-      return
-    }
-    if (catchFish === null) {
-      Alert.alert('エラー', '釣果数を選択してください')
-      return
+    const requiredFields = [
+      { key: images.length === 0, message: '釣果画像を選択してください' },
+      { key: area === '', message: '釣果エリアを選択してください' },
+      { key: fishArea === '', message: '釣果エリアを選択してください' },
+      { key: weather === '', message: '天気を選択してください' },
+      { key: category === '', message: 'カテゴリーを選択してください' },
+      { key: lure === '', message: 'ルアーを選択してください' },
+      { key: lureAction === '', message: 'ルアーアクションを選択してください' },
+      { key: waterDepth === '', message: '水深を選択してください' },
+      { key: structure === '', message: 'ストラクチャーを選択してください' },
+      { key: cover === '', message: 'カバーを選択してください' },
+      { key: length === null, message: '長さを入力してください' },
+      { key: weight === null, message: '重さを入力してください' },
+      { key: catchFish === null, message: '釣果数を選択してください' }
+    ]
+    for (const field of requiredFields) {
+      if (field.key) {
+        Alert.alert('エラー', field.message)
+        return
+      }
     }
 
     if (auth.currentUser === null) return
@@ -98,7 +63,7 @@ const handlePress = async (
     const userName = userData?.userName
     const userImage = userData?.userImage
     const postRef = collection(db, 'posts')
-    const newPostRef = await addDoc(postRef, {})
+    const newPostRef = doc(postRef)
     const postId = newPostRef.id
 
     const imageUrls = await Promise.all(images.map(async (image, index) => {
@@ -124,7 +89,7 @@ const handlePress = async (
       dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
-    await setDoc(doc(db, 'posts', postId), {
+    await setDoc(newPostRef, {
       userId,
       userName,
       userImage,

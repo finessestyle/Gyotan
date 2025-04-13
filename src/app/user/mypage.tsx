@@ -2,8 +2,8 @@ import {
   View, Text, StyleSheet, Image,
   FlatList, TouchableOpacity, Alert, ScrollView, Linking
 } from 'react-native'
-import { router, useNavigation } from 'expo-router'
-import { useState, useEffect } from 'react'
+import { router, useNavigation, useFocusEffect } from 'expo-router'
+import { useState, useEffect, useCallback } from 'react'
 import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
 import { auth, db, storage } from '../../config'
@@ -123,85 +123,85 @@ const Mypage = (): JSX.Element => {
     })
   }, [])
 
-  useEffect(() => {
-    if (auth.currentUser === null) return
-    const userRef = doc(db, 'users', auth.currentUser.uid)
-    const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
-      const data = userDoc.data() as User
+  useFocusEffect(
+    useCallback(() => {
+      if (auth.currentUser === null) return
+      const userRef = doc(db, 'users', auth.currentUser.uid)
+      const unsubscribeUser = onSnapshot(userRef, (userDoc) => {
+        const data = userDoc.data() as User
 
-      if (data === undefined || data === null) {
-        setUser({
-          id: auth.currentUser.uid,
-          userName: '',
-          email: '',
-          password: '',
-          userImage: '',
-          userYoutube: '',
-          userTiktok: '',
-          userInstagram: '',
-          userX: '',
-          updatedAt: '',
-          follower: ''
-        })
-      } else {
-        setUser({
-          id: userDoc.id,
-          userName: data.userName,
-          email: data.email,
-          password: data.password,
-          userImage: data.userImage,
-          profile: data.profile,
-          userYoutube: data.userYoutube,
-          userTiktok: data.userTiktok,
-          userInstagram: data.userInstagram,
-          userX: data.userX,
-          updatedAt: data.updatedAt,
-          follower: data.follower
-        })
-      }
-    })
-
-    const postRef = collection(db, 'posts')
-    const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', auth.currentUser.uid), orderBy('updatedAt', 'desc'))
-    const unsubscribePost = onSnapshot(q, (snapshot) => {
-      const userPost: Post[] = []
-      snapshot.forEach((doc) => {
-        const {
-          userId, userName, userImage, images, weather, content, length,
-          weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt, likes
-        } = doc.data()
-        userPost.push({
-          id: doc.id,
-          userId,
-          userName,
-          userImage,
-          images,
-          weather,
-          content,
-          length,
-          weight,
-          category,
-          lure,
-          lureAction,
-          waterDepth,
-          structure,
-          cover,
-          catchFish,
-          fishArea,
-          area,
-          updatedAt,
-          exifData,
-          likes
-        })
+        if (data === undefined || data === null) {
+          setUser({
+            id: auth.currentUser?.uid ?? '',
+            userName: '',
+            email: '',
+            userImage: '',
+            userYoutube: '',
+            userTiktok: '',
+            userInstagram: '',
+            userX: '',
+            updatedAt: '',
+            follower: ''
+          })
+        } else {
+          setUser({
+            id: userDoc.id,
+            userName: data.userName,
+            email: data.email,
+            userImage: data.userImage,
+            profile: data.profile,
+            userYoutube: data.userYoutube,
+            userTiktok: data.userTiktok,
+            userInstagram: data.userInstagram,
+            userX: data.userX,
+            updatedAt: data.updatedAt,
+            followed: data.followed
+          })
+        }
       })
-      setPosts(userPost)
-    })
 
-    return () => {
-      unsubscribeUser()
-      unsubscribePost()
-    }
-  }, [selectedArea])
+      const postRef = collection(db, 'posts')
+      const q = query(postRef, where('fishArea', '==', selectedArea), where('userId', '==', auth.currentUser.uid), orderBy('updatedAt', 'desc'))
+      const unsubscribePost = onSnapshot(q, (snapshot) => {
+        const userPost: Post[] = []
+        snapshot.forEach((doc) => {
+          const {
+            userId, userName, userImage, images, weather, content, length,
+            weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, fishArea, area, exifData, updatedAt, likes
+          } = doc.data()
+          userPost.push({
+            id: doc.id,
+            userId,
+            userName,
+            userImage,
+            images,
+            weather,
+            content,
+            length,
+            weight,
+            category,
+            lure,
+            lureAction,
+            waterDepth,
+            structure,
+            cover,
+            catchFish,
+            fishArea,
+            area,
+            updatedAt,
+            exifData,
+            likes
+          })
+        })
+        setPosts(userPost)
+      })
+
+      return () => {
+        unsubscribeUser()
+        unsubscribePost()
+      }
+    }, [selectedArea])
+  )
 
   return (
     <View style={styles.container}>

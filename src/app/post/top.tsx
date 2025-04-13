@@ -1,8 +1,8 @@
 import {
-  View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView /* Animated */
+  View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView, Animated
 } from 'react-native'
-import { useEffect, useState } from 'react'
-import { Link } from 'expo-router'
+import { useEffect, useState, useCallback } from 'react'
+import { Link, useFocusEffect } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
 import { db } from '../../config'
 import { type Post } from '../../../types/post'
@@ -17,15 +17,29 @@ const Top = (): JSX.Element => {
   const [largestPosts, setLargestPosts] = useState<Post[]>([])
   const [latestArea, setLatestArea] = useState<string>(areas[0])
   const [largestArea, setLargestArea] = useState<string>(areas[0])
-  // const [fadeAnime] = useState(new Animated.Value(0))
+  const [fadeAnime] = useState(new Animated.Value(0))
 
-  // useEffect(() => {
-  //   Animated.timing(fadeAnime, {
-  //     toValue: 1,
-  //     duration: 1500,
-  //     useNativeDriver: true
-  //   }).start()
-  // }, [])
+  useFocusEffect(
+    useCallback(() => {
+      fadeAnime.setValue(0)
+      Animated.timing(fadeAnime, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true
+      }).start()
+    }, [fadeAnime])
+  )
+
+  useEffect(() => {
+    if (latestPosts.length > 0) {
+      fadeAnime.setValue(0)
+      Animated.timing(fadeAnime, {
+        toValue: 1,
+        duration: 1500,
+        useNativeDriver: true
+      }).start()
+    }
+  }, [latestPosts])
 
   useEffect(() => {
     const ref = collection(db, 'posts')
@@ -140,22 +154,18 @@ const Top = (): JSX.Element => {
         <View style={styles.fishNow}>
           <Text style={styles.title}>今釣れてる!?</Text>
           {latestPosts.length > 0 && (
-            // <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }] }>
-            //   <Text style={styles.now}>{latestPosts[0].structure}</Text>
-            //   <Icon name="delete" size={32} color="#888" />
-            //   <Text style={styles.now}>{latestPosts[0].cover}</Text>
-            //   <Icon name="delete" size={32} color="#888" />
-            //   <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
-            // </Animated.View>
-            <View style={styles.fishingNow}>
-            <Text style={styles.now}>{latestPosts[0].structure}</Text>
-            <Icon name="delete" size={32} color="#888" />
-            <Text style={styles.now}>{latestPosts[0].cover}</Text>
-            <Icon name="delete" size={32} color="#888" />
-            <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
-          </View>
+            <View>
+              <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }] }>
+                <Text style={styles.now}>{latestPosts[0].structure}</Text>
+                <Icon name="delete" size={32} color="#888" />
+                <Text style={styles.now}>{latestPosts[0].cover}</Text>
+                <Icon name="delete" size={32} color="#888" />
+                <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
+              </Animated.View>
+            </View>
           )}
         </View>
+
         <Text style={styles.title}>ランキング[長さ]</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (

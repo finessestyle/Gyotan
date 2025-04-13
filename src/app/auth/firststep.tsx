@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, ImageBackground } from 'react-native'
 import { router } from 'expo-router'
-import Button from '../../components/Button'
 import { auth } from '../../config'
 import { signInAnonymously } from 'firebase/auth'
+import Button from '../../components/Button'
 
 const handlePress = async (): Promise<void> => {
   try {

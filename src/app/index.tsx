@@ -7,7 +7,7 @@ const Index = (): JSX.Element => {
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        router.replace('/auth/firststep')
+        router.replace('post/top')
       }
     })
   }, [])

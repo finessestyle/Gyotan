@@ -26,7 +26,6 @@ const Detail = (): JSX.Element => {
         id: userDoc.id,
         userName: data.userName,
         email: data.email,
-        password: data.password,
         profile: data.profile,
         userImage: data.userImage,
         userYoutube: data.userYoutube,
@@ -34,7 +33,7 @@ const Detail = (): JSX.Element => {
         userTiktok: data.userTiktok,
         userX: data.userX,
         updatedAt: data.updatedAt,
-        follower: data.follower
+        followed: data.followed
       })
     })
 

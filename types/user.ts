@@ -11,7 +11,11 @@ interface User {
   userInstagram: string
   userX: string
   updatedAt: Timestamp
-  followers: string[]
+  followed: string[]
 }
 
 export type { User }
+
+// () 関数の呼び出し
+// {} オブジェクトの定義
+// [] 配列の定義
