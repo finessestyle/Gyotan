@@ -1,45 +1,70 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
-import { useEffect, useState } from 'react'
-import { collection, onSnapshot, query, orderBy, where } from 'firebase/firestore'
+import { useFocusEffect } from 'expo-router'
+import { useEffect, useState, useCallback } from 'react'
+import { collection, doc, getDocs, getDoc, query, where } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
 import FollowedUser from '../../components/FollowedUser'
+import { chunk } from 'lodash'
 
 const List = (): JSX.Element => {
   const [users, setUsers] = useState<User[]>([])
+  const [followed, setFollowed] = useState<string[]>([])
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchFollowedIds = async (): Promise<void> => {
+        if (auth.currentUser === null) return
+        const myRef = doc(db, 'users', auth.currentUser.uid)
+        const mySnap = await getDoc(myRef)
+        if (mySnap.exists()) {
+          const data = mySnap.data()
+          const followedRaw = data.followed
+          const followedIds: string[] = Array.isArray(followedRaw) ? followedRaw : []
+          setFollowed(followedIds.slice(0, 10))
+        }
+      }
+      void fetchFollowedIds()
+    }, [])
+  )
 
   useEffect(() => {
-    if (auth.currentUser === null) return
-    const ref = collection(db, 'users')
-    const q = query(ref, where('followed', 'array-contains', auth.currentUser?.uid), orderBy('updatedAt', 'desc'))
+    if (auth.currentUser === null || followed.length === 0) return
 
-    const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remoteUsers: User[] = []
-      snapShot.forEach((doc) => {
-        const { userName, email, profile, userImage, userYoutube, userTiktok, userInstagram, userX, updatedAt, followed } = doc.data()
-        const userId = doc.id
-        if (userId !== auth.currentUser?.uid) {
-          if (Array.isArray(followed) && followed.includes(auth.currentUser?.uid)) {
-            remoteUsers.push({
-              id: doc.id,
-              userName,
-              email,
-              profile,
-              userImage,
-              userYoutube,
-              userTiktok,
-              userInstagram,
-              userX,
-              updatedAt,
-              followed
-            })
+    const fetchFollowedUsers = async (): Promise<void> => {
+      const chunks = chunk(followed, 10)
+      const promises = chunks.map(async (chunkIds) => {
+        const ref = collection(db, 'users')
+        const q = query(ref, where('__name__', 'in', chunkIds))
+        const snap = await getDocs(q)
+
+        const usersChunk: User[] = snap.docs.map((doc) => {
+          const data = doc.data()
+          return {
+            id: doc.id,
+            userName: data.userName,
+            email: data.email,
+            profile: data.profile,
+            userImage: data.userImage,
+            userYoutube: data.userYoutube,
+            userTiktok: data.userTiktok,
+            userInstagram: data.userInstagram,
+            userX: data.userX,
+            updatedAt: data.updatedAt,
+            followed: data.followed
           }
-        }
+        })
+
+        return usersChunk
       })
-      setUsers(remoteUsers)
-    })
-    return unsubscribe
-  }, [])
+
+      const resultChunks = await Promise.all(promises)
+      const allUsers = resultChunks.flat()
+      setUsers(allUsers)
+    }
+
+    void fetchFollowedUsers()
+  }, [followed])
 
   return (
     <View style={styles.container}>
@@ -69,7 +94,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16
   },
   columnWrapper: {
-    justifyContent: 'space-between' // 列間のアイテムを均等に配置
+    justifyContent: 'space-between'
   }
 })
 
