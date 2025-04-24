@@ -1,5 +1,6 @@
 import { ScrollView, View, Text, TextInput, StyleSheet, Alert, Image, TouchableOpacity } from 'react-native'
 import { useState, useEffect } from 'react'
+import { router } from 'expo-router'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
@@ -65,20 +66,18 @@ const handlePress = async (
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
     if (auth.currentUser.isAnonymous) {
-      const credential = EmailAuthProvider.credential(email, password)
-      await linkWithCredential(auth.currentUser, credential)
-        .then(() => {
-          // メール認証後、プロファイルを更新
-          return updateProfile(auth.currentUser, { displayName: userName })
-        })
-        .catch((error) => {
-          console.error('認証情報のリンクに失敗しました: ', error.message)
-          Alert.alert('認証情報のリンクに失敗しました')
-        })
+      try {
+        const credential = EmailAuthProvider.credential(email, password)
+        await linkWithCredential(auth.currentUser, credential)
+        await updateProfile(auth.currentUser, { displayName: userName })
+      } catch (error) {
+        Alert.alert('認証情報のリンクに失敗しました')
+        return
+      }
     } else {
-      // 既存のユーザーには直接プロフィール更新
       await updateProfile(auth.currentUser, { displayName: userName })
     }
+    router.back()
   } catch (error) {
     console.log(error)
     Alert.alert('更新に失敗しました')

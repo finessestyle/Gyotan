@@ -20,9 +20,10 @@ const FirstStep = (): JSX.Element => {
       style={styles.container}
     >
       <View style={styles.inner}>
-        <Text style={styles.title}>Welcome to</Text>
         <View style={styles.subInner}>
-          <Text style={styles.subTitle}>Gyotan</Text>
+          <Text style={styles.title}>Gyotan</Text>
+          <Text style={styles.subTitle}>琵琶湖でバス釣りを本気で楽しむあなたへ</Text>
+          <Text style={styles.subTitle}>釣果を共有して、釣れるヒントを見つけよう</Text>
         </View>
         <View style={styles.auth}>
           <Button
@@ -61,24 +62,22 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   subInner: {
-    alignItems: 'flex-end'
+    alignItems: 'center',
+    marginBottom: 80
   },
   title: {
-    color: 'rgb(218, 221, 226)',
-    fontSize: 52,
-    fontWeight: '600',
-    marginBottom: 10,
-    paddingLeft: 16
+    color: '#ffffff',
+    fontSize: 80,
+    fontWeight: 'bold',
+    marginBottom: 8
   },
   subTitle: {
-    fontSize: 52,
+    fontSize: 14,
     fontWeight: 'bold',
-    color: 'rgb(218, 221, 226)',
-    marginBottom: 40,
-    paddingRight: 24
+    color: '#ffffff',
+    marginBottom: 8
   },
   auth: {
-    width: '100%',
     gap: 12
   },
   button: {
@@ -92,12 +91,11 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
-    justifyContent: 'center',
     alignItems: 'center'
   },
   buttonLabel: {
     fontSize: 24,
-    lineHeight: 24,
+    lineHeight: 30,
     color: '#fff',
     fontWeight: 'bold'
   },

@@ -139,6 +139,7 @@ const Edit = (): JSX.Element => {
           style={styles.input}
           value={email}
           onChangeText={(text) => { setEmail(text) }}
+          autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
           textContentType='emailAddress'

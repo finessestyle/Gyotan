@@ -99,7 +99,7 @@ const Map = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion}>
+      <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion} mapType='hybrid'>
         {posts.map((post) => {
           const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
           if (!exif?.latitude || !exif?.longitude) return null

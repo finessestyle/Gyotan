@@ -16,7 +16,8 @@ import { FontAwesome6 } from '@expo/vector-icons'
 
 const handlePress = (): void => {
   const userId = auth.currentUser?.uid
-  if (userId === undefined || userId === null || userId === '') return
+  const isAnonymous = auth.currentUser?.isAnonymous === true // ← これを追加
+  if (userId === undefined || userId === null || userId === '' || isAnonymous) return
   Alert.alert(
     '選択してください',
     undefined,

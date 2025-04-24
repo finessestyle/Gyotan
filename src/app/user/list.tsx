@@ -1,7 +1,7 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { useFocusEffect } from 'expo-router'
 import { useEffect, useState, useCallback } from 'react'
-import { collection, doc, getDocs, getDoc, query, where } from 'firebase/firestore'
+import { collection, doc, getDocs, query, where, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
 import FollowedUser from '../../components/FollowedUser'
@@ -13,23 +13,25 @@ const List = (): JSX.Element => {
 
   useFocusEffect(
     useCallback(() => {
-      const fetchFollowedIds = async (): Promise<void> => {
-        if (auth.currentUser === null) return
-        const myRef = doc(db, 'users', auth.currentUser.uid)
-        const mySnap = await getDoc(myRef)
-        if (mySnap.exists()) {
-          const data = mySnap.data()
-          const followedRaw = data.followed
-          const followedIds: string[] = Array.isArray(followedRaw) ? followedRaw : []
-          setFollowed(followedIds.slice(0, 10))
+      if (auth.currentUser === null) return
+      const userRef = doc(db, 'users', auth.currentUser.uid)
+      const unsubscribe = onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data()
+          const followedIds = Array.isArray(data?.followed) ? data.followed : []
+          setFollowed(followedIds)
         }
-      }
-      void fetchFollowedIds()
+      })
+      return unsubscribe
     }, [])
   )
 
   useEffect(() => {
-    if (auth.currentUser === null || followed.length === 0) return
+    if (auth.currentUser === null) return
+    if (followed.length === 0) {
+      setUsers([])
+      return
+    }
 
     const fetchFollowedUsers = async (): Promise<void> => {
       const chunks = chunk(followed, 10)

@@ -77,7 +77,7 @@ const List = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion}>
+      <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion} mapType='hybrid'>
         {maps.map((map) => {
           return (
             <Marker
