@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ImageBackground } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native'
 import { router } from 'expo-router'
 import { auth } from '../../config'
 import { signInAnonymously } from 'firebase/auth'
@@ -9,7 +9,7 @@ const handlePress = async (): Promise<void> => {
     await signInAnonymously(auth)
     router.replace('/post/top')
   } catch (error) {
-    console.error('匿名ログイン失敗:', error)
+    Alert.alert('匿名ログインに失敗しました')
   }
 }
 

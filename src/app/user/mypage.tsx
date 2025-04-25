@@ -16,8 +16,7 @@ import { FontAwesome6 } from '@expo/vector-icons'
 
 const handlePress = (): void => {
   const userId = auth.currentUser?.uid
-  const isAnonymous = auth.currentUser?.isAnonymous === true // ← これを追加
-  if (userId === undefined || userId === null || userId === '' || isAnonymous) return
+  if (userId === undefined || userId === null || userId === '') return
   Alert.alert(
     '選択してください',
     undefined,
@@ -209,11 +208,13 @@ const Mypage = (): JSX.Element => {
       <ScrollView style={styles.inner}>
         <View style={styles.innerTitle}>
           <Text style={styles.title}>マイページ</Text>
-          {auth.currentUser?.uid === user?.id && (
+          {auth.currentUser?.uid === user?.id && !isAnonymous
+            ? (
             <TouchableOpacity style={styles.setting} onPress={handlePress}>
               <FontAwesome6 size={24} name="gear" color='#D0D0D0' />
-            </TouchableOpacity>
-          )}
+            </TouchableOpacity>)
+            : null
+          }
         </View>
         <View style={styles.userTop}>
           {isAnonymous || auth.currentUser === null
@@ -276,6 +277,7 @@ const Mypage = (): JSX.Element => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#F0F4F8'
   },
   inner: {

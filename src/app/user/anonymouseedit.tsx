@@ -16,11 +16,7 @@ const handlePress = async (
   email: string,
   password: string,
   userImage: string | null,
-  profile: string,
-  userYoutube: string | null,
-  userTiktok: string | null,
-  userInstagram: string | null,
-  userX: string | null
+  profile: string
 ): Promise<void> => {
   try {
     if (userName === '') {
@@ -59,10 +55,6 @@ const handlePress = async (
       userImage,
       userName,
       profile,
-      userYoutube,
-      userTiktok,
-      userInstagram,
-      userX,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
     if (auth.currentUser.isAnonymous) {
@@ -91,10 +83,6 @@ const anonymouseedit = (): JSX.Element => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
-  const [userYoutube, setUserYoutube] = useState('')
-  const [userTiktok, setUserTiktok] = useState('')
-  const [userInstagram, setUserInstagram] = useState('')
-  const [userX, setUserX] = useState('')
 
   const pickImage = async (): Promise<void> => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -122,10 +110,6 @@ const anonymouseedit = (): JSX.Element => {
           setPassword('')
           setUserImage(data.userImage ?? null)
           setProfile(data.profile ?? '')
-          setUserYoutube(data.userYoutube ?? '')
-          setUserTiktok(data.userTiktok ?? '')
-          setUserInstagram(data.userInstagram ?? '')
-          setUserX(data.userX ?? '')
         }
       })
       .catch((error) => {
@@ -205,46 +189,6 @@ const anonymouseedit = (): JSX.Element => {
           maxLength={30}
           returnKeyType='done'
         />
-        <Text style={styles.textTitle}>Youtube</Text>
-        <TextInput
-          style={styles.input}
-          value={userYoutube}
-          onChangeText={(text) => { setUserYoutube(text) }}
-          keyboardType='url'
-          placeholder='URLを入力'
-          textContentType='URL'
-          returnKeyType='done'
-        />
-        <Text style={styles.textTitle}>Tiktok</Text>
-        <TextInput
-          style={styles.input}
-          value={userTiktok}
-          onChangeText={(text) => { setUserTiktok(text) }}
-          keyboardType='url'
-          placeholder='URLを入力'
-          textContentType='URL'
-          returnKeyType='done'
-        />
-        <Text style={styles.textTitle}>Instagram</Text>
-        <TextInput
-          style={styles.input}
-          value={userInstagram}
-          onChangeText={(text) => { setUserInstagram(text) }}
-          keyboardType='url'
-          placeholder='URLを入力'
-          textContentType='URL'
-          returnKeyType='done'
-        />
-        <Text style={styles.textTitle}>X</Text>
-        <TextInput
-          style={styles.input}
-          value={userX}
-          onChangeText={(text) => { setUserX(text) }}
-          keyboardType='url'
-          placeholder='URLを入力'
-          textContentType='URL'
-          returnKeyType='done'
-        />
         <Button
           label='編集'
           onPress={() => {
@@ -255,11 +199,7 @@ const anonymouseedit = (): JSX.Element => {
                 email,
                 password,
                 userImage,
-                profile,
-                userYoutube,
-                userTiktok,
-                userInstagram,
-                userX
+                profile
               )
             }
           }}
@@ -311,7 +251,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 20,
+    top: 40,
     transform: [{ translateY: -12 }]
   },
   imageBox: {
