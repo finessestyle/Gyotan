@@ -4,9 +4,9 @@ import {onSchedule} from "firebase-functions/v2/scheduler";// 正しいインポ
 admin.initializeApp();
 
 export const deleteOldAnonymousUsers =
-onSchedule("every 24 hours", async (context) => {
+onSchedule("every 1 minutes", async (context) => {
   const now = Date.now();
-  const oneDayMs = 24 * 60 * 60 * 1000;
+  const fiveMinutesMs = 5 * 60 * 1000;
 
   let nextPageToken: string | undefined;
   do {
@@ -15,7 +15,7 @@ onSchedule("every 24 hours", async (context) => {
       const isAnonymous = user.providerData.length === 0;
       const creationTime = user.metadata.creationTime ?
         new Date(user.metadata.creationTime).getTime() : 0;
-      if (isAnonymous && now - creationTime > oneDayMs) {
+      if (isAnonymous && now - creationTime > fiveMinutesMs) {
         console.log(`Deleting anonymous user: ${user.uid}`);
         await admin.auth().deleteUser(user.uid);
       }
