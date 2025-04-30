@@ -150,6 +150,12 @@ const Top = (): JSX.Element => {
           showsHorizontalScrollIndicator={false}
           keyboardShouldPersistTaps='always'
           contentContainerStyle={styles.listContainer}
+          initialNumToRender={5}
+          ListEmptyComponent={
+            <View style={{ padding: 20 }}>
+              <Text>投稿がありません...。</Text>
+            </View>
+          }
         />
         <View style={styles.fishNow}>
           <Text style={styles.title}>今釣れてる!?</Text>
@@ -187,6 +193,12 @@ const Top = (): JSX.Element => {
           showsHorizontalScrollIndicator={false}
           keyboardShouldPersistTaps="always"
           contentContainerStyle={styles.listContainer}
+          initialNumToRender={5}
+          ListEmptyComponent={
+            <View style={{ padding: 20 }}>
+              <Text>投稿がありません...。</Text>
+            </View>
+          }
         />
       </ScrollView>
     </View>

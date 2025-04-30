@@ -24,8 +24,8 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
         }}
       >
         <UrlTile
-          urlTemplate='https://cyberjapandata.gsi.go.jp/xyz/ort/{z}/{x}/{y}.jpg'
-          maximumZ={20}
+          urlTemplate='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+          maximumZ={19}
           flipY={false} // 必要に応じて設定
         />
         <Circle

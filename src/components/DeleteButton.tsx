@@ -69,7 +69,7 @@ const DeleteButton = ({ post }: Props): JSX.Element | null => {
 const styles = StyleSheet.create({
   deleteButton: {
     position: 'absolute',
-    right: 5
+    right: 100
   }
 })
 

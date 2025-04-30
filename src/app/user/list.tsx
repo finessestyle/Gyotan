@@ -77,6 +77,11 @@ const List = (): JSX.Element => {
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
+        ListEmptyComponent={
+          <View style={{ padding: 20 }}>
+            <Text>フォローユーザーがいません...。</Text>
+          </View>
+        }
       />
     </View>
   )

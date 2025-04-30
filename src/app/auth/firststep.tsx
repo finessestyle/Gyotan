@@ -1,19 +1,32 @@
-import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native'
+import { View, Text, StyleSheet, ImageBackground, Alert, Animated } from 'react-native'
+import { useState, useEffect } from 'react'
 import { router } from 'expo-router'
 import { auth } from '../../config'
 import { signInAnonymously } from 'firebase/auth'
 import Button from '../../components/Button'
 
-const handlePress = async (): Promise<void> => {
-  try {
-    await signInAnonymously(auth)
-    router.replace('/post/top')
-  } catch (error) {
-    Alert.alert('匿名ログインに失敗しました')
-  }
-}
-
 const FirstStep = (): JSX.Element => {
+  const [fadeAnim] = useState(new Animated.Value(0))
+
+  const handlePress = async (): Promise<void> => {
+    try {
+      await signInAnonymously(auth)
+      router.replace('/post/top')
+    } catch (error) {
+      Alert.alert('匿名ログインに失敗しました')
+    }
+  }
+
+  useEffect(() => {
+    // コンポーネントがマウントされた後にアニメーション開始
+    Animated.timing(fadeAnim, {
+      toValue: 1, // 完全に表示させる
+      duration: 2000, // 2秒で表示
+      delay: 300, // 300ms後にアニメーション開始
+      useNativeDriver: true // ネイティブドライバを使用
+    }).start()
+  }, [])
+
   return (
     <ImageBackground
       source={require('../../../assets/1.jpeg')}
@@ -25,7 +38,7 @@ const FirstStep = (): JSX.Element => {
           <Text style={styles.subTitle}>琵琶湖でバス釣りを本気で楽しむあなたへ</Text>
           <Text style={styles.subTitle}>釣果を共有して、釣れるヒントを見つけよう</Text>
         </View>
-        <View style={styles.auth}>
+        <Animated.View style={{ opacity: fadeAnim, gap: 14 }}>
           <Button
             label={'ログイン'}
             buttonStyle={styles.button}
@@ -44,7 +57,7 @@ const FirstStep = (): JSX.Element => {
             labelStyle={styles.buttonLabel}
             onPress={handlePress}
           />
-        </View>
+        </Animated.View>
       </View>
     </ImageBackground>
   )
@@ -76,9 +89,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#ffffff',
     marginBottom: 8
-  },
-  auth: {
-    gap: 12
   },
   button: {
     width: '60%',
