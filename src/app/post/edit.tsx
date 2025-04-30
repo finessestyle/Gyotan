@@ -13,6 +13,7 @@ import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 import { hokkoNarea, hokkoEarea, hokkoWarea, nannkoEarea, nannkoWarea } from '../../../types/areas'
 import { softLures, hardLures, softLureActions, hardLureActions } from '../../../types/lure'
+import Lottie from '../../components/Lottie'
 
 const handlePress = async (
   id: string,
@@ -33,60 +34,30 @@ const handlePress = async (
   hokkoEarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
   hokkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
   nannkoEarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
-  nannkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>
+  nannkoWarea: Array<{ label: string, value: string, latitude: number, longitude: number }>,
+  setLoading: (value: boolean) => void
 ): Promise<void> => {
   try {
-    if (images.length === 0) {
-      Alert.alert('エラー', '釣果画像を選択してください')
-      return
-    }
-    if (area === '') {
-      Alert.alert('エラー', '釣果エリアを選択してください')
-      return
-    }
-    if (fishArea === '') {
-      Alert.alert('エラー', '釣果エリアを選択してください')
-      return
-    }
-    if (weather === '') {
-      Alert.alert('エラー', '天気を選択してください')
-      return
-    }
-    if (category === '') {
-      Alert.alert('エラー', 'カテゴリーを選択してください')
-      return
-    }
-    if (lure === '') {
-      Alert.alert('エラー', 'ルアーを選択してください')
-      return
-    }
-    if (lureAction === '') {
-      Alert.alert('エラー', 'ルアーアクションを選択してください')
-      return
-    }
-    if (waterDepth === '') {
-      Alert.alert('エラー', '水深を選択してください')
-      return
-    }
-    if (structure === '') {
-      Alert.alert('エラー', 'ストラクチャーを選択してください')
-      return
-    }
-    if (cover === '') {
-      Alert.alert('エラー', 'カバーを選択してください')
-      return
-    }
-    if (length === null) {
-      Alert.alert('エラー', '長さを入力してください')
-      return
-    }
-    if (weight === null) {
-      Alert.alert('エラー', '重さを入力してください')
-      return
-    }
-    if (catchFish === null) {
-      Alert.alert('エラー', '釣果数を選択してください')
-      return
+    const requiredFields = [
+      { key: images.length === 0, message: '釣果画像を選択してください' },
+      { key: area === '', message: '釣果エリアを選択してください' },
+      { key: fishArea === '', message: '釣果エリアを選択してください' },
+      { key: weather === '', message: '天気を選択してください' },
+      { key: category === '', message: 'カテゴリーを選択してください' },
+      { key: lure === '', message: 'ルアーを選択してください' },
+      { key: lureAction === '', message: 'ルアーアクションを選択してください' },
+      { key: waterDepth === '', message: '水深を選択してください' },
+      { key: structure === '', message: 'ストラクチャーを選択してください' },
+      { key: cover === '', message: 'カバーを選択してください' },
+      { key: length === null, message: '長さを入力してください' },
+      { key: weight === null, message: '重さを入力してください' },
+      { key: catchFish === null, message: '釣果数を選択してください' }
+    ]
+    for (const field of requiredFields) {
+      if (field.key) {
+        Alert.alert('エラー', field.message)
+        return
+      }
     }
 
     if (auth.currentUser === null) return
@@ -121,6 +92,8 @@ const handlePress = async (
       dateTime: image.exif?.DateTimeOriginal ?? null
     }))
 
+    setLoading(true)
+
     await setDoc(doc(db, 'posts', id), {
       userId,
       userName,
@@ -141,10 +114,13 @@ const handlePress = async (
       catchFish,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
+    await new Promise(resolve => setTimeout(resolve, 3000))
     router.back()
   } catch (error) {
     console.log(error)
     Alert.alert('更新に失敗しました')
+  } finally {
+    setLoading(false)
   }
 }
 
@@ -163,6 +139,7 @@ const Edit = (): JSX.Element => {
   const [length, setLength] = useState<number | null>(null)
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const areaOptions =
   fishArea === '北湖北岸'
@@ -245,285 +222,289 @@ const Edit = (): JSX.Element => {
   }, [id])
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
-      <ScrollView style={styles.inner}>
+    <>
+      {loading && <Lottie onFinish={() => { setLoading(false) }} />}
+      <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView style={styles.inner}>
 
-        <Text style={styles.title}>釣果編集</Text>
+          <Text style={styles.title}>釣果編集</Text>
 
-        <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button
-          label="釣果画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
-          onPress={() => {
-            pickImage().then(() => {
-            }).catch((error) => {
-              console.error('Error picking image:', error)
-            })
-          }}
-        />
-        <View style={styles.imageContainer}>
-          {images.map((image, index) => (
-            <View key={index} style={styles.imageWrapper}>
-              <Image source={{ uri: image.uri }} style={styles.image} />
-              <TouchableOpacity
-                style={styles.removeButton}
-                onPress={() => {
-                  removeImage(index)
-                }}
-              >
-                <Text style={styles.removeButtonText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
+          <Text style={styles.textTitle}>ファイルを選択</Text>
+          <Button
+            label="釣果画像を選択"
+            buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
+            labelStyle={{ lineHeight: 16, color: '#000000' }}
+            onPress={() => {
+              pickImage().then(() => {
+              }).catch((error) => {
+                console.error('Error picking image:', error)
+              })
+            }}
+          />
+          <View style={styles.imageContainer}>
+            {images.map((image, index) => (
+              <View key={index} style={styles.imageWrapper}>
+                <Image source={{ uri: image.uri }} style={styles.image} />
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => {
+                    removeImage(index)
+                  }}
+                >
+                  <Text style={styles.removeButtonText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
 
-        <Text style={styles.textTitle}>釣果エリア</Text>
-        <RNPickerSelect
-          value={fishArea}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setFishArea(value)
-              setArea(value)
-            }
-          }}
-          items={[
-            { label: '北湖北岸', value: '北湖北岸' },
-            { label: '北湖東岸', value: '北湖東岸' },
-            { label: '北湖西岸', value: '北湖西岸' },
-            { label: '南湖東岸', value: '南湖東岸' },
-            { label: '南湖西岸', value: '南湖西岸' }
-          ]}
-          placeholder={{ label: '釣果エリアを選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-        {fishArea !== null && (
+          <Text style={styles.textTitle}>釣果エリア</Text>
           <RNPickerSelect
-            value={area}
+            value={fishArea}
             onValueChange={(value: string | null) => {
               if (value !== null) {
+                setFishArea(value)
                 setArea(value)
               }
             }}
-            items={areaOptions}
-            placeholder={{ label: 'エリアを選択してください', value: '' }}
+            items={[
+              { label: '北湖北岸', value: '北湖北岸' },
+              { label: '北湖東岸', value: '北湖東岸' },
+              { label: '北湖西岸', value: '北湖西岸' },
+              { label: '南湖東岸', value: '南湖東岸' },
+              { label: '南湖西岸', value: '南湖西岸' }
+            ]}
+            placeholder={{ label: '釣果エリアを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-        )}
+          {fishArea !== null && (
+            <RNPickerSelect
+              value={area}
+              onValueChange={(value: string | null) => {
+                if (value !== null) {
+                  setArea(value)
+                }
+              }}
+              items={areaOptions}
+              placeholder={{ label: 'エリアを選択してください', value: '' }}
+              style={pickerSelectStyles}
+            />
+          )}
 
-        <Text style={styles.textTitle}>天気を選択</Text>
-        <RNPickerSelect
-          value={weather}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setWeather(value)
-            }
-          }}
-          items={[
-            { label: '晴れ', value: '晴れ' },
-            { label: '曇り', value: '曇り' },
-            { label: '雨', value: '雨' },
-            { label: '雪', value: '雪' }
-          ]}
-          placeholder={{ label: '天気を選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-
-        <Text style={styles.textTitle}>ルアーを選択</Text>
-        <RNPickerSelect
-          value={category}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setCategory(value)
-              setLure(value)
-              setLureAction(value)
-            }
-          }}
-          items={[
-            { label: 'ソフトルアー', value: 'ソフトルアー' },
-            { label: 'ハードルアー', value: 'ハードルアー' }
-          ]}
-          placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-        {category !== null && (
+          <Text style={styles.textTitle}>天気を選択</Text>
           <RNPickerSelect
-            value={lure}
+            value={weather}
             onValueChange={(value: string | null) => {
               if (value !== null) {
-                setLure(value)
+                setWeather(value)
               }
             }}
-            items={lureOptions}
-            placeholder={{ label: 'ルアーを選択してください', value: '' }}
+            items={[
+              { label: '晴れ', value: '晴れ' },
+              { label: '曇り', value: '曇り' },
+              { label: '雨', value: '雨' },
+              { label: '雪', value: '雪' }
+            ]}
+            placeholder={{ label: '天気を選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-        )}
-        {category !== null && (
+
+          <Text style={styles.textTitle}>ルアーを選択</Text>
           <RNPickerSelect
-            value={lureAction}
+            value={category}
             onValueChange={(value: string | null) => {
               if (value !== null) {
+                setCategory(value)
+                setLure(value)
                 setLureAction(value)
               }
             }}
-            items={lureActionOptions}
-            placeholder={{ label: 'ルアーアクションを選択してください', value: '' }}
+            items={[
+              { label: 'ソフトルアー', value: 'ソフトルアー' },
+              { label: 'ハードルアー', value: 'ハードルアー' }
+            ]}
+            placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-        )}
+          {category !== null && (
+            <RNPickerSelect
+              value={lure}
+              onValueChange={(value: string | null) => {
+                if (value !== null) {
+                  setLure(value)
+                }
+              }}
+              items={lureOptions}
+              placeholder={{ label: 'ルアーを選択してください', value: '' }}
+              style={pickerSelectStyles}
+            />
+          )}
+          {category !== null && (
+            <RNPickerSelect
+              value={lureAction}
+              onValueChange={(value: string | null) => {
+                if (value !== null) {
+                  setLureAction(value)
+                }
+              }}
+              items={lureActionOptions}
+              placeholder={{ label: 'ルアーアクションを選択してください', value: '' }}
+              style={pickerSelectStyles}
+            />
+          )}
 
-        <Text style={styles.textTitle}>水深を選択</Text>
-        <RNPickerSelect
-          value={waterDepth}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setWaterDepth(value)
-            }
+          <Text style={styles.textTitle}>水深を選択</Text>
+          <RNPickerSelect
+            value={waterDepth}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setWaterDepth(value)
+              }
+            }}
+            items={[
+              { label: 'トップ', value: 'トップ' },
+              { label: 'ミドル', value: 'ミドル' },
+              { label: 'ボトム', value: 'ボトム' }
+            ]}
+            placeholder={{ label: '水深を選択してください', value: '' }}
+            style={pickerSelectStyles}
+          />
+
+          <Text style={styles.textTitle}>ストラクチャー（水中の地形変化）を選択</Text>
+          <RNPickerSelect
+            value={structure}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setStructure(value)
+              }
+            }}
+            items={[
+              { label: 'ブレイク', value: 'ブレイク' },
+              { label: 'シャローフラット', value: 'シャローフラット' },
+              { label: 'ディープ', value: 'ディープ' },
+              { label: '岬', value: '岬' },
+              { label: 'ワンド', value: 'ワンド' },
+              { label: 'ゴロタ石', value: 'ゴロタ石' },
+              { label: 'リップラップ', value: 'リップラップ' },
+              { label: 'チャネル', value: 'チャネル' },
+              { label: 'サンドバー', value: 'サンドバー' },
+              { label: '浚渫跡', value: '浚渫跡' },
+              { label: 'ハンプ', value: 'ハンプ' },
+              { label: '流れ込み', value: '流れ込み' },
+              { label: '河口', value: '河口' },
+              { label: '漁港', value: '漁港' }
+
+            ]}
+            placeholder={{ label: 'ストラクチャーを選択してください', value: '' }}
+            style={pickerSelectStyles}
+          />
+
+          <Text style={styles.textTitle}>カバー（障害物）を選択</Text>
+          <RNPickerSelect
+            value={cover}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setCover(value)
+              }
+            }}
+            items={[
+              { label: 'ウィード', value: 'ウィード' },
+              { label: '取水塔', value: '取水塔' },
+              { label: '桟橋', value: '桟橋' },
+              { label: '橋脚', value: '橋脚' },
+              { label: '護岸際', value: '護岸際' },
+              { label: 'オーバーハング', value: 'オーバーハング' },
+              { label: '立木', value: '立木' },
+              { label: 'ブッシュ', value: 'ブッシュ' },
+              { label: 'レイダウン', value: 'レイダウン' },
+              { label: 'リリーパッド', value: 'リリーパッド' },
+              { label: 'ゴミ溜まり', value: 'ゴミ溜まり' },
+              { label: 'オダ', value: 'オダ' },
+              { label: '杭', value: '杭' },
+              { label: '水門', value: '水門' },
+              { label: '漁礁', value: '漁礁' },
+              { label: '消波ブロック', value: '消波ブロック' },
+              { label: '大岩', value: '大岩' },
+              { label: '沈船', value: '沈船' }
+            ]}
+            placeholder={{ label: 'カバーを選択してください', value: '' }}
+            style={pickerSelectStyles}
+          />
+
+          <Text style={styles.textTitle}>長さを入力(cm)</Text>
+          <TextInput
+            value={length !== null ? String(length) : ''}
+            style={styles.input}
+            onChangeText={(text) => {
+              const numericValue = Number(text)
+              if (!isNaN(numericValue)) {
+                setLength(Number(text))
+              }
+            }}
+            placeholder='長さ(cm)を入力してください'
+            keyboardType='number-pad'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>重さを入力(g)</Text>
+          <TextInput
+            style={styles.input}
+            value={weight !== null ? String(weight) : ''}
+            onChangeText={(text) => {
+              const numericValue = Number(text)
+              if (!isNaN(numericValue)) {
+                setWeight(Number(text))
+              }
+            }}
+            placeholder='重さ(g)を入力してください'
+            keyboardType='number-pad'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>釣果数</Text>
+          <TextInput
+            style={styles.input}
+            value={catchFish !== null ? String(catchFish) : ''}
+            onChangeText={(text) => {
+              const numericValue = Number(text)
+              if (!isNaN(numericValue)) {
+                setCatchFish(Number(text))
+              }
+            }}
+            placeholder='釣果数を入力してください'
+            keyboardType='number-pad'
+            returnKeyType='done'
+          />
+
+          <Button label='投稿' onPress={() => {
+            void handlePress(
+              id,
+              images,
+              area,
+              fishArea,
+              weather,
+              category,
+              lure,
+              lureAction,
+              waterDepth,
+              structure,
+              cover,
+              length,
+              weight,
+              catchFish,
+              hokkoNarea,
+              hokkoEarea,
+              hokkoWarea,
+              nannkoEarea,
+              nannkoWarea,
+              setLoading
+            )
           }}
-          items={[
-            { label: 'トップ', value: 'トップ' },
-            { label: 'ミドル', value: 'ミドル' },
-            { label: 'ボトム', value: 'ボトム' }
-          ]}
-          placeholder={{ label: '水深を選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-
-        <Text style={styles.textTitle}>ストラクチャー（水中の地形変化）を選択</Text>
-        <RNPickerSelect
-          value={structure}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setStructure(value)
-            }
-          }}
-          items={[
-            { label: 'ブレイク', value: 'ブレイク' },
-            { label: 'シャローフラット', value: 'シャローフラット' },
-            { label: 'ディープ', value: 'ディープ' },
-            { label: '岬', value: '岬' },
-            { label: 'ワンド', value: 'ワンド' },
-            { label: 'ゴロタ石', value: 'ゴロタ石' },
-            { label: 'リップラップ', value: 'リップラップ' },
-            { label: 'チャネル', value: 'チャネル' },
-            { label: 'サンドバー', value: 'サンドバー' },
-            { label: '浚渫跡', value: '浚渫跡' },
-            { label: 'ハンプ', value: 'ハンプ' },
-            { label: '流れ込み', value: '流れ込み' },
-            { label: '河口', value: '河口' },
-            { label: '漁港', value: '漁港' }
-
-          ]}
-          placeholder={{ label: 'ストラクチャーを選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-
-        <Text style={styles.textTitle}>カバー（障害物）を選択</Text>
-        <RNPickerSelect
-          value={cover}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setCover(value)
-            }
-          }}
-          items={[
-            { label: 'ウィード', value: 'ウィード' },
-            { label: '取水塔', value: '取水塔' },
-            { label: '桟橋', value: '桟橋' },
-            { label: '橋脚', value: '橋脚' },
-            { label: '護岸際', value: '護岸際' },
-            { label: 'オーバーハング', value: 'オーバーハング' },
-            { label: '立木', value: '立木' },
-            { label: 'ブッシュ', value: 'ブッシュ' },
-            { label: 'レイダウン', value: 'レイダウン' },
-            { label: 'リリーパッド', value: 'リリーパッド' },
-            { label: 'ゴミ溜まり', value: 'ゴミ溜まり' },
-            { label: 'オダ', value: 'オダ' },
-            { label: '杭', value: '杭' },
-            { label: '水門', value: '水門' },
-            { label: '漁礁', value: '漁礁' },
-            { label: '消波ブロック', value: '消波ブロック' },
-            { label: '大岩', value: '大岩' },
-            { label: '沈船', value: '沈船' }
-          ]}
-          placeholder={{ label: 'カバーを選択してください', value: '' }}
-          style={pickerSelectStyles}
-        />
-
-        <Text style={styles.textTitle}>長さを入力(cm)</Text>
-        <TextInput
-          value={length !== null ? String(length) : ''}
-          style={styles.input}
-          onChangeText={(text) => {
-            const numericValue = Number(text)
-            if (!isNaN(numericValue)) {
-              setLength(Number(text))
-            }
-          }}
-          placeholder='長さ(cm)を入力してください'
-          keyboardType='number-pad'
-          returnKeyType='done'
-        />
-
-        <Text style={styles.textTitle}>重さを入力(g)</Text>
-        <TextInput
-          style={styles.input}
-          value={weight !== null ? String(weight) : ''}
-          onChangeText={(text) => {
-            const numericValue = Number(text)
-            if (!isNaN(numericValue)) {
-              setWeight(Number(text))
-            }
-          }}
-          placeholder='重さ(g)を入力してください'
-          keyboardType='number-pad'
-          returnKeyType='done'
-        />
-
-        <Text style={styles.textTitle}>釣果数</Text>
-        <TextInput
-          style={styles.input}
-          value={catchFish !== null ? String(catchFish) : ''}
-          onChangeText={(text) => {
-            const numericValue = Number(text)
-            if (!isNaN(numericValue)) {
-              setCatchFish(Number(text))
-            }
-          }}
-          placeholder='釣果数を入力してください'
-          keyboardType='number-pad'
-          returnKeyType='done'
-        />
-
-        <Button label='投稿' onPress={() => {
-          void handlePress(
-            id,
-            images,
-            area,
-            fishArea,
-            weather,
-            category,
-            lure,
-            lureAction,
-            waterDepth,
-            structure,
-            cover,
-            length,
-            weight,
-            catchFish,
-            hokkoNarea,
-            hokkoEarea,
-            hokkoWarea,
-            nannkoEarea,
-            nannkoWarea
-          )
-        }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-          labelStyle={{ fontSize: 24, lineHeight: 21 }}
-        />
-      </ScrollView>
-    </KeyboardAwareScrollView>
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+          />
+        </ScrollView>
+      </KeyboardAwareScrollView>
+    </>
   )
 }
 
@@ -580,7 +561,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 2
+    elevation: 2,
+    marginHorizontal: 4
   },
   image: {
     width: 100,

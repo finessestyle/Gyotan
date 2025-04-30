@@ -52,7 +52,7 @@ const FirstStep = (): JSX.Element => {
             onPress={() => { router.push('/auth/signup') }}
           />
           <Button
-            label={'匿名ログイン'}
+            label={'試してみる'}
             buttonStyle={[styles.button, styles.anonymousButton]}
             labelStyle={styles.buttonLabel}
             onPress={handlePress}

@@ -121,7 +121,7 @@ const anonymouseedit = (): JSX.Element => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
-        <Text style={styles.title}>ユーザー情報を更新</Text>
+        <Text style={styles.title}>ユーザー情報を登録</Text>
         <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
           style={styles.input}
@@ -190,7 +190,7 @@ const anonymouseedit = (): JSX.Element => {
           returnKeyType='done'
         />
         <Button
-          label='編集'
+          label='登録'
           onPress={() => {
             if (auth.currentUser !== null) {
               void handlePress(

@@ -55,10 +55,11 @@ const Layout = (): JSX.Element => {
               if (auth.currentUser?.isAnonymous) {
                 // 匿名ユーザーには警告を表示
                 Alert.alert(
-                  '匿名ログイン中',
-                  '匿名ログインユーザーは投稿できません。',
+                  'ゲストログイン中',
+                  'ゲストユーザーは投稿できません。ユーザー情報を登録しますか？',
                   [
-                    { text: 'OK', onPress: () => navigation.navigate('user/anonymouseedit') }
+                    { text: 'いいえ', style: 'cancel' },
+                    { text: 'はい', onPress: () => navigation.navigate('user/anonymouseedit') }
                   ]
                 )
               } else {
