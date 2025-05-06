@@ -43,7 +43,8 @@ const handlePress = async (
     }
 
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-    const userId = userCredential.user.uid
+    const user = userCredential.user
+    const userId = user.uid
 
     if (userImage !== null) {
       const response = await fetch(userImage)
@@ -62,11 +63,10 @@ const handlePress = async (
     })
 
     await sendEmailVerification(user)
-    Alert.alert('確認メールを送信しました', '登録したメールアドレスを確認してください')
-
-    router.replace('/post/top')
+    Alert.alert('確認メール送信', 'メールをご確認ください')
+    router.replace('/auth/emailCheck')
   } catch (error) {
-    console.log(error)
+    console.log('新規登録エラー', error)
     Alert.alert('新規登録に失敗しました')
   }
 }

@@ -5,12 +5,26 @@ import { auth } from '../config'
 
 const Index = (): JSX.Element => {
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        router.replace('post/top')
+        // Promise の未処理警告を回避するには void を付ける
+        void (async () => {
+          try {
+            await user.reload()
+            if (user.emailVerified) {
+              router.replace('post/top')
+            } else {
+              router.replace('/auth/emailCheck')
+            }
+          } catch (error) {
+            console.error('認証確認エラー', error)
+          }
+        })()
       }
     })
+    return unsubscribe
   }, [])
+
   return <Redirect href="auth/firststep" />
 }
 

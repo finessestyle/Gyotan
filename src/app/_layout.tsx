@@ -112,6 +112,13 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
+          name="auth/emailCheck"
+          options={{
+            href: null,
+            tabBarStyle: { display: 'none' }
+          }}
+        />
+        <Tabs.Screen
           name="post/detail"
           options={{
             href: null,
