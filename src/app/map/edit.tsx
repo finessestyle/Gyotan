@@ -188,7 +188,7 @@ const Edit = (): JSX.Element => {
               content
             )
           }}
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
             labelStyle={{ fontSize: 24, lineHeight: 21 }}
           />
         )}
@@ -203,14 +203,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 24,
-    marginHorizontal: 8
+    paddingHorizontal: 8
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginBottom: 16
   },
   input: {
     borderBottomWidth: 1,
@@ -232,7 +231,7 @@ const styles = StyleSheet.create({
   },
 
   textTitle: {
-    paddingVertical: 4
+    paddingVertical: 8
   }
 })
 

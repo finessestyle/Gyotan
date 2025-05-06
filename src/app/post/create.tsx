@@ -1,5 +1,5 @@
 import {
-  View, Text, TextInput, Image, StyleSheet, Alert
+  View, Text, TextInput, Image, StyleSheet, Alert, TouchableOpacity
 } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useCallback } from 'react'
@@ -192,6 +192,10 @@ const Create = (): JSX.Element => {
     }
   }
 
+  const removeImage = (index: number): void => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index))
+  }
+
   return (
     <>
       {loading && <Lottie onFinish={() => { setLoading(false) }} />}
@@ -214,7 +218,14 @@ const Create = (): JSX.Element => {
             {images.map((image, index) => (
               <View key={index} style={styles.imageWrapper}>
                 <Image source={{ uri: image.uri }} style={styles.image} />
-                <Text style={styles.imageNumber}>{index + 1}</Text>
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => {
+                    removeImage(index)
+                  }}
+                >
+                  <Text style={styles.removeButtonText}>×</Text>
+                </TouchableOpacity>
               </View>
             ))}
           </View>
@@ -225,7 +236,7 @@ const Create = (): JSX.Element => {
             onValueChange={(value: string | null) => {
               if (value !== null) {
                 setFishArea(value)
-                setArea(value)
+                setArea('')
               }
             }}
             items={[
@@ -522,16 +533,24 @@ const styles = StyleSheet.create({
   image: {
     width: 100,
     height: 100,
-    borderRadius: 8
+    borderRadius: 10
   },
-  imageNumber: {
+  removeButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    top: 3,
+    right: 3,
+    backgroundColor: 'silver',
+    borderRadius: 16, // 半径は width/2 に
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  removeButtonText: {
     color: 'white',
-    padding: 4,
-    fontSize: 10
+    fontSize: 14, // 調整可能
+    lineHeight: 16, // 高さを詰めるために追加
+    textAlign: 'center'// 念のため中央寄せ
   }
 })
 

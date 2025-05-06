@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { router, useNavigation, useFocusEffect } from 'expo-router'
 import { useState, useEffect, useCallback } from 'react'
-import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, orderBy, doc, deleteDoc, Timestamp } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
 import { auth, db, storage } from '../../config'
 import { deleteUser } from 'firebase/auth'
@@ -135,13 +135,14 @@ const Mypage = (): JSX.Element => {
             id: auth.currentUser?.uid ?? '',
             userName: '',
             email: '',
+            profile: '',
             userImage: '',
             userYoutube: '',
             userTiktok: '',
             userInstagram: '',
             userX: '',
-            updatedAt: '',
-            follower: ''
+            updatedAt: Timestamp.now(),
+            followed: []
           })
         } else {
           setUser({

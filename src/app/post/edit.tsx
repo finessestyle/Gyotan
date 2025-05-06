@@ -263,7 +263,7 @@ const Edit = (): JSX.Element => {
             onValueChange={(value: string | null) => {
               if (value !== null) {
                 setFishArea(value)
-                setArea(value)
+                setArea('')
               }
             }}
             items={[
@@ -314,8 +314,8 @@ const Edit = (): JSX.Element => {
             onValueChange={(value: string | null) => {
               if (value !== null) {
                 setCategory(value)
-                setLure(value)
-                setLureAction(value)
+                setLure('')
+                setLureAction('')
               }
             }}
             items={[
@@ -499,7 +499,7 @@ const Edit = (): JSX.Element => {
               setLoading
             )
           }}
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
             labelStyle={{ fontSize: 24, lineHeight: 21 }}
           />
         </ScrollView>
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginHorizontal: 8
+    paddingHorizontal: 8
   },
   title: {
     fontSize: 24,
@@ -571,19 +571,20 @@ const styles = StyleSheet.create({
   },
   removeButton: {
     position: 'absolute',
-    top: 5,
-    right: 5,
+    top: 3,
+    right: 3,
     backgroundColor: 'silver',
-    borderRadius: 20,
+    borderRadius: 16, // 半径は width/2 に
     width: 24,
     height: 24,
-    justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   removeButtonText: {
     color: 'white',
-    fontSize: 16,
-    lineHeight: 20
+    fontSize: 14, // 調整可能
+    lineHeight: 16, // 高さを詰めるために追加
+    textAlign: 'center'// 念のため中央寄せ
   }
 })
 

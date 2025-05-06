@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import { Link, router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import { doc, setDoc } from 'firebase/firestore'
 import * as ImagePicker from 'expo-image-picker'
@@ -60,6 +60,9 @@ const handlePress = async (
       userImage,
       updatedAt: new Date()
     })
+
+    await sendEmailVerification(user)
+    Alert.alert('確認メールを送信しました', '登録したメールアドレスを確認してください')
 
     router.replace('/post/top')
   } catch (error) {
