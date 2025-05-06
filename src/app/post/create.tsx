@@ -249,7 +249,7 @@ const Create = (): JSX.Element => {
             placeholder={{ label: 'エリアを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-          {fishArea !== null && (
+          {fishArea && (
             <RNPickerSelect
               value={area}
               onValueChange={(value: string | null) => {
@@ -258,7 +258,7 @@ const Create = (): JSX.Element => {
                 }
               }}
               items={areaOptions}
-              placeholder={{ label: 'エリアを選択してください', value: '' }}
+              placeholder={{ label: '詳細エリアを選択してください', value: '' }}
               style={pickerSelectStyles}
             />
           )}
@@ -298,12 +298,13 @@ const Create = (): JSX.Element => {
             placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-          {category !== null && (
+          {category && (
             <RNPickerSelect
               value={lure}
               onValueChange={(value: string | null) => {
                 if (value !== null) {
                   setLure(value)
+                  setLureAction('')
                 }
               }}
               items={lureOptions}
@@ -311,7 +312,7 @@ const Create = (): JSX.Element => {
               style={pickerSelectStyles}
             />
           )}
-          {category !== null && (
+          {lure && (
             <RNPickerSelect
               value={lureAction}
               onValueChange={(value: string | null) => {
