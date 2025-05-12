@@ -104,7 +104,7 @@ const List = (): JSX.Element => {
       <View style={styles.buttonContainer}>
         <Button title='MAPを戻す' onPress={resetMapRegion} />
       </View>
-      {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
+      {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
         <CircleButton onPress={handlePress}>
           <Icon name='plus' size={40} color='#ffffff' />
         </CircleButton>

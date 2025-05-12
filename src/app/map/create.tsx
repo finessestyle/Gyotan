@@ -1,8 +1,8 @@
 import {
   ScrollView, Text, TextInput, StyleSheet, Alert
 } from 'react-native'
-import { router } from 'expo-router'
-import { useState } from 'react'
+import { router, useFocusEffect } from 'expo-router'
+import { useState, useCallback } from 'react'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
@@ -56,7 +56,7 @@ const handlePress = async (
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
-    router.back() // 成功したら前のページに戻る
+    router.push('/map/list')
   } catch (error) {
     console.log('Error: ', error)
     Alert.alert('投稿に失敗しました')
@@ -70,6 +70,17 @@ const Create = (): JSX.Element => {
   const [latitude, setLatitude] = useState<number | null>(null)
   const [longitude, setLongitude] = useState<number | null>(null)
   const [content, setContent] = useState('')
+
+  useFocusEffect(
+    useCallback(() => {
+      setTitle('')
+      setArea('')
+      setSeason('')
+      setLatitude(null)
+      setLongitude(null)
+      setContent('')
+    }, [])
+  )
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
@@ -160,7 +171,7 @@ const Create = (): JSX.Element => {
           returnKeyType='done'
           multiline
         />
-        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
+        {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
           <Button label='投稿' onPress={() => {
             void handlePress(
               title,

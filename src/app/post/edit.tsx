@@ -276,7 +276,7 @@ const Edit = (): JSX.Element => {
             placeholder={{ label: '釣果エリアを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-          {fishArea && (
+          {fishArea !== '' && (
             <RNPickerSelect
               value={area}
               onValueChange={(value: string | null) => {
@@ -325,7 +325,7 @@ const Edit = (): JSX.Element => {
             placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
             style={pickerSelectStyles}
           />
-          {category && (
+          {category !== '' && (
             <RNPickerSelect
               value={lure}
               onValueChange={(value: string | null) => {
@@ -339,7 +339,7 @@ const Edit = (): JSX.Element => {
               style={pickerSelectStyles}
             />
           )}
-          {lure && (
+          {lure !== '' && (
             <RNPickerSelect
               value={lureAction}
               onValueChange={(value: string | null) => {

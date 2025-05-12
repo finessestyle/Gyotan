@@ -7,7 +7,6 @@ const Index = (): JSX.Element => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user !== null) {
-        // Promise の未処理警告を回避するには void を付ける
         void (async () => {
           try {
             await user.reload()

@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Gyotan",
-    "slug": "GyotanApp",
+    "slug": "gyotan",
     "scheme": "gyotan",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,10 +14,13 @@
     "icon": "./assets/icon.png",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "jp.gyotan.gyotanapp",
+      "bundleIdentifier": "com.fishing-gyotan.gyotan",
       "buildNumber": "1.0.0",
       "config": {
         "googleMapsApiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -43,8 +46,12 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "d84dd01a-d9e3-4aff-8016-d61f33ce9674"
+        "projectId": "06d8c482-4d92-42af-9d1f-afe29526abe6"
+      },
+      "router": {
+        "origin": false
       }
-    }
+    },
+    "owner": "finessestyle"
   }
 }

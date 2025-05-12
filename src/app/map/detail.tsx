@@ -54,7 +54,7 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
-        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
+        {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
           <Button
             label='編集'
             buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
