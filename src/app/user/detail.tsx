@@ -94,7 +94,7 @@ const Detail = (): JSX.Element => {
             style={styles.userImage}
           />
           <Text style={styles.userName}>{user?.userName}さん</Text>
-          <Text style={styles.userFishArea}>{user?.fishArea}</Text>
+          <Text style={styles.userFishArea}>ホームフィールド：{user?.fishArea}</Text>
         </View>
       </View>
       <View style={styles.userSnsTop}>

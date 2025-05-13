@@ -35,11 +35,11 @@ const Detail = (): JSX.Element => {
     const postRef = doc(db, 'posts', id)
     const unsubscribe = onSnapshot(postRef, (postDoc) => {
       const { userId, userName, userImage, images, weather, length, weight, category, lure, lureAction, waterDepth, structure, cover, catchFish, area, fishArea, exifData, updatedAt, likes } = postDoc.data() as Post
-      let newContent = `${fishArea}の${area}で${catchFish}匹釣れました。\n天気は${weather}、${lure}を使用して${structure}にある${cover}を狙いました。\n`
+      let newContent = `天気は${weather}、${fishArea}の${area}で${lure}を使用し、${structure}にある${cover}を狙いました。\n`
       if (catchFish > 0) {
-        newContent += `${waterDepth}を${lureAction}のアクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
+        newContent += `${waterDepth}を${lureAction}アクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
       } else {
-        newContent += '残念ながら今回は釣果がありませんでしたが、次回に期待です！'
+        newContent += `${waterDepth}を${lureAction}アクションでアプローチしましたが、残念ながら今回は釣果がありませんでしたが、次回に期待です！`
       }
       setPost({
         id: postDoc.id,
