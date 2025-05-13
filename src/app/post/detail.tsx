@@ -39,7 +39,7 @@ const Detail = (): JSX.Element => {
       if (catchFish > 0) {
         newContent += `${waterDepth}を${lureAction}アクションでアプローチし、釣れたバスのサイズは${length}cm/${weight}gでした。`
       } else {
-        newContent += `${waterDepth}を${lureAction}アクションでアプローチしましたが、残念ながら今回は釣果がありませんでしたが、次回に期待です！`
+        newContent += `${waterDepth}を${lureAction}アクションでアプローチしましたが、残念ながら今回は釣果がありませんでした。\n次回に期待です・・・。`
       }
       setPost({
         id: postDoc.id,
