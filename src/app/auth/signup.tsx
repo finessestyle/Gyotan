@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import { doc, setDoc } from 'firebase/firestore'
+import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
@@ -43,7 +44,7 @@ const handlePress = async (
   email: string,
   password: string,
   userName: string,
-  profile: string,
+  fishArea: string,
   userImage: string | null
 ): Promise<void> => {
   try {
@@ -59,8 +60,8 @@ const handlePress = async (
       Alert.alert('エラー', 'パスワードを入力してください')
       return
     }
-    if (profile === '') {
-      Alert.alert('エラー', 'プロフィールを入力してください')
+    if (fishArea === '') {
+      Alert.alert('エラー', 'ホームフィールドを選択してください')
       return
     }
     if (userImage === null) {
@@ -85,9 +86,9 @@ const handlePress = async (
     await setDoc(doc(db, 'users', userId), {
       userName,
       email,
-      profile,
+      fishArea,
       userImage,
-      updatedAt: new Date(),
+      updatedAt: new Date()
       // ...((pushToken !== undefined && pushToken !== '') && { expoPushToken: pushToken })
     })
     // console.log('取得したトークン', pushToken)
@@ -104,7 +105,7 @@ const SignUp = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [userName, setUserName] = useState('')
-  const [profile, setProfile] = useState('')
+  const [fishArea, setFishArea] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
   const { termsAgreed, privacyAgreed } = useLocalSearchParams()
@@ -180,15 +181,22 @@ const SignUp = (): JSX.Element => {
           </TouchableOpacity>
         </View>
 
-        <TextInput
-          style={styles.input}
-          value={profile}
-          onChangeText={(text) => { setProfile(text) }}
-          autoCapitalize='none'
-          placeholder='プロフィールを入力※30文字以内'
-          maxLength={30}
-          keyboardType='default'
-          returnKeyType='done'
+        <RNPickerSelect
+          value={fishArea}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setFishArea(value)
+            }
+          }}
+          items={[
+            { label: '北湖北岸エリア', value: '北湖北岸' },
+            { label: '北湖東岸エリア', value: '北湖東岸' },
+            { label: '北湖西岸エリア', value: '北湖西岸' },
+            { label: '南湖東岸エリア', value: '南湖東岸' },
+            { label: '南湖西岸エリア', value: '南湖西岸' }
+          ]}
+          placeholder={{ label: 'ホームフィールドを選択してください', value: '' }}
+          style={pickerSelectStyles}
         />
         <Button
           label="ユーザー画像を選択"
@@ -235,7 +243,7 @@ const SignUp = (): JSX.Element => {
             email,
             password,
             userName,
-            profile,
+            fishArea,
             userImage
           )
         }}
@@ -321,6 +329,33 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 24,
     color: '#467FD3'
+  }
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 16,
+    backgroundColor: '#ffffff',
+    color: 'black',
+    pointerEvents: 'none',
+    height: 40
+  },
+  inputAndroid: {
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 8,
+    padding: 8,
+    marginBottom: 16,
+    backgroundColor: '#ffffff',
+    color: 'black',
+    pointerEvents: 'none',
+    height: 40
   }
 })
 

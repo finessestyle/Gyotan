@@ -5,6 +5,7 @@ import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import RNPickerSelect from 'react-native-picker-select'
 import Button from '../../components/Button'
 import { Ionicons } from '@expo/vector-icons'
 import { type User } from '../../../types/user'
@@ -16,7 +17,7 @@ const handlePress = async (
   email: string,
   password: string,
   userImage: string | null,
-  profile: string
+  fishArea: string
 ): Promise<void> => {
   try {
     if (userName === '') {
@@ -35,8 +36,8 @@ const handlePress = async (
       Alert.alert('エラー', 'ユーザー画像を選択してください')
       return
     }
-    if (profile === '') {
-      Alert.alert('エラー', 'プロフィールを入力してください')
+    if (fishArea === '') {
+      Alert.alert('エラー', 'ホームフィールドを選択してください')
       return
     }
     if (auth.currentUser === null) return
@@ -54,7 +55,7 @@ const handlePress = async (
       email,
       userImage,
       userName,
-      profile,
+      fishArea,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
     if (auth.currentUser.isAnonymous) {
@@ -81,7 +82,7 @@ const anonymouseedit = (): JSX.Element => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
-  const [profile, setProfile] = useState('')
+  const [fishArea, setFishArea] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
 
   const pickImage = async (): Promise<void> => {
@@ -109,7 +110,7 @@ const anonymouseedit = (): JSX.Element => {
           setEmail(data.email ?? '')
           setPassword('')
           setUserImage(data.userImage ?? null)
-          setProfile(data.profile ?? '')
+          setFishArea(data.fishArea ?? '')
         }
       })
       .catch((error) => {
@@ -165,6 +166,24 @@ const anonymouseedit = (): JSX.Element => {
             />
           </TouchableOpacity>
         </View>
+        <Text style={styles.textTitle}>ホームフィールド選択</Text>
+        <RNPickerSelect
+          value={fishArea}
+          onValueChange={(value: string | null) => {
+            if (value !== null) {
+              setFishArea(value)
+            }
+          }}
+          items={[
+            { label: '北湖北岸', value: '北湖北岸' },
+            { label: '北湖東岸', value: '北湖東岸' },
+            { label: '北湖西岸', value: '北湖西岸' },
+            { label: '南湖東岸', value: '南湖東岸' },
+            { label: '南湖西岸', value: '南湖西岸' }
+          ]}
+          placeholder={{ label: 'ホームフィールドを選択してください', value: '' }}
+          style={pickerSelectStyles}
+        />
         <Button
           label="ユーザー画像を選択"
           buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
@@ -179,16 +198,6 @@ const anonymouseedit = (): JSX.Element => {
         <View style={styles.imageBox}>
           {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
         </View>
-        <Text style={styles.textTitle}>プロフィール</Text>
-        <TextInput
-          style={styles.input}
-          value={profile}
-          onChangeText={(text) => { setProfile(text) }}
-          placeholder='プロフィールを入力'
-          keyboardType='default'
-          maxLength={30}
-          returnKeyType='done'
-        />
         <Button
           label='登録'
           onPress={() => {
@@ -199,7 +208,7 @@ const anonymouseedit = (): JSX.Element => {
                 email,
                 password,
                 userImage,
-                profile
+                fishArea
               )
             }
           }}
@@ -268,6 +277,29 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 8
+  }
+})
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    borderBottomWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 4,
+    height: 32,
+    marginVertical: 4,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 10
+  },
+  inputAndroid: {
+    borderBottomWidth: 1,
+    borderColor: '#D0D0D0',
+    borderRadius: 4,
+    height: 32,
+    marginVertical: 4,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 10
   }
 })
 

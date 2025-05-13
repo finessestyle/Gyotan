@@ -26,7 +26,7 @@ const Detail = (): JSX.Element => {
         id: userDoc.id,
         userName: data.userName,
         email: data.email,
-        profile: data.profile,
+        fishArea: data.fishArea,
         userImage: data.userImage,
         userYoutube: data.userYoutube,
         userInstagram: data.userInstagram,
@@ -94,7 +94,7 @@ const Detail = (): JSX.Element => {
             style={styles.userImage}
           />
           <Text style={styles.userName}>{user?.userName}さん</Text>
-          <Text style={styles.userProfile}>{user?.profile}</Text>
+          <Text style={styles.userFishArea}>{user?.fishArea}</Text>
         </View>
       </View>
       <View style={styles.userSnsTop}>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: 'bold'
   },
-  userProfile: {
+  userFishArea: {
     fontSize: 14
   },
   userSnsTop: {

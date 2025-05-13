@@ -10,8 +10,10 @@ const Index = (): JSX.Element => {
         void (async () => {
           try {
             await user.reload()
-            if (user.emailVerified) {
-              router.replace('post/top')
+            if (user.isAnonymous) {
+              router.replace('/post/top')
+            } else if (user.emailVerified) {
+              router.replace('/post/top')
             } else {
               router.replace('/auth/emailCheck')
             }

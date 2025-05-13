@@ -31,10 +31,10 @@
     "react-native": "0.74.5",
     "react-native-exif": "^0.5.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
-    "react-native-maps": "^1.14.0",
     "react-native-picker": "^4.3.7",
     "react-native-picker-select": "^9.1.3",
-    "react-native-swiper": "^1.6.0"
+    "react-native-swiper": "^1.6.0",
+    "react-native-maps": "1.14.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
