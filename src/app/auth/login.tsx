@@ -81,6 +81,11 @@ const LogIn = (): JSX.Element => {
               <Text style={styles.footerLink}>新規登録はこちらをクリック</Text>
             </TouchableOpacity>
           </Link>
+          <Link replace href='/auth/passwordReset' asChild >
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>パスワードを忘れた場合はこちらをクリック</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </View>
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -12 }]
   },
   footer: {
-    flexDirection: 'row'
+    flexDirection: 'column'
   },
   footerText: {
     fontSize: 14,

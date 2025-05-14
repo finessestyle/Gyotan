@@ -257,18 +257,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 24,
-    marginHorizontal: 8
+    paddingHorizontal: 8
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 16
   },
   textTitle: {
-    paddingVertical: 4,
-    fontWeight: 'bold'
+    paddingVertical: 4
   },
   input: {
     borderBottomWidth: 1,

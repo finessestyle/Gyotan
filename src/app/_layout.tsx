@@ -105,6 +105,13 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
+          name="auth/passwordReset"
+          options={{
+            href: null,
+            tabBarStyle: { display: 'none' }
+          }}
+        />
+        <Tabs.Screen
           name="auth/firststep"
           options={{
             href: null,
