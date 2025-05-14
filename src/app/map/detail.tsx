@@ -50,11 +50,13 @@ const Detail = (): JSX.Element => {
           </View>
           <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
           <Weather lat={map?.latitude ?? 0} lon={map?.longitude ?? 0} />
-          <Swiper style={styles.swiper} showsButtons={false}>
-            {mapImages.map((uri, index) => (
-              <Image key={index} source={{ uri }} style={styles.mapImage} />
-            ))}
-          </Swiper>
+          {mapImages.length > 0 && (
+            <Swiper style={styles.swiper} showsButtons={false}>
+              {mapImages.map((uri, index) => (
+                <Image key={index} source={{ uri }} style={styles.mapImage} />
+              ))}
+            </Swiper>
+          )}
           <View style={styles.fishInfo}>
             <Text>-釣り場情報-</Text>
             <Text style={styles.fishText}>

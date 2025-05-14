@@ -14,7 +14,7 @@ import Button from '../../components/Button'
 const handlePress = async (
   id: string,
   title: string,
-  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
+  images: Array<{ uri: string }>,
   area: string,
   season: string,
   latitude: number | null,
@@ -82,11 +82,11 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [title, setTitle] = useState('')
-  const [images, setImages] = useState<Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>>([])
+  const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [area, setArea] = useState('')
   const [season, setSeason] = useState('')
-  const [latitude, setLatitude] = useState<number | null>(null)
-  const [longitude, setLongitude] = useState<number | null>(null)
+  const [latitude, setLatitude] = useState('')
+  const [longitude, setLongitude] = useState('')
   const [content, setContent] = useState('')
 
   const pickImage = async (): Promise<void> => {
@@ -216,7 +216,7 @@ const Edit = (): JSX.Element => {
         <Text style={styles.textTitle}>緯度</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => { setLatitude(Number(text)) }}
+          onChangeText={setLatitude}
           placeholder='緯度を入力してください'
           keyboardType='decimal-pad'
           returnKeyType='done'
@@ -225,9 +225,9 @@ const Edit = (): JSX.Element => {
         <Text style={styles.textTitle}>経度</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(text) => { setLongitude(Number(text)) }}
+          onChangeText={setLongitude}
           placeholder='経度を入力してください'
-          keyboardType='decimal-pad'
+          keyboardType='numeric'
           returnKeyType='done'
           value={longitude !== null ? String(longitude) : ''}
         />
@@ -249,8 +249,8 @@ const Edit = (): JSX.Element => {
               images,
               area,
               season,
-              latitude,
-              longitude,
+              parseFloat(latitude),
+              parseFloat(longitude),
               content
             )
           }}

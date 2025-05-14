@@ -3,7 +3,7 @@ import {
 } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useCallback } from 'react'
-import { collection, addDoc, Timestamp } from 'firebase/firestore'
+import { doc, collection, addDoc, Timestamp } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
@@ -12,7 +12,7 @@ import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const handlePress = async (
-  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
+  images: Array<{ uri: string }>,
   title: string,
   area: string,
   season: string,
@@ -79,12 +79,12 @@ const handlePress = async (
 }
 
 const Create = (): JSX.Element => {
-  const [images, setImages] = useState<Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>>([])
+  const [images, setImages] = useState<Array<{ uri: string }>>([])
   const [title, setTitle] = useState('')
   const [area, setArea] = useState('')
   const [season, setSeason] = useState('')
-  const [latitude, setLatitude] = useState<number | null>(null)
-  const [longitude, setLongitude] = useState<number | null>(null)
+  const [latitude, setLatitude] = useState('')
+  const [longitude, setLongitude] = useState('')
   const [content, setContent] = useState('')
 
   useFocusEffect(
@@ -93,8 +93,8 @@ const Create = (): JSX.Element => {
       setTitle('')
       setArea('')
       setSeason('')
-      setLatitude(null)
-      setLongitude(null)
+      setLatitude('')
+      setLongitude('')
       setContent('')
     }, [])
   )
@@ -200,12 +200,7 @@ const Create = (): JSX.Element => {
         <TextInput
           style={styles.input}
           value={latitude !== null ? String(latitude) : ''}
-          onChangeText={(text) => {
-            const numericValue = Number(text)
-            if (!isNaN(numericValue)) {
-              setLatitude(Number(text))
-            }
-          }}
+          onChangeText={setLatitude}
           placeholder='緯度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
@@ -215,12 +210,7 @@ const Create = (): JSX.Element => {
         <TextInput
           style={styles.input}
           value={longitude !== null ? String(longitude) : ''}
-          onChangeText={(text) => {
-            const numericValue = Number(text)
-            if (!isNaN(numericValue)) {
-              setLongitude(Number(text))
-            }
-          }}
+          onChangeText={setLongitude}
           placeholder='緯度を入力してください'
           keyboardType='numeric'
           returnKeyType='done'
@@ -243,8 +233,8 @@ const Create = (): JSX.Element => {
               title,
               area,
               season,
-              latitude,
-              longitude,
+              parseFloat(latitude),
+              parseFloat(longitude),
               content
             )
           }}

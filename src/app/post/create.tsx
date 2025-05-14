@@ -134,7 +134,7 @@ const Create = (): JSX.Element => {
   const [waterDepth, setWaterDepth] = useState('')
   const [structure, setStructure] = useState('')
   const [cover, setCover] = useState('')
-  const [length, setLength] = useState<number | null>(null)
+  const [length, setLength] = useState('')
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
@@ -151,7 +151,7 @@ const Create = (): JSX.Element => {
       setWaterDepth('')
       setStructure('')
       setCover('')
-      setLength(null)
+      setLength('')
       setWeight(null)
       setCatchFish(null)
     }, [])
@@ -407,12 +407,7 @@ const Create = (): JSX.Element => {
           <TextInput
             style={styles.input}
             value={length !== null ? String(length) : ''}
-            onChangeText={(text) => {
-              const numericValue = Number(text)
-              if (!isNaN(numericValue)) {
-                setLength(Number(text))
-              }
-            }}
+            onChangeText={setLength}
             placeholder='長さ(cm)を入力してください'
             keyboardType='number-pad'
             returnKeyType='done'
@@ -460,7 +455,7 @@ const Create = (): JSX.Element => {
               waterDepth,
               structure,
               cover,
-              length,
+              parseFloat(length),
               weight,
               catchFish,
               hokkoNarea,

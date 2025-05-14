@@ -136,7 +136,7 @@ const Edit = (): JSX.Element => {
   const [waterDepth, setWaterDepth] = useState('')
   const [structure, setStructure] = useState('')
   const [cover, setCover] = useState('')
-  const [length, setLength] = useState<number | null>(null)
+  const [length, setLength] = useState('')
   const [weight, setWeight] = useState<number | null>(null)
   const [catchFish, setCatchFish] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
@@ -211,7 +211,7 @@ const Edit = (): JSX.Element => {
         setWaterDepth(data.waterDepth ?? '')
         setStructure(data?.structure ?? '')
         setCover(data?.cover ?? '')
-        setLength(data?.length !== undefined && data.length !== '' ? parseFloat(data.length) : null)
+        setLength(data?.length ?? '')
         setWeight(data?.weight !== undefined && data.weight !== '' ? parseFloat(data.weight) : null)
         setCatchFish(data?.catchFish !== undefined && data.catchFish !== '' ? parseFloat(data.catchFish) : null)
       })
@@ -435,12 +435,7 @@ const Edit = (): JSX.Element => {
           <TextInput
             value={length !== null ? String(length) : ''}
             style={styles.input}
-            onChangeText={(text) => {
-              const numericValue = Number(text)
-              if (!isNaN(numericValue)) {
-                setLength(Number(text))
-              }
-            }}
+            onChangeText={setlength}
             placeholder='長さ(cm)を入力してください'
             keyboardType='number-pad'
             returnKeyType='done'
@@ -489,7 +484,7 @@ const Edit = (): JSX.Element => {
               waterDepth,
               structure,
               cover,
-              length,
+              parseFloat(length),
               weight,
               catchFish,
               hokkoNarea,
