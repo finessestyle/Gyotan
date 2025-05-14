@@ -1,17 +1,20 @@
 import {
-  Text, TextInput, StyleSheet, ScrollView, Alert
+  View, Text, TextInput, StyleSheet, ScrollView, Alert, Image, TouchableOpacity
 } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
-import { auth, db } from '../../config'
+import { auth, db, storage } from '../../config'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
+import * as ImageMultiplePicker from 'expo-image-picker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Button from '../../components/Button'
 
 const handlePress = async (
   id: string,
   title: string,
+  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
   area: string,
   season: string,
   latitude: number | null,
@@ -46,10 +49,22 @@ const handlePress = async (
     if (auth.currentUser === null) return
 
     const userId = auth.currentUser.uid
+    const mapRef = doc(db, 'maps', id)
+    const mapId = mapRef.id
+
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image.uri)
+      const blob = await response.blob()
+      const imageName = `image_${Date.now()}_${index}`
+      const storageRef = ref(storage, `posts/${mapId}/${imageName}`)
+      await uploadBytes(storageRef, blob)
+      return await getDownloadURL(storageRef)
+    }))
 
     await setDoc(doc(db, 'maps', id), {
       userId,
       title,
+      images: imageUrls,
       area,
       season,
       latitude,
@@ -67,11 +82,32 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [title, setTitle] = useState('')
+  const [images, setImages] = useState<Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>>([])
   const [area, setArea] = useState('')
   const [season, setSeason] = useState('')
   const [latitude, setLatitude] = useState<number | null>(null)
   const [longitude, setLongitude] = useState<number | null>(null)
   const [content, setContent] = useState('')
+
+  const pickImage = async (): Promise<void> => {
+    const result = await ImageMultiplePicker.launchImageLibraryAsync({
+      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      selectionLimit: 3,
+      quality: 0.3,
+      exif: true
+    })
+    if (!result.canceled && result.assets.length > 0) {
+      const processedAssets = result.assets.map(asset => ({
+        uri: asset.uri,
+        exif: asset.exif ?? undefined
+      }))
+      setImages(processedAssets)
+    }
+  }
+  const removeImage = (index: number): void => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index))
+  }
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
@@ -80,6 +116,7 @@ const Edit = (): JSX.Element => {
       .then((docRef) => {
         const data = docRef.data() as {
           title?: string
+          images?: string[]
           area?: string
           season?: string
           latitude?: string
@@ -87,6 +124,7 @@ const Edit = (): JSX.Element => {
           content?: string
         }
         setTitle(data.title ?? '')
+        setImages(data.images?.map((uri: string) => ({ uri })) ?? [])
         setArea(data.area ?? '')
         setSeason(data.season ?? '')
         setLatitude(data?.latitude !== undefined && data.latitude !== '' ? parseFloat(data.latitude) : null)
@@ -112,6 +150,33 @@ const Edit = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
+        <Text style={styles.textTitle}>ファイルを選択</Text>
+        <Button
+          label="釣り場画像を選択"
+          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
+          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
+        />
+        <View style={styles.imageContainer}>
+          {images.map((image, index) => (
+            <View key={index} style={styles.imageWrapper}>
+              <Image source={{ uri: image.uri }} style={styles.image} />
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => {
+                  removeImage(index)
+                }}
+              >
+                <Text style={styles.removeButtonText}>×</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
         <Text style={styles.textTitle}>エリアを選択</Text>
         <RNPickerSelect
           value={area}
@@ -176,11 +241,12 @@ const Edit = (): JSX.Element => {
           returnKeyType='done'
           multiline
         />
-        {auth.currentUser?.uid === 'fYOX0b2SB9Y9xuiiWMi6RfEIgSN2' && (
+        {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
           <Button label='投稿' onPress={() => {
             void handlePress(
               id,
               title,
+              images,
               area,
               season,
               latitude,
@@ -229,9 +295,46 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     fontSize: 16
   },
-
   textTitle: {
-    paddingVertical: 8
+    paddingVertical: 4
+  },
+  imageContainer: {
+    marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  imageWrapper: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
+    marginHorizontal: 4
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 3,
+    right: 3,
+    backgroundColor: 'silver',
+    borderRadius: 16, // 半径は width/2 に
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  removeButtonText: {
+    color: 'white',
+    fontSize: 14, // 調整可能
+    lineHeight: 16, // 高さを詰めるために追加
+    textAlign: 'center'// 念のため中央寄せ
   }
 })
 

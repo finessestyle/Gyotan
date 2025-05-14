@@ -1,9 +1,10 @@
-import { View, StyleSheet, Text, ScrollView } from 'react-native'
+import { View, StyleSheet, Text, ScrollView, Image } from 'react-native'
 import { router, useLocalSearchParams } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { onSnapshot, doc } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
+import Swiper from 'react-native-swiper'
 import Button from '../../components/Button'
 import Weather from '../../components/Weather'
 import Map from '../../components/Map'
@@ -15,17 +16,19 @@ const handlePress = (id: string): void => {
 const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [map, setMap] = useState<FishMap | null>(null)
+  const mapImages = map !== null && Array.isArray(map.images) ? map.images : []
 
   useEffect(() => {
     if (auth.currentUser === null) { return }
 
     const mapRef = doc(db, 'maps', id)
     const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
-      const { userId, title, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
+      const { userId, title, images, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
         userId,
         title,
+        images,
         area,
         season,
         latitude,
@@ -47,6 +50,11 @@ const Detail = (): JSX.Element => {
           </View>
           <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
           <Weather lat={map?.latitude ?? 0} lon={map?.longitude ?? 0} />
+          <Swiper style={styles.swiper} showsButtons={false}>
+            {mapImages.map((uri, index) => (
+              <Image key={index} source={{ uri }} style={styles.mapImage} />
+            ))}
+          </Swiper>
           <View style={styles.fishInfo}>
             <Text>-釣り場情報-</Text>
             <Text style={styles.fishText}>
@@ -89,6 +97,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 8
+  },
+  mapImage: {
+    height: 322,
+    width: 'auto'
   },
   title: {
     fontSize: 18,

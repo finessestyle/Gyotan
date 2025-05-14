@@ -1,15 +1,18 @@
 import {
-  ScrollView, Text, TextInput, StyleSheet, Alert
+  ScrollView, View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Image
 } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useCallback } from 'react'
 import { collection, addDoc, Timestamp } from 'firebase/firestore'
-import { db, auth } from '../../config'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
+import * as ImageMultiplePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 const handlePress = async (
+  images: Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number, DateTimeOriginal?: string } }>,
   title: string,
   area: string,
   season: string,
@@ -45,10 +48,22 @@ const handlePress = async (
     if (auth.currentUser === null) return
     const userId = auth.currentUser.uid
     const mapRef = collection(db, 'maps')
+    const newMapRef = doc(mapRef)
+    const mapId = newMapRef.id
+
+    const imageUrls = await Promise.all(images.map(async (image, index) => {
+      const response = await fetch(image.uri)
+      const blob = await response.blob()
+      const imageName = `image_${Date.now()}_${index}`
+      const storageRef = ref(storage, `maps/${mapId}/${imageName}`)
+      await uploadBytes(storageRef, blob)
+      return await getDownloadURL(storageRef)
+    }))
 
     await addDoc(mapRef, { // Firestoreにドキュメントを追加
       userId,
       title,
+      images: imageUrls,
       area,
       season,
       latitude,
@@ -64,6 +79,7 @@ const handlePress = async (
 }
 
 const Create = (): JSX.Element => {
+  const [images, setImages] = useState<Array<{ uri: string, exif?: { GPSLatitude?: number, GPSLongitude?: number } }>>([])
   const [title, setTitle] = useState('')
   const [area, setArea] = useState('')
   const [season, setSeason] = useState('')
@@ -73,6 +89,7 @@ const Create = (): JSX.Element => {
 
   useFocusEffect(
     useCallback(() => {
+      setImages([])
       setTitle('')
       setArea('')
       setSeason('')
@@ -81,6 +98,27 @@ const Create = (): JSX.Element => {
       setContent('')
     }, [])
   )
+
+  const pickImage = async (): Promise<void> => {
+    const result = await ImageMultiplePicker.launchImageLibraryAsync({
+      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      selectionLimit: 3,
+      quality: 0.3,
+      exif: true
+    })
+    if (!result.canceled && result.assets.length > 0) {
+      const processedAssets = result.assets.map(asset => ({
+        uri: asset.uri,
+        exif: asset.exif ?? undefined
+      }))
+      setImages(processedAssets)
+    }
+  }
+
+  const removeImage = (index: number): void => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index))
+  }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
@@ -95,6 +133,33 @@ const Create = (): JSX.Element => {
           keyboardType='default'
           returnKeyType='done'
         />
+        <Text style={styles.textTitle}>ファイルを選択</Text>
+        <Button
+          label="釣り場画像を選択"
+          buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
+          labelStyle={{ lineHeight: 12, color: '#000000' }}
+          onPress={() => {
+            pickImage().then(() => {
+            }).catch((error) => {
+              console.error('Error picking image:', error)
+            })
+          }}
+        />
+        <View style={styles.imageContainer}>
+          {images.map((image, index) => (
+            <View key={index} style={styles.imageWrapper}>
+              <Image source={{ uri: image.uri }} style={styles.image} />
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => {
+                  removeImage(index)
+                }}
+              >
+                <Text style={styles.removeButtonText}>×</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
         <Text style={styles.textTitle}>エリアを選択</Text>
         <RNPickerSelect
           value={area}
@@ -138,7 +203,7 @@ const Create = (): JSX.Element => {
           onChangeText={(text) => {
             const numericValue = Number(text)
             if (!isNaN(numericValue)) {
-              setLatitude(numericValue)
+              setLatitude(Number(text))
             }
           }}
           placeholder='緯度を入力してください'
@@ -146,14 +211,14 @@ const Create = (): JSX.Element => {
           returnKeyType='done'
         />
 
-        <Text style={styles.textTitle}>緯度</Text>
+        <Text style={styles.textTitle}>経度</Text>
         <TextInput
           style={styles.input}
           value={longitude !== null ? String(longitude) : ''}
           onChangeText={(text) => {
             const numericValue = Number(text)
             if (!isNaN(numericValue)) {
-              setLongitude(numericValue)
+              setLongitude(Number(text))
             }
           }}
           placeholder='緯度を入力してください'
@@ -174,6 +239,7 @@ const Create = (): JSX.Element => {
         {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
           <Button label='投稿' onPress={() => {
             void handlePress(
+              images,
               title,
               area,
               season,
@@ -225,6 +291,44 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     paddingVertical: 4
+  },
+  imageContainer: {
+    marginTop: 8,
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  imageWrapper: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 2,
+    marginHorizontal: 4
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 3,
+    right: 3,
+    backgroundColor: 'silver',
+    borderRadius: 16, // 半径は width/2 に
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  removeButtonText: {
+    color: 'white',
+    fontSize: 14, // 調整可能
+    lineHeight: 16, // 高さを詰めるために追加
+    textAlign: 'center'// 念のため中央寄せ
   }
 })
 

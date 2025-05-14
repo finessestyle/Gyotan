@@ -45,7 +45,9 @@ const handlePress = async (
   password: string,
   userName: string,
   fishArea: string,
-  userImage: string | null
+  userImage: string | null,
+  isTermsChecked: boolean,
+  isPrivacyChecked: boolean
 ): Promise<void> => {
   try {
     if (userName === '') {
@@ -60,12 +62,20 @@ const handlePress = async (
       Alert.alert('エラー', 'パスワードを入力してください')
       return
     }
+    if (password.length < 6) {
+      Alert.alert('エラー', 'パスワードは6文字以上入力してください')
+      return
+    }
     if (fishArea === '') {
       Alert.alert('エラー', 'ホームフィールドを選択してください')
       return
     }
     if (userImage === null) {
       Alert.alert('エラー', 'ユーザー画像を選択してください')
+      return
+    }
+    if (!isTermsChecked || !isPrivacyChecked) {
+      Alert.alert('エラー', '利用規約とプライバシーポリシーに同意してください')
       return
     }
 
@@ -96,8 +106,11 @@ const handlePress = async (
     Alert.alert('確認メール送信', 'メールをご確認ください')
     router.replace('/auth/emailCheck')
   } catch (error) {
-    console.log('新規登録エラー', error)
-    Alert.alert('新規登録に失敗しました')
+    if (error.code === 'auth/email-already-in-use') {
+      Alert.alert('エラー', 'このメールアドレスはすでに使用されています')
+    } else {
+      Alert.alert('新規登録に失敗しました', error.message)
+    }
   }
 }
 
@@ -135,7 +148,7 @@ const SignUp = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.inner}>
+      <ScrollView style={styles.inner} keyboardShouldPersistTaps='handled'>
         <Text style={styles.title}>新規登録</Text>
         <TextInput
           style={styles.input}
@@ -244,7 +257,9 @@ const SignUp = (): JSX.Element => {
             password,
             userName,
             fishArea,
-            userImage
+            userImage,
+            isTermsChecked,
+            isPrivacyChecked
           )
         }}
           buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}

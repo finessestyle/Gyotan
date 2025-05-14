@@ -4,6 +4,7 @@ interface FishMap {
   id: string
   userId: string
   title: string
+  images: []
   area: string
   season: string
   latitude: number
