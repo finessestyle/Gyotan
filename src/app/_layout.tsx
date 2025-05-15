@@ -259,7 +259,16 @@ const Layout = (): JSX.Element => {
           name="user/anonymouseedit"
           options={{
             href: null,
-            tabBarStyle: { display: 'none' }
+            tabBarStyle: { display: 'none' },
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/top')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
