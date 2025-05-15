@@ -13,9 +13,10 @@
     },
     "icon": "./assets/icon.png",
     "ios": {
+      "version": "1.0.1",
       "supportsTablet": false,
       "bundleIdentifier": "jp.gyotan.Gyotan",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "config": {
         "googleMapsApiKey": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
       },
