@@ -15,7 +15,7 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: 'jp.gyotan.Gyotan',
-    buildNumber: '7',
+    buildNumber: '8',
     supportsTablet: false,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
