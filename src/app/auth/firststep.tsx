@@ -4,6 +4,7 @@ import { router } from 'expo-router'
 import { auth } from '../../config'
 import { signInAnonymously } from 'firebase/auth'
 import Button from '../../components/Button'
+import Constants from 'expo-constants'
 
 const FirstStep = (): JSX.Element => {
   const [fadeAnim] = useState(new Animated.Value(0))
@@ -16,6 +17,11 @@ const FirstStep = (): JSX.Element => {
       Alert.alert('匿名ログインに失敗しました')
     }
   }
+
+  useEffect(() => {
+    const apiKey = Constants.expoConfig?.extra?.expoPublicFbApiKey
+    console.log('Firebase API Key:', apiKey)
+  }, [])
 
   useEffect(() => {
     // コンポーネントがマウントされた後にアニメーション開始

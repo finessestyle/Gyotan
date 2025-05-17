@@ -2,6 +2,7 @@ import { Redirect, router } from 'expo-router'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useEffect } from 'react'
 import { auth } from '../config'
+import 'react-native-gesture-handler'
 
 const Index = (): JSX.Element => {
   useEffect(() => {
