@@ -40,7 +40,8 @@ const config: ExpoConfig = {
     expoPublicFbProjectId: process.env.EXPO_PUBLIC_FB_PROJECT_ID,
     expoPublicFbStorageBucket: process.env.EXPO_PUBLIC_FB_STORAGE_BUCKET,
     expoPublicFbMessagingSenderId: process.env.EXPO_PUBLIC_FB_MESSAGING_SENDER_ID,
-    expoPublicFbAppId: process.env.EXPO_PUBLIC_FB_APP_ID,
+    expoPublicFbWebAppId: process.env.EXPO_PUBLIC_FB_WEB_APP_ID,
+    expoPublicFbIosAppId: process.env.EXPO_PUBLIC_FB_IOS_APP_ID,
     expoPublicFbOpenWeatherApiKey: process.env.EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY,
     expoPublicGoogleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
   },
