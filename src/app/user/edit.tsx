@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
-import RNPickerSelect from 'react-native-picker-select'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 
@@ -19,7 +18,7 @@ const handlePress = async (
   userInstagram: string | null,
   userX: string | null,
   userName: string,
-  fishArea: string
+  profile: string
 ): Promise<void> => {
   try {
     if (email === '') {
@@ -30,7 +29,7 @@ const handlePress = async (
       Alert.alert('エラー', 'ユーザーネームを入力してください')
       return
     }
-    if (fishArea === '') {
+    if (profile === '') {
       Alert.alert('エラー', 'ホームフィールドを選択してください')
       return
     }
@@ -54,7 +53,7 @@ const handlePress = async (
       email,
       userImage,
       userName,
-      fishArea,
+      profile,
       userYoutube,
       userTiktok,
       userInstagram,
@@ -71,7 +70,7 @@ const handlePress = async (
 const Edit = (): JSX.Element => {
   const [userName, setUserName] = useState('')
   const [email, setEmail] = useState('')
-  const [fishArea, setFishArea] = useState('')
+  const [profile, setProfile] = useState('')
   const [userImage, setUserImage] = useState<string | null>(null)
   const [userYoutube, setUserYoutube] = useState('')
   const [userTiktok, setUserTiktok] = useState('')
@@ -101,7 +100,7 @@ const Edit = (): JSX.Element => {
           email?: string
           userImage?: string
           userName?: string
-          fishArea?: string
+          profile?: string
           userYoutube?: string
           userTiktok?: string
           userInstagram?: string
@@ -110,7 +109,7 @@ const Edit = (): JSX.Element => {
         setEmail(data.email ?? '')
         setUserImage(data.userImage ?? null)
         setUserName(data.userName ?? '')
-        setFishArea(data.fishArea ?? '')
+        setProfile(data.profile ?? '')
         setUserYoutube(data.userYoutube ?? '')
         setUserTiktok(data.userTiktok ?? '')
         setUserInstagram(data.userInstagram ?? '')
@@ -160,23 +159,15 @@ const Edit = (): JSX.Element => {
         <View style={styles.imageBox}>
           {userImage !== null && <Image source={{ uri: userImage }} style={styles.userImage} />}
         </View>
-        <Text style={styles.textTitle}>ホームフィールドを選択</Text>
-        <RNPickerSelect
-          value={fishArea}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setFishArea(value)
-            }
-          }}
-          items={[
-            { label: '北湖北岸エリア', value: '北湖北岸' },
-            { label: '北湖東岸エリア', value: '北湖東岸' },
-            { label: '北湖西岸エリア', value: '北湖西岸' },
-            { label: '南湖東岸エリア', value: '南湖東岸' },
-            { label: '南湖西岸エリア', value: '南湖西岸' }
-          ]}
-          placeholder={{ label: 'ホームフィールドを選択してください', value: '' }}
-          style={pickerSelectStyles}
+        <Text style={styles.textTitle}>プロフィール</Text>
+        <TextInput
+          style={styles.input}
+          value={profile}
+          onChangeText={(text) => { setProfile(text) }}
+          placeholder='プロフィールを入力'
+          keyboardType='default'
+          maxLength={30}
+          returnKeyType='done'
         />
         <Text style={styles.textTitle}>Youtube</Text>
         <TextInput
@@ -231,7 +222,7 @@ const Edit = (): JSX.Element => {
                 userInstagram,
                 userX,
                 userName,
-                fishArea
+                profile
               )
             }
           }}
@@ -292,29 +283,6 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 8
-  }
-})
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    height: 32,
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
-  },
-  inputAndroid: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    height: 32,
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
   }
 })
 

@@ -135,7 +135,7 @@ const Mypage = (): JSX.Element => {
             id: auth.currentUser?.uid ?? '',
             userName: '',
             email: '',
-            fishArea: '',
+            profile: '',
             userImage: '',
             userYoutube: '',
             userTiktok: '',
@@ -150,7 +150,7 @@ const Mypage = (): JSX.Element => {
             userName: data.userName,
             email: data.email,
             userImage: data.userImage,
-            fishArea: data.fishArea,
+            profile: data.profile,
             userYoutube: data.userYoutube,
             userTiktok: data.userTiktok,
             userInstagram: data.userInstagram,
@@ -233,7 +233,7 @@ const Mypage = (): JSX.Element => {
                 style={styles.userImage}
               />
               <Text style={styles.userName}>{user?.userName}さん</Text>
-              <Text style={styles.userFishArea}>ホームフィールド：{user?.fishArea}</Text>
+              <Text style={styles.userProfile}>{user?.profile}</Text>
             </>)
           }
         </View>
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: 'bold'
   },
-  userFishArea: {
+  userProfile: {
     fontSize: 14
   },
   userSnsTop: {

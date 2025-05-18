@@ -4,7 +4,7 @@ interface User {
   id: string
   userName: string
   email: string
-  fishArea: string
+  profile: string
   userImage: string
   userYoutube: string
   userTiktok: string
