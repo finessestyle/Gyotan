@@ -335,9 +335,9 @@ const Create = (): JSX.Element => {
               }
             }}
             items={[
-              { label: 'トップ', value: 'トップ' },
-              { label: 'ミドル', value: 'ミドル' },
-              { label: 'ボトム', value: 'ボトム' }
+              { label: '表層', value: '表層' },
+              { label: '中層', value: '中層' },
+              { label: '底層', value: '底層' }
             ]}
             placeholder={{ label: '水深を選択してください', value: '' }}
             style={pickerSelectStyles}

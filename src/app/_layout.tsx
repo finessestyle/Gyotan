@@ -2,6 +2,8 @@ import { View, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { auth } from '../config'
+import { useEffect } from 'react'
+import * as Notifications from 'expo-notifications'
 
 const Layout = (): JSX.Element => {
   const renderBackButton = (): JSX.Element => {
@@ -13,6 +15,26 @@ const Layout = (): JSX.Element => {
       </TouchableOpacity>
     )
   }
+
+  useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+      const postId = response.notification.request.content.data.postId
+      if (typeof postId === 'string' && postId.length > 0) {
+        router.push(`/post/detail?id=${postId}`)
+      }
+    })
+    const checkInitialNotification = async (): Promise<void> => {
+      const response = await Notifications.getLastNotificationResponseAsync()
+      const postId = response?.notification.request.content.data.postId
+      if (typeof postId === 'string' && postId.length > 0) {
+        router.push(`/post/detail?id=${postId}`)
+      }
+    }
+    checkInitialNotification().catch(console.error)
+    return () => {
+      subscription.remove()
+    }
+  }, [])
 
   return (
     <View style={styles.container}>

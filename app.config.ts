@@ -49,7 +49,7 @@ const config: ExpoConfig = {
     policy: 'appVersion'
   },
   updates: {
-    fallbackToCacheTimeout: 0
+    url: 'https://u.expo.dev/06d8c482-4d92-42af-9d1f-afe29526abe6'
   },
   scheme: 'gyotan'
 }
