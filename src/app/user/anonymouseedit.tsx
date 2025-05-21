@@ -119,8 +119,8 @@ const anonymouseedit = (): JSX.Element => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.inner}>
+    <ScrollView style={styles.container}>
+      <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報を登録</Text>
         <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
@@ -214,8 +214,8 @@ const anonymouseedit = (): JSX.Element => {
             lineHeight: 21
           }}
         />
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -225,8 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 8,
-    paddingHorizontal: 8
+    marginVertical: 16,
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -235,18 +235,17 @@ const styles = StyleSheet.create({
     marginVertical: 16
   },
   textTitle: {
-    paddingVertical: 4,
-    fontWeight: 'bold'
+    paddingVertical: 4
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    height: 32,
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 40,
+    padding: 8,
+    fontSize: 16,
+    marginBottom: 16
   },
   icon: {
     position: 'absolute',

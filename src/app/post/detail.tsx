@@ -157,8 +157,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8'
   },
   inner: {
-    marginVertical: 24,
-    marginHorizontal: 8
+    marginVertical: 16,
+    marginHorizontal: 16
   },
   postBody: {
     borderWidth: 1,

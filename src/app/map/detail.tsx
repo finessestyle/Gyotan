@@ -80,11 +80,15 @@ const Detail = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8'
+    backgroundColor: '#F0F4F8'
   },
   inner: {
     marginVertical: 24,
-    marginHorizontal: 8
+    marginHorizontal: 16
+  },
+  title: {
+    fontSize: 18,
+    lineHeight: 32
   },
   areaBody: {
     borderWidth: 1,
@@ -103,10 +107,6 @@ const styles = StyleSheet.create({
   mapImage: {
     height: 322,
     width: 'auto'
-  },
-  title: {
-    fontSize: 18,
-    lineHeight: 32
   },
   fishInfo: {
     borderTopWidth: 1,

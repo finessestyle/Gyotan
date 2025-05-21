@@ -122,8 +122,8 @@ const Edit = (): JSX.Element => {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.inner}>
+    <ScrollView style={styles.container}>
+      <View style={styles.inner}>
         <Text style={styles.title}>ユーザー編集</Text>
         <Text style={styles.textTitle}>ユーザーネーム</Text>
         <TextInput
@@ -237,8 +237,8 @@ const Edit = (): JSX.Element => {
             lineHeight: 21
           }}
         />
-      </ScrollView>
-    </View>
+      </View>
+    </ScrollView>
   )
 }
 
@@ -248,7 +248,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingHorizontal: 8
+    marginVertical: 16,
+    marginHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -260,14 +261,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
-    borderRadius: 4,
-    height: 32,
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingLeft: 10
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 40,
+    padding: 8,
+    fontSize: 16,
+    marginBottom: 16
   },
   imageBox: {
     borderWidth: 1,

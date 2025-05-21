@@ -288,7 +288,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingHorizontal: 8
+    marginVertical: 16,
+    marginHorizontal: 16
   },
   innerTitle: {
     flexDirection: 'row'

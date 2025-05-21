@@ -1,5 +1,5 @@
 import {
-  ScrollView, View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Image
+  View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, Image
 } from 'react-native'
 import { router, useFocusEffect } from 'expo-router'
 import { useState, useCallback } from 'react'
@@ -121,8 +121,8 @@ const Create = (): JSX.Element => {
   }
 
   return (
-    <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
-      <ScrollView style={styles.inner}>
+    <KeyboardAwareScrollView style={styles.scrollContainer}>
+      <View style={styles.inner}>
         <Text style={styles.title}>釣り場投稿</Text>
         <Text style={styles.textTitle}>タイトル</Text>
         <TextInput
@@ -242,7 +242,7 @@ const Create = (): JSX.Element => {
             labelStyle={{ fontSize: 24, lineHeight: 21 }}
           />
         )}
-      </ScrollView>
+      </View>
     </KeyboardAwareScrollView>
   )
 }
@@ -250,10 +250,11 @@ const Create = (): JSX.Element => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: '#f8f8f8'
+    backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginHorizontal: 8
+    marginVertical: 16,
+    marginHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -262,22 +263,24 @@ const styles = StyleSheet.create({
     marginVertical: 16
   },
   input: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
-    height: 32,
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    paddingLeft: 18,
-    fontSize: 16
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 40,
+    padding: 8,
+    fontSize: 16,
+    marginBottom: 16
   },
   contentInput: {
-    borderBottomWidth: 1,
-    borderColor: '#D0D0D0',
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
     height: 'auto',
-    marginVertical: 4,
-    alignItems: 'flex-start',
-    paddingLeft: 18,
-    fontSize: 16
+    padding: 8,
+    fontSize: 16,
+    marginBottom: 16
   },
   textTitle: {
     paddingVertical: 4
@@ -324,25 +327,26 @@ const styles = StyleSheet.create({
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
+    borderWidth: 1,
+    borderRadius: 8,
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 40,
+    padding: 8,
     fontSize: 16,
-    paddingVertical: 4,
-    paddingHorizontal: 19,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D0D0D0',
-    borderRadius: 4,
-    color: 'black',
-    paddingRight: 30,
-    marginVertical: 4
+    marginBottom: 16,
+    pointerEvents: 'none'
   },
   inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 19,
-    paddingVertical: 8,
-    borderBottomWidth: 0.5,
-    borderBottomColor: '#D0D0D0',
+    borderWidth: 1,
     borderRadius: 8,
-    color: 'black',
-    paddingRight: 30
+    borderColor: '#DDDDDD',
+    backgroundColor: '#ffffff',
+    height: 40,
+    padding: 8,
+    fontSize: 16,
+    marginBottom: 16,
+    pointerEvents: 'none'
   }
 })
 

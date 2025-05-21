@@ -222,8 +222,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   inner: {
-    paddingHorizontal: 8,
-    marginVertical: 8
+    paddingHorizontal: 16,
+    marginVertical: 16
   },
   title: {
     fontSize: 24,

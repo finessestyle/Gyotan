@@ -34,11 +34,12 @@ const List = (): JSX.Element => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
         const {
-          userId, title, area, season, latitude, longitude, content, updatedAt
+          userId, images, title, area, season, latitude, longitude, content, updatedAt
         } = doc.data()
         remoteMaps.push({
           id: doc.id,
           userId,
+          images,
           title,
           area,
           season,
