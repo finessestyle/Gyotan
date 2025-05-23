@@ -157,20 +157,26 @@ const Top = (): JSX.Element => {
             </View>
           }
         />
-        <View style={styles.fishNow}>
-          <Text style={styles.title}>今釣れてる!?</Text>
-          {latestPosts.length > 0 && (
-            <View>
-              <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }] }>
-                <Text style={styles.now}>{latestPosts[0].structure}</Text>
-                <Icon name="delete" size={32} color="#888" />
-                <Text style={styles.now}>{latestPosts[0].cover}</Text>
-                <Icon name="delete" size={32} color="#888" />
-                <Text style={styles.now}>{latestPosts[0].lure} : {latestPosts[0].lureAction}</Text>
-              </Animated.View>
-            </View>
-          )}
-        </View>
+        <Text style={styles.title}>今釣れてる!?</Text>
+        {latestPosts.length > 0 && (
+          <View>
+            <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }]}>
+              <Text style={styles.now}>{latestPosts[0].structure}</Text>
+              <Icon name="delete" size={32} color="#888" />
+              <Text style={styles.now}>{latestPosts[0].cover}</Text>
+              <Icon name="delete" size={32} color="#888" />
+              <Text style={styles.now}>
+                {latestPosts[0].lure} : {latestPosts[0].lureAction}
+              </Text>
+            </Animated.View>
+          </View>
+        )}
+
+        {latestPosts.length === 0 && (
+          <View style={{ padding: 20 }}>
+            <Text>投稿がありません...。</Text>
+          </View>
+        )}
 
         <Text style={styles.title}>ランキング[長さ]</Text>
         <View style={styles.tabs}>
@@ -223,13 +229,13 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingHorizontal: 16,
-    marginVertical: 16
+    marginBottom: 16
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginVertical: 16
+    marginVertical: 24
   },
   tabs: {
     flexDirection: 'row',
@@ -241,7 +247,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent'
   },
   selectedTab: {
-    borderBottomColor: '#467FD3'
+    borderBottomColor: '#B0B0B0'
   },
   tabText: {
     fontSize: 16,
@@ -249,9 +255,6 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     height: 170
-  },
-  fishNow: {
-    marginBottom: 24
   },
   fishingNow: {
     flexDirection: 'column',

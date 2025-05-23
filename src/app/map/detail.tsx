@@ -83,11 +83,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 24,
+    marginVertical: 16,
     marginHorizontal: 16
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 32
   },
   areaBody: {

@@ -230,7 +230,8 @@ const Edit = (): JSX.Element => {
             width: '100%',
             marginTop: 8,
             alignItems: 'center',
-            height: 30
+            height: 30,
+            marginBottom: 24
           }}
           labelStyle={{
             fontSize: 24,
@@ -248,8 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 16,
-    marginHorizontal: 16
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16

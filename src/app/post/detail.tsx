@@ -120,7 +120,7 @@ const Detail = (): JSX.Element => {
             </View>
           </View>
           <View style={styles.fishingInfomation}>
-            <View style={styles.leftInfo}>
+            <View style={styles.rightInfo}>
               <Text>ルアー  :  {post?.lure} / {post?.lureAction}</Text>
             </View>
           </View>
@@ -154,7 +154,7 @@ const Detail = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f8f8'
+    backgroundColor: '#F0F4F8'
   },
   inner: {
     marginVertical: 16,

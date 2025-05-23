@@ -120,11 +120,11 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
   tempMax: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'red'
   },
   tempMin: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'blue'
   }
 })

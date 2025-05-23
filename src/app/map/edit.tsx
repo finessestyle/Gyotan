@@ -269,21 +269,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 16,
-    marginHorizontal: 16
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginVertical: 16
+    marginVertical: 24
   },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16
@@ -347,7 +346,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16,
@@ -358,7 +357,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16,

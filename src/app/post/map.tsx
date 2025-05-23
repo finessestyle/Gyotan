@@ -114,10 +114,9 @@ const Map = (): JSX.Element => {
             >
               <Callout>
                 <TouchableWithoutFeedback>
-                  <Link
-                    href={{ pathname: '/post/detail', params: { id: post.id } }}
-                  >
-                    <View style={{ alignItems: 'center', position: 'relative' }}>
+                  <Link href={{ pathname: '/post/detail', params: { id: post.id } }}>
+                    <View style={{ alignItems: 'center' }}>
+                      <Text style={styles.area}>{post.area}</Text>
                       <Image
                         source={{ uri: post.images?.[0] }}
                         style={{ width: 200, height: 200, borderRadius: 10 }}
@@ -141,6 +140,9 @@ const Map = (): JSX.Element => {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+  area: {
+    color: '#B0B0B0'
   },
   map: {
     flex: 1

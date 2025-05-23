@@ -510,8 +510,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingHorizontal: 16,
-    paddingVertical: 24
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -524,7 +523,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16
@@ -544,7 +543,7 @@ const styles = StyleSheet.create({
     color: 'gray'
   },
   textTitle: {
-    paddingVertical: 8
+    paddingVertical: 4
   },
   imageContainer: {
     marginTop: 8,
@@ -592,7 +591,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16,
@@ -603,7 +602,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    height: 32,
     padding: 8,
     fontSize: 16,
     marginBottom: 16,

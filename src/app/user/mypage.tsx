@@ -288,15 +288,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 16,
-    marginHorizontal: 16
+    paddingHorizontal: 16
   },
   innerTitle: {
     flexDirection: 'row'
   },
   setting: {
     marginLeft: 'auto',
-    marginRight: 16,
+    marginRight: 8,
     marginTop: 24
   },
   subInner: {
@@ -307,7 +306,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginVertical: 16
+    marginVertical: 24
   },
   userTop: {
     alignItems: 'center',
@@ -319,7 +318,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#D0D0D0',
     borderRadius: 150,
-    marginBottom: 8
+    marginBottom: 16
   },
   userImageContainer: {
     width: 160,
