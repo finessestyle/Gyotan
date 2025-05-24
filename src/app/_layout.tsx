@@ -57,10 +57,28 @@ const Layout = (): JSX.Element => {
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="list" color={color} />
           }}
         />
+         <Tabs.Screen
+          name="post/mapswitcher"
+          options={{
+            title: '釣果MAP',
+            headerShown: false,
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
+          }}
+        />
         <Tabs.Screen
           name="post/map"
           options={{
-            title: '釣果MAP',
+            title: 'みんなの釣果MAP',
+            href: null,
+            headerShown: false,
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
+          }}
+        />
+        <Tabs.Screen
+          name="post/mymap"
+          options={{
+            title: 'あなたの釣果MAP',
+            href: null,
             headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
           }}
@@ -166,7 +184,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/post/top')
+                  router.replace('/post/mapswitcher')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>
@@ -288,7 +306,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/post/top')
+                  router.replace('/user/mypage')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>
