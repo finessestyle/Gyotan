@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 20,
+    top: 16,
     transform: [{ translateY: -12 }]
   },
   image: {

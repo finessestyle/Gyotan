@@ -98,14 +98,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingVertical: 24,
     paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 24
   },
   input: {
     borderWidth: 1,
@@ -120,11 +119,12 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 20,
+    top: 16,
     transform: [{ translateY: -12 }]
   },
   footer: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    marginTop: 16
   },
   footerText: {
     fontSize: 14,
@@ -133,10 +133,10 @@ const styles = StyleSheet.create({
     color: '#000000'
   },
   footerLink: {
-    marginTop: 8,
     fontSize: 14,
     lineHeight: 24,
-    color: '#467FD3'
+    color: '#467FD3',
+    marginBottom: 8
   }
 })
 

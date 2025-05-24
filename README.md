@@ -3,7 +3,7 @@
 
 ## 概要
 Gyotanアプリは、琵琶湖のバス釣りに特化した釣果共有アプリ
-画像・位置情報・ルアー・天気・エリア情報を簡単に記録でき、他のアングラーの釣果も地図やリストで閲覧可能
+- 釣果画像・位置情報・ルアー・天気・エリア情報を簡単に記録でき、他のアングラーの釣果も地図やリストで閲覧可能
 
 ## 技術スタック
 - React Native + Expo（モバイルアプリ開発）
@@ -29,7 +29,7 @@ Gyotanアプリは、琵琶湖のバス釣りに特化した釣果共有アプ�
 ## スクリーンショット（準備中）
 ![スクリーンショット①](./assets/simulator/fireststep.png)
 ![スクリーンショット②](./assets/simulator/login.png)
-![スクリーンショット③](./assets/simulator/sighup.png)
+![スクリーンショット③](./assets/simulator/signup.png)
 ![スクリーンショット④](./assets/simulator/top.png)
 ![スクリーンショット⑤](./assets/simulator/create.png)
 ![スクリーンショット⑥](./assets/simulator/detail.png)

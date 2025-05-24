@@ -240,15 +240,23 @@ const Mypage = (): JSX.Element => {
 
         <View style={styles.userSnsTop}>
           {socialLinks.map((social, index) =>
-            social.url === null
+            social.url?.trim()
               ? (
-              <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url) } style={styles.userSns}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => {
+                  void Linking.openURL(social.url)
+                }}
+                style={styles.userSns}
+              >
                 <FontAwesome6 size={30} name={social.name} color={social.color} />
               </TouchableOpacity>)
               : null
           )}
         </View>
-        <View style={styles.subInner}>
+
+        <View>
+          <Text style={styles.title}>あなたの最新釣果</Text>
           <View style={styles.tabs}>
             {areas.map((area) => (
 
@@ -298,19 +306,14 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginTop: 24
   },
-  subInner: {
-    marginVertical: 24,
-    marginHorizontal: 8
-  },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginVertical: 24
+    paddingVertical: 16
   },
   userTop: {
-    alignItems: 'center',
-    marginBottom: 8
+    alignItems: 'center'
   },
   userImage: {
     width: 160,

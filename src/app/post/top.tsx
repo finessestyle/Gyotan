@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent'
   },
   selectedTab: {
-    borderBottomColor: '#B0B0B0'
+    borderBottomColor: '#467FD3'
   },
   tabText: {
     fontSize: 16,

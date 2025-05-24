@@ -61,6 +61,7 @@ const Layout = (): JSX.Element => {
           name="post/map"
           options={{
             title: '釣果MAP',
+            headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="fish" color={color} />
           }}
         />
@@ -102,6 +103,7 @@ const Layout = (): JSX.Element => {
           name="map/list"
           options={{
             title: '釣り場MAP',
+            headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="map" color={color} />
           }}
         />
@@ -146,7 +148,8 @@ const Layout = (): JSX.Element => {
           name="auth/firststep"
           options={{
             href: null,
-            tabBarStyle: { display: 'none' }
+            tabBarStyle: { display: 'none' },
+            headerShown: false
           }}
         />
         <Tabs.Screen
