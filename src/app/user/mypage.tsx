@@ -36,7 +36,7 @@ const handlePress = (): void => {
       {
         text: '問い合わせ',
         onPress: () => {
-          Linking.openURL('https://forms.gle/2apUPegk4WrNiMUv5')
+          void Linking.openURL('https://forms.gle/2apUPegk4WrNiMUv5')
         }
       },
       {

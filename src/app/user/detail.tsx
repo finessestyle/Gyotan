@@ -127,6 +127,12 @@ const Detail = (): JSX.Element => {
           showsHorizontalScrollIndicator={false}
           keyboardShouldPersistTaps='always'
           contentContainerStyle={styles.listContainer}
+          initialNumToRender={5}
+          ListEmptyComponent={
+            <View style={{ padding: 20 }}>
+              <Text>投稿がありません...。</Text>
+            </View>
+          }
         />
       </View>
     </ScrollView>

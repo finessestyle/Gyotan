@@ -7,7 +7,7 @@ interface Props {
 }
 
 const Map = ({ latitude, longitude }: Props): JSX.Element => {
-  const nRadiusHalfKm = 400
+  const nRadiusHalfKm = 300
 
   return (
     <View style={styles.container}>

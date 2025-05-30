@@ -254,8 +254,8 @@ const SignUp = (): JSX.Element => {
             isPrivacyChecked
           )
         }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 32 }}
+          labelStyle={{ fontSize: 24, lineHeight: 22 }}
         />
         <View style={styles.footer}>
           <Link replace href='/auth/login' asChild >
@@ -275,7 +275,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    paddingVertical: 24,
     paddingHorizontal: 16
   },
   title: {

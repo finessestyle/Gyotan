@@ -22,7 +22,7 @@ const Button = (props: Props): JSX.Element => {
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#467FD3',
-    borderRadius: 4,
+    borderRadius: 8,
     alignSelf: 'flex-start',
     width: 'auto',
     height: 'auto'

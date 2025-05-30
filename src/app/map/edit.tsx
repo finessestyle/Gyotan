@@ -72,7 +72,7 @@ const handlePress = async (
       content,
       updatedAt: Timestamp.fromDate(new Date())
     })
-    router.back()
+    router.replace('map/list')
   } catch (error) {
     console.log(error)
     Alert.alert('更新に失敗しました')

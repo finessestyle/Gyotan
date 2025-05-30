@@ -72,8 +72,8 @@ const LogIn = (): JSX.Element => {
             password
           )
         }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-          labelStyle={{ fontSize: 24, lineHeight: 21 }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 32 }}
+          labelStyle={{ fontSize: 24, lineHeight: 22 }}
         />
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >

@@ -18,9 +18,9 @@ const CircleButton = (props: Props): JSX.Element => {
 
 const styles = StyleSheet.create({
   circleButton: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
     backgroundColor: '#467FD3',
     justifyContent: 'center',
     alignItems: 'center',
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   circleButtonLabel: {
     color: '#FFFFFF',
-    fontSize: 40,
+    fontSize: 32,
     lineHeight: 40
   }
 })
