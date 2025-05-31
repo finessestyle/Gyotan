@@ -7,7 +7,7 @@ import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
-import * as ImageMultiplePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Button from '../../components/Button'
 
@@ -90,8 +90,8 @@ const Edit = (): JSX.Element => {
   const [content, setContent] = useState('')
 
   const pickImage = async (): Promise<void> => {
-    const result = await ImageMultiplePicker.launchImageLibraryAsync({
-      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
       quality: 0.3,

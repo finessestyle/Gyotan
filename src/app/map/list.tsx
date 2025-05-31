@@ -4,7 +4,7 @@ import { Link, router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
-import MapView, { Marker, Callout } from 'react-native-maps'
+import MapView, { Marker, Callout, CalloutSubview } from 'react-native-maps'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
 import Map from '../../components/Map'
@@ -89,14 +89,18 @@ const List = (): JSX.Element => {
               }}
             >
               <Callout>
-                <Link href={{ pathname: '/map/detail', params: { id: map.id } }}>
+                <CalloutSubview
+                  onPress={() => {
+                    router.push({ pathname: '/map/detail', params: { id: map.id } })
+                  }}
+                >
                   <View style={{ alignItems: 'center' }}>
                     <Text style={styles.mapTitle}>{map.title}</Text>
                     <View style={styles.submap} pointerEvents="none">
                       <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
                     </View>
                   </View>
-                </Link>
+                </CalloutSubview>
               </Callout>
             </Marker>
           )

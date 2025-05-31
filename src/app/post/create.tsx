@@ -8,7 +8,7 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import RNPickerSelect from 'react-native-picker-select'
-import * as ImageMultiplePicker from 'expo-image-picker'
+import * as ImagePicker from 'expo-image-picker'
 import Button from '../../components/Button'
 import { hokkoNarea, hokkoEarea, hokkoWarea, nannkoEarea, nannkoWarea } from '../../../types/areas'
 import { softLures, hardLures, softLureActions, hardLureActions } from '../../../types/lure'
@@ -176,8 +176,8 @@ const Create = (): JSX.Element => {
   const lureActionOptions = category === 'ソフトルアー' ? softLureActions : hardLureActions
 
   const pickImage = async (): Promise<void> => {
-    const result = await ImageMultiplePicker.launchImageLibraryAsync({
-      mediaTypes: ImageMultiplePicker.MediaTypeOptions.Images,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       selectionLimit: 3,
       quality: 0.3,

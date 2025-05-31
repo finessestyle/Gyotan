@@ -1,9 +1,9 @@
-import { View, StyleSheet, Text, Image, Button, TouchableWithoutFeedback } from 'react-native'
+import { View, StyleSheet, Text, Image, Button } from 'react-native'
 import { useState, useEffect, useRef } from 'react'
 import { collection, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore'
 import { db } from '../../config'
-import { Link } from 'expo-router'
-import MapView, { Marker, Callout } from 'react-native-maps'
+import { router } from 'expo-router'
+import MapView, { Marker, Callout, CalloutSubview } from 'react-native-maps'
 
 interface ExifData {
   latitude: number
@@ -112,20 +112,22 @@ const Map = (): JSX.Element => {
               }}
               style={{ zIndex: 1 }}
             >
-              <Callout>
-                <TouchableWithoutFeedback>
-                  <Link href={{ pathname: '/post/detail', params: { id: post.id } }}>
-                    <View style={{ alignItems: 'center' }}>
-                      <Text style={styles.area}>{post.area}</Text>
-                      <Image
-                        source={{ uri: post.images?.[0] }}
-                        style={{ width: 200, height: 200, borderRadius: 10 }}
-                      />
-                      <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
-                    </View>
-                  </Link>
-                </TouchableWithoutFeedback>
-             </Callout>
+            <Callout>
+              <CalloutSubview
+                onPress={() => {
+                  router.push({ pathname: '/post/detail', params: { id: post.id } })
+                }}
+              >
+                <View style={{ alignItems: 'center' }}>
+                  <Text style={styles.area}>{post.area}</Text>
+                  <Image
+                    source={{ uri: post.images?.[0] }}
+                    style={{ width: 200, height: 200, borderRadius: 10 }}
+                  />
+                  <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
+                </View>
+              </CalloutSubview>
+            </Callout>
             </Marker>
           )
         })}

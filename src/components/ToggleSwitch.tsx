@@ -1,4 +1,4 @@
-import { View, Text, Switch, StyleSheet } from 'react-native'
+import { View, Switch, StyleSheet } from 'react-native'
 
 interface Props {
   isEnabled: boolean
