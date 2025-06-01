@@ -36,6 +36,7 @@
     "react-native-gesture-handler": "~2.24.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-maps": "1.20.1",
+    "react-native-modal": "^14.0.0-rc.1",
     "react-native-picker": "^4.3.7",
     "react-native-picker-select": "^9.1.3",
     "react-native-safe-area-context": "5.4.0",
