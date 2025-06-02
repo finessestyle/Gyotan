@@ -52,22 +52,47 @@ const WithdrawModal = (props: Props): JSX.Element => {
     try {
       const userRef = doc(db, 'users', userId)
       await deleteDoc(userRef)
+    } catch (e) {
+      console.warn(`ユーザードキュメント削除失敗: ${userId}`, e)
+    }
+
+    try {
       const userImageRef = ref(storage, `users/${userId}/userImage.jpg`)
       await deleteObject(userImageRef)
+    } catch (e) {
+      console.warn(`ユーザー画像削除失敗: ${userId}`, e)
+    }
+
+    try {
       const postsQuery = query(collection(db, 'posts'), where('userId', '==', userId))
       const querySnapshot = await getDocs(postsQuery)
 
       for (const docSnap of querySnapshot.docs) {
         const postId = docSnap.id
-        await deleteDoc(doc(db, 'posts', postId))
-        const postFolderRef = ref(storage, `posts/${postId}`)
-        const listResult = await listAll(postFolderRef)
-        for (const itemRef of listResult.items) {
-          await deleteObject(itemRef)
+
+        try {
+          await deleteDoc(doc(db, 'posts', postId))
+        } catch (e) {
+          console.warn(`Firestore ドキュメント削除失敗: ${postId}`, e)
+        }
+
+        try {
+          const postFolderRef = ref(storage, `posts/${postId}`)
+          const listResult = await listAll(postFolderRef)
+
+          for (const itemRef of listResult.items) {
+            try {
+              await deleteObject(itemRef)
+            } catch (e) {
+              console.warn(`画像削除失敗: ${itemRef.fullPath}`, e)
+            }
+          }
+        } catch (e) {
+          console.warn(`Storage フォルダ取得失敗: ${postId}`, e)
         }
       }
-    } catch (error) {
-      console.log('ファイル削除エラー:', error)
+    } catch (e) {
+      console.warn(`投稿データ取得失敗: ${userId}`, e)
     }
   }
 
