@@ -6,10 +6,10 @@ const config: ExpoConfig = {
   slug: 'gyotan',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/icon.png',
+  icon: './assets/icon(1).png',
   userInterfaceStyle: 'light',
   splash: {
-    image: './assets/splash-icon.png',
+    image: './assets/splash-icon(1).png',
     resizeMode: 'cover',
     backgroundColor: '#ffffff'
   },
@@ -22,7 +22,7 @@ const config: ExpoConfig = {
     },
     infoPlist: {
       ITSAppUsesNonExemptEncryption: false,
-      NSLocationWhenInUseUsageDescription: 'このアプリでは釣果投稿の位置情報を記録するために位置情報を使用します。',
+      NSLocationWhenInUseUsageDescription: 'このアプリでは釣果投稿の位置情報を記録するために位置情報を使用します。'
     },
     googleServicesFile: './GoogleService-Info.plist'
   },
