@@ -1,6 +1,6 @@
 import { View, StyleSheet, Text, Button } from 'react-native'
 import { useState, useEffect, useRef } from 'react'
-import { Link, router } from 'expo-router'
+import { router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'

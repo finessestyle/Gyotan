@@ -90,8 +90,8 @@ const TermsOfService = (): JSX.Element => {
         </Text>
         <Button
           label={'同意する'}
-          buttonStyle={{ width: '100%', alignItems: 'center', marginVertical: 16 }}
-          labelStyle={{ fontSize: 20 }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 32 }}
+          labelStyle={{ fontSize: 24, lineHeight: 22 }}
           onPress={handleAgree}
         />
       </ScrollView>

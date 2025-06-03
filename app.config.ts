@@ -6,10 +6,10 @@ const config: ExpoConfig = {
   slug: 'gyotan',
   version: '1.0.0',
   orientation: 'portrait',
-  icon: './assets/icon(1).png',
+  icon: './assets/splash-icon(1).png',
   userInterfaceStyle: 'light',
   splash: {
-    image: './assets/splash-icon(1).png',
+    image: './assets/splash-icon.png',
     resizeMode: 'cover',
     backgroundColor: '#ffffff'
   },

@@ -49,21 +49,48 @@ const handlePress = async (
       userImage = await getDownloadURL(storageRef)
     }
 
+    const formattedYoutube = formatSocialUrl('youtube', userYoutube)
+    const formattedTiktok = formatSocialUrl('tiktok', userTiktok)
+    const formattedInstagram = formatSocialUrl('instagram', userInstagram)
+    const formattedX = formatSocialUrl('x', userX)
+
     await setDoc(doc(db, 'users', id), {
       email,
       userImage,
       userName,
       profile,
-      userYoutube,
-      userTiktok,
-      userInstagram,
-      userX,
+      userYoutube: formattedYoutube,
+      userTiktok: formattedTiktok,
+      userInstagram: formattedInstagram,
+      userX: formattedX,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
     router.back()
   } catch (error) {
     console.log(error)
     Alert.alert('更新に失敗しました')
+  }
+}
+
+const formatSocialUrl = (platform: string, handle: string | null): string | null => {
+  if (!handle) return null
+  if (handle.startsWith('@')) {
+    handle = handle.slice(1)
+  }
+  if (handle.startsWith('http')) {
+    return handle // すでにURL形式ならそのまま
+  }
+  switch (platform) {
+    case 'youtube':
+      return `https://www.youtube.com/@${handle}`
+    case 'tiktok':
+      return `https://www.tiktok.com/@${handle}`
+    case 'instagram':
+      return `https://www.instagram.com/${handle}`
+    case 'x':
+      return `https://x.com/${handle}`
+    default:
+      return handle
   }
 }
 
@@ -175,7 +202,7 @@ const Edit = (): JSX.Element => {
           value={userYoutube}
           onChangeText={(text) => { setUserYoutube(text) }}
           keyboardType='url'
-          placeholder='URLを入力'
+          placeholder='@ユーザー名 または URL を入力'
           textContentType='URL'
           returnKeyType='done'
         />
@@ -185,7 +212,7 @@ const Edit = (): JSX.Element => {
           value={userTiktok}
           onChangeText={(text) => { setUserTiktok(text) }}
           keyboardType='url'
-          placeholder='URLを入力'
+          placeholder='@ユーザー名 または URL を入力'
           textContentType='URL'
           returnKeyType='done'
         />
@@ -195,7 +222,7 @@ const Edit = (): JSX.Element => {
           value={userInstagram}
           onChangeText={(text) => { setUserInstagram(text) }}
           keyboardType='url'
-          placeholder='URLを入力'
+          placeholder='ユーザー名 または URL を入力'
           textContentType='URL'
           returnKeyType='done'
         />
@@ -205,7 +232,7 @@ const Edit = (): JSX.Element => {
           value={userX}
           onChangeText={(text) => { setUserX(text) }}
           keyboardType='url'
-          placeholder='URLを入力'
+          placeholder='ユーザー名 または URL を入力'
           textContentType='URL'
           returnKeyType='done'
         />
@@ -265,7 +292,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 32,
+    height: 40,
     padding: 8,
     fontSize: 16,
     marginBottom: 16

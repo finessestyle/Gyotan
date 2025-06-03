@@ -9,6 +9,7 @@ export const softLures = [
   { label: 'カバー撃ちスモラバ', value: 'カバー撃ちスモラバ' },
   { label: 'スナッグレスネコリグ', value: 'スナッグレスネコリグ' },
   { label: 'ヘビキャロ', value: 'ヘビキャロ' },
+  { label: 'ライトテキサス', value: 'ライトテキサス' },
   { label: 'テキサスリグ', value: 'テキサスリグ' },
   { label: 'ラバージグ', value: 'ラバージグ' },
   { label: 'フットボールジグ', value: 'フットボールジグ' },

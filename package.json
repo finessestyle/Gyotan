@@ -40,7 +40,7 @@
     "react-native-picker": "^4.3.7",
     "react-native-picker-select": "^9.1.3",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.10.0",
+    "react-native-screens": "~4.11.1",
     "react-native-swiper": "^1.6.0"
   },
   "devDependencies": {
