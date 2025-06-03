@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    marginVertical: 24
   },
   input: {
     borderWidth: 1,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
   icon: {
     position: 'absolute',
     right: 16,
-    top: 16,
+    top: 20,
     transform: [{ translateY: -12 }]
   },
   image: {

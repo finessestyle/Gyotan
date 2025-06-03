@@ -1,5 +1,5 @@
 import {
-  View, Text, TextInput, StyleSheet, Alert, TouchableOpacity
+  View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ScrollView
 } from 'react-native'
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
@@ -32,7 +32,7 @@ const LogIn = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inner}>
+      <ScrollView style={styles.inner}>
         <Text style={styles.title}>ログイン</Text>
         <TextInput
           style={styles.input}
@@ -87,7 +87,7 @@ const LogIn = (): JSX.Element => {
             </TouchableOpacity>
           </Link>
         </View>
-      </View>
+      </ScrollView>
     </View>
   )
 }
