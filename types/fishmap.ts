@@ -9,6 +9,9 @@ interface FishMap {
   season: string
   latitude: number
   longitude: number
+  access: string
+  toile: string
+  parking: string
   content: string
   updatedAt: Timestamp
 }

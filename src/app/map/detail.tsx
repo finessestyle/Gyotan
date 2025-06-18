@@ -23,7 +23,7 @@ const Detail = (): JSX.Element => {
 
     const mapRef = doc(db, 'maps', id)
     const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
-      const { userId, title, images, area, season, latitude, longitude, content, updatedAt } = mapDoc.data() as FishMap
+      const { userId, title, images, area, season, latitude, longitude, access, toile, parking, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
         userId,
@@ -33,6 +33,9 @@ const Detail = (): JSX.Element => {
         season,
         latitude,
         longitude,
+        access,
+        toile,
+        parking,
         content,
         updatedAt
       })
@@ -57,6 +60,20 @@ const Detail = (): JSX.Element => {
               ))}
             </Swiper>
           )}
+          <View style={styles.fishInfo}>
+            <Text>-アクセス情報-</Text>
+            <Text style={styles.fishText}>
+              {map?.access}
+            </Text>
+          </View>
+          <View style={styles.feeldInfo}>
+            <View style={styles.toile}>
+              <Text>トイレ  :  {map?.toile}</Text>
+            </View>
+            <View style={styles.parking}>
+              <Text>駐車場  :  {map?.parking}</Text>
+            </View>
+          </View>
           <View style={styles.fishInfo}>
             <Text>-釣り場情報-</Text>
             <Text style={styles.fishText}>
@@ -107,6 +124,27 @@ const styles = StyleSheet.create({
   mapImage: {
     height: 322,
     width: 'auto'
+  },
+  feeldInfo: {
+    height: 32,
+    width: 'auto',
+    flexDirection: 'row',
+    borderTopWidth: 1,
+    borderColor: '#B0B0B0'
+  },
+  toile: {
+    flex: 1,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#D0D0D0'
+  },
+  parking: {
+    flex: 1,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   fishInfo: {
     borderTopWidth: 1,

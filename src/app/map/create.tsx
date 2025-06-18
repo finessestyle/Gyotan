@@ -20,6 +20,9 @@ const handlePress = async (
   season: string,
   latitude: number | null,
   longitude: number | null,
+  access: string,
+  toile: string,
+  parking: string,
   content: string,
   setLoading: (value: boolean) => void
 ): Promise<void> => {
@@ -42,6 +45,18 @@ const handlePress = async (
     }
     if (longitude === null) {
       Alert.alert('エラー', '経度を入力してください')
+      return
+    }
+    if (access === null) {
+      Alert.alert('エラー', 'アクセス情報を入力してください')
+      return
+    }
+    if (toile === null) {
+      Alert.alert('エラー', 'トイレ情報を入力してください')
+      return
+    }
+    if (parking === null) {
+      Alert.alert('エラー', '駐車場情報を入力してください')
       return
     }
     if (content === '') {
@@ -73,6 +88,9 @@ const handlePress = async (
       season,
       latitude,
       longitude,
+      access,
+      toile,
+      parking,
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
@@ -93,6 +111,9 @@ const Create = (): JSX.Element => {
   const [season, setSeason] = useState('')
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
+  const [access, setAccess] = useState('')
+  const [toile, setToile] = useState('')
+  const [parking, setParking] = useState('')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -104,6 +125,9 @@ const Create = (): JSX.Element => {
       setSeason('')
       setLatitude('')
       setLongitude('')
+      setAccess('')
+      setToile('')
+      setParking('')
       setContent('')
     }, [])
   )
@@ -239,6 +263,36 @@ const Create = (): JSX.Element => {
             returnKeyType='done'
           />
 
+          <Text style={styles.textTitle}>アクセス情報</Text>
+          <TextInput
+            style={styles.input}
+            value={access !== null ? String(access) : ''}
+            onChangeText={setAccess}
+            placeholder='アクセス情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>トイレ情報</Text>
+          <TextInput
+            style={styles.input}
+            value={toile !== null ? String(toile) : ''}
+            onChangeText={setToile}
+            placeholder='トイレ情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>駐車場情報</Text>
+          <TextInput
+            style={styles.input}
+            value={parking !== null ? String(parking) : ''}
+            onChangeText={setParking}
+            placeholder='駐車場情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
+
           <Text style={styles.textTitle}>釣り場内容</Text>
           <TextInput
             style={styles.contentInput}
@@ -258,6 +312,9 @@ const Create = (): JSX.Element => {
                 season,
                 parseFloat(latitude),
                 parseFloat(longitude),
+                access,
+                toile,
+                parking,
                 content,
                 setLoading
               )

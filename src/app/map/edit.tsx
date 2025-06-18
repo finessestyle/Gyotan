@@ -21,6 +21,9 @@ const handlePress = async (
   season: string,
   latitude: number | null,
   longitude: number | null,
+  access: string,
+  toile: string,
+  parking: string,
   content: string,
   setLoading: (value: boolean) => void
 ): Promise<void> => {
@@ -43,6 +46,18 @@ const handlePress = async (
     }
     if (longitude === null) {
       Alert.alert('エラー', '経度を入力してください')
+      return
+    }
+    if (access === null) {
+      Alert.alert('エラー', 'アクセス情報を入力してください')
+      return
+    }
+    if (toile === null) {
+      Alert.alert('エラー', 'トイレ情報を入力してください')
+      return
+    }
+    if (parking === null) {
+      Alert.alert('エラー', '駐車場情報を入力してください')
       return
     }
     if (content === '') {
@@ -74,6 +89,9 @@ const handlePress = async (
       season,
       latitude,
       longitude,
+      access,
+      toile,
+      parking,
       content,
       updatedAt: Timestamp.fromDate(new Date())
     })
@@ -95,6 +113,9 @@ const Edit = (): JSX.Element => {
   const [season, setSeason] = useState('')
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
+  const [access, useAccess] = useState('')
+  const [toile, setToile] = useState('')
+  const [parking, setParking] = useState('')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -143,6 +164,9 @@ const Edit = (): JSX.Element => {
           season?: string
           latitude?: string
           longitude?: string
+          access?: string
+          toilet?: string
+          parking?: string
           content?: string
         }
         setTitle(data.title ?? '')
@@ -151,6 +175,9 @@ const Edit = (): JSX.Element => {
         setSeason(data.season ?? '')
         setLatitude(data?.latitude ?? '')
         setLongitude(data?.longitude ?? '')
+        setAccess(data?.access ?? '')
+        setToile(data?.toilet ?? '')
+        setParking(data?.parking ?? '')
         setContent(data.content ?? '')
       })
       .catch((error) => {
@@ -255,6 +282,33 @@ const Edit = (): JSX.Element => {
             returnKeyType='done'
             value={longitude !== null ? String(longitude) : ''}
           />
+          <Text style={styles.textTitle}>アクセス情報</Text>
+          <TextInput
+            style={styles.input}
+            value={access}
+            onChangeText={(text) => { setContent(text) }}
+            placeholder='アクセス情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
+          <Text style={styles.textTitle}>トイレ情報</Text>
+          <TextInput
+            style={styles.input}
+            value={toile}
+            onChangeText={(text) => { setContent(text) }}
+            placeholder='トイレ情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
+          <Text style={styles.textTitle}>駐車場情報</Text>
+          <TextInput
+            style={styles.input}
+            value={parking}
+            onChangeText={(text) => { setContent(text) }}
+            placeholder='駐車場情報を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+          />
           <Text style={styles.textTitle}>釣り場内容</Text>
           <TextInput
             style={styles.contentInput}
@@ -275,6 +329,9 @@ const Edit = (): JSX.Element => {
                 season,
                 parseFloat(latitude),
                 parseFloat(longitude),
+                access,
+                toile,
+                parking,
                 content,
                 setLoading
               )
