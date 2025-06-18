@@ -10,6 +10,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import Button from '../../components/Button'
 import { hokkoNarea, hokkoEarea, hokkoWarea, nannkoEarea, nannkoWarea } from '../../../types/areas'
 import { softLures, hardLures, softLureActions, hardLureActions } from '../../../types/lure'
@@ -168,10 +169,22 @@ const Edit = (): JSX.Element => {
       exif: true
     })
     if (!result.canceled && result.assets.length > 0) {
-      const processedAssets = result.assets.map(asset => ({
-        uri: asset.uri,
-        exif: asset.exif ?? undefined
-      }))
+      const processedAssets = await Promise.all(
+        result.assets.map(async (asset) => {
+          const manipulated = await ImageManipulator.manipulateAsync(
+            asset.uri,
+            [],
+            {
+              compress: 0.9,
+              format: ImageManipulator.SaveFormat.JPEG
+            }
+          )
+          return {
+            uri: manipulated.uri,
+            exif: asset.exif ?? undefined
+          }
+        })
+      )
       setImages(processedAssets)
     }
   }
@@ -263,7 +276,7 @@ const Edit = (): JSX.Element => {
             onValueChange={(value: string | null) => {
               if (value !== null) {
                 setFishArea(value)
-                setArea('')
+                setArea(value)
               }
             }}
             items={[
@@ -314,8 +327,8 @@ const Edit = (): JSX.Element => {
             onValueChange={(value: string | null) => {
               if (value !== null) {
                 setCategory(value)
-                setLure('')
-                setLureAction('')
+                setLure(value)
+                setLureAction(value)
               }
             }}
             items={[
@@ -331,7 +344,7 @@ const Edit = (): JSX.Element => {
               onValueChange={(value: string | null) => {
                 if (value !== null) {
                   setLure(value)
-                  setLureAction('')
+                  setLureAction(value)
                 }
               }}
               items={lureOptions}

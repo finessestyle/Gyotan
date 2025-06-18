@@ -37,6 +37,14 @@ const Privacy = (): JSX.Element => {
           当アプリは、利用目的が変更前と関連性を有すると合理的に認められる場合に限り、個人情報の利用目的を変更できます。
         </Text>
 
+        <Text style={styles.sectionTitle}>第5条（不適切なユーザーへの対応）</Text>
+        <Text style={styles.text}>
+          当アプリでは、不適切なユーザーを通報・ブロックする機能を提供しています。
+          通報された情報はFirebaseに保存され、管理者が定期的に確認・対応します。
+          問題のあるユーザーには警告またはアカウント停止などの対応を行います。
+          虚偽の通報や悪用が確認された場合、通報者に対しても適切な対応を行うことがあります。
+        </Text>
+
         <Text style={styles.sectionTitle}>（お問い合わせ窓口）</Text>
         <Text style={styles.text}>
           本プライバシーポリシーに関するお問い合わせは、

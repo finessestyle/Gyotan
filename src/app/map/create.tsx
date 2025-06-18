@@ -8,8 +8,10 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { db, auth, storage } from '../../config'
 import RNPickerSelect from 'react-native-picker-select'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import Button from '../../components/Button'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Lottie from '../../components/Lottie'
 
 const handlePress = async (
   images: Array<{ uri: string }>,
@@ -18,7 +20,8 @@ const handlePress = async (
   season: string,
   latitude: number | null,
   longitude: number | null,
-  content: string
+  content: string,
+  setLoading: (value: boolean) => void
 ): Promise<void> => {
   try {
     if (title === '') {
@@ -60,6 +63,8 @@ const handlePress = async (
       return await getDownloadURL(storageRef)
     }))
 
+    setLoading(true)
+
     await addDoc(mapRef, { // Firestoreにドキュメントを追加
       userId,
       title,
@@ -71,10 +76,13 @@ const handlePress = async (
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
     })
+    await new Promise(resolve => setTimeout(resolve, 3000))
     router.push('/map/list')
   } catch (error) {
     console.log('Error: ', error)
     Alert.alert('投稿に失敗しました')
+  } finally {
+    setLoading(false)
   }
 }
 
@@ -86,6 +94,7 @@ const Create = (): JSX.Element => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   const [content, setContent] = useState('')
+  const [loading, setLoading] = useState(false)
 
   useFocusEffect(
     useCallback(() => {
@@ -108,10 +117,22 @@ const Create = (): JSX.Element => {
       exif: true
     })
     if (!result.canceled && result.assets.length > 0) {
-      const processedAssets = result.assets.map(asset => ({
-        uri: asset.uri,
-        exif: asset.exif ?? undefined
-      }))
+      const processedAssets = await Promise.all(
+        result.assets.map(async (asset) => {
+          const manipulated = await ImageManipulator.manipulateAsync(
+            asset.uri,
+            [],
+            {
+              compress: 0.9,
+              format: ImageManipulator.SaveFormat.JPEG
+            }
+          )
+          return {
+            uri: manipulated.uri,
+            exif: asset.exif ?? undefined
+          }
+        })
+      )
       setImages(processedAssets)
     }
   }
@@ -121,129 +142,133 @@ const Create = (): JSX.Element => {
   }
 
   return (
-    <KeyboardAwareScrollView style={styles.scrollContainer}>
-      <View style={styles.inner}>
-        <Text style={styles.title}>釣り場投稿</Text>
-        <Text style={styles.textTitle}>タイトル</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => { setTitle(text) }}
-          value={title}
-          placeholder='タイトルを入力'
-          keyboardType='default'
-          returnKeyType='done'
-        />
-        <Text style={styles.textTitle}>ファイルを選択</Text>
-        <Button
-          label="釣り場画像を選択"
-          buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
-          labelStyle={{ lineHeight: 12, color: '#000000' }}
-          onPress={() => {
-            pickImage().then(() => {
-            }).catch((error) => {
-              console.error('Error picking image:', error)
-            })
-          }}
-        />
-        <View style={styles.imageContainer}>
-          {images.map((image, index) => (
-            <View key={index} style={styles.imageWrapper}>
-              <Image source={{ uri: image.uri }} style={styles.image} />
-              <TouchableOpacity
-                style={styles.removeButton}
-                onPress={() => {
-                  removeImage(index)
-                }}
-              >
-                <Text style={styles.removeButtonText}>×</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
-        </View>
-        <Text style={styles.textTitle}>エリアを選択</Text>
-        <RNPickerSelect
-          value={area}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setArea(value)
-            }
-          }}
-          items={[
-            { label: '北湖北岸', value: '北湖北岸' },
-            { label: '北湖東岸', value: '北湖東岸' },
-            { label: '北湖西岸', value: '北湖西岸' },
-            { label: '南湖東岸', value: '南湖東岸' },
-            { label: '南湖西岸', value: '南湖西岸' }
-          ]}
-          style={pickerSelectStyles}
-          placeholder={{ label: 'エリアを選択してください', value: '' }}
-        />
-        <Text style={styles.textTitle}>季節を選択</Text>
-        <RNPickerSelect
-          value={season}
-          onValueChange={(value: string | null) => {
-            if (value !== null) {
-              setSeason(value)
-            }
-          }}
-          items={[
-            { label: '春', value: '春' },
-            { label: '夏', value: '夏' },
-            { label: '秋', value: '秋' },
-            { label: '冬', value: '冬' },
-            { label: '通年', value: '通年' }
-          ]}
-          style={pickerSelectStyles}
-          placeholder={{ label: '季節を選択してください', value: '' }}
-        />
-        <Text style={styles.textTitle}>緯度</Text>
-        <TextInput
-          style={styles.input}
-          value={latitude !== null ? String(latitude) : ''}
-          onChangeText={setLatitude}
-          placeholder='緯度を入力してください'
-          keyboardType='numeric'
-          returnKeyType='done'
-        />
-
-        <Text style={styles.textTitle}>経度</Text>
-        <TextInput
-          style={styles.input}
-          value={longitude !== null ? String(longitude) : ''}
-          onChangeText={setLongitude}
-          placeholder='緯度を入力してください'
-          keyboardType='numeric'
-          returnKeyType='done'
-        />
-
-        <Text style={styles.textTitle}>釣り場内容</Text>
-        <TextInput
-          style={styles.contentInput}
-          value={content}
-          onChangeText={(text) => { setContent(text) }}
-          placeholder='釣り場内容を入力してください'
-          keyboardType='default'
-          returnKeyType='done'
-          multiline
-        />
-        {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
-          <Button label='投稿' onPress={() => {
-            void handlePress(
-              images,
-              title,
-              area,
-              season,
-              parseFloat(latitude),
-              parseFloat(longitude),
-              content
-            )
-          }}
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+    <>
+      {loading && <Lottie onFinish={() => { setLoading(false) }} />}
+      <KeyboardAwareScrollView style={styles.scrollContainer}>
+        <View style={styles.inner}>
+          <Text style={styles.title}>釣り場投稿</Text>
+          <Text style={styles.textTitle}>タイトル</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(text) => { setTitle(text) }}
+            value={title}
+            placeholder='タイトルを入力'
+            keyboardType='default'
+            returnKeyType='done'
           />
-        )}
-      </View>
-    </KeyboardAwareScrollView>
+          <Text style={styles.textTitle}>ファイルを選択</Text>
+          <Button
+            label="釣り場画像を選択"
+            buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
+            labelStyle={{ lineHeight: 12, color: '#000000' }}
+            onPress={() => {
+              pickImage().then(() => {
+              }).catch((error) => {
+                console.error('Error picking image:', error)
+              })
+            }}
+          />
+          <View style={styles.imageContainer}>
+            {images.map((image, index) => (
+              <View key={index} style={styles.imageWrapper}>
+                <Image source={{ uri: image.uri }} style={styles.image} />
+                <TouchableOpacity
+                  style={styles.removeButton}
+                  onPress={() => {
+                    removeImage(index)
+                  }}
+                >
+                  <Text style={styles.removeButtonText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+          <Text style={styles.textTitle}>エリアを選択</Text>
+          <RNPickerSelect
+            value={area}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setArea(value)
+              }
+            }}
+            items={[
+              { label: '北湖北岸', value: '北湖北岸' },
+              { label: '北湖東岸', value: '北湖東岸' },
+              { label: '北湖西岸', value: '北湖西岸' },
+              { label: '南湖東岸', value: '南湖東岸' },
+              { label: '南湖西岸', value: '南湖西岸' }
+            ]}
+            style={pickerSelectStyles}
+            placeholder={{ label: 'エリアを選択してください', value: '' }}
+          />
+          <Text style={styles.textTitle}>季節を選択</Text>
+          <RNPickerSelect
+            value={season}
+            onValueChange={(value: string | null) => {
+              if (value !== null) {
+                setSeason(value)
+              }
+            }}
+            items={[
+              { label: '春', value: '春' },
+              { label: '夏', value: '夏' },
+              { label: '秋', value: '秋' },
+              { label: '冬', value: '冬' },
+              { label: '通年', value: '通年' }
+            ]}
+            style={pickerSelectStyles}
+            placeholder={{ label: '季節を選択してください', value: '' }}
+          />
+          <Text style={styles.textTitle}>緯度</Text>
+          <TextInput
+            style={styles.input}
+            value={latitude !== null ? String(latitude) : ''}
+            onChangeText={setLatitude}
+            placeholder='緯度を入力してください'
+            keyboardType='numeric'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>経度</Text>
+          <TextInput
+            style={styles.input}
+            value={longitude !== null ? String(longitude) : ''}
+            onChangeText={setLongitude}
+            placeholder='緯度を入力してください'
+            keyboardType='numeric'
+            returnKeyType='done'
+          />
+
+          <Text style={styles.textTitle}>釣り場内容</Text>
+          <TextInput
+            style={styles.contentInput}
+            value={content}
+            onChangeText={(text) => { setContent(text) }}
+            placeholder='釣り場内容を入力してください'
+            keyboardType='default'
+            returnKeyType='done'
+            multiline
+          />
+          {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
+            <Button label='投稿' onPress={() => {
+              void handlePress(
+                images,
+                title,
+                area,
+                season,
+                parseFloat(latitude),
+                parseFloat(longitude),
+                content,
+                setLoading
+              )
+            }}
+              buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
+              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            />
+          )}
+        </View>
+      </KeyboardAwareScrollView>
+    </>
   )
 }
 

@@ -11,6 +11,7 @@ import { format } from 'date-fns'
 import Button from '../../components/Button'
 import Map from '../../components/Map'
 import LikeButton from '../../components/LikeButton'
+import ReportButton from '../../components/ReportButton'
 // import DeleteButton from '../../components/DeleteButton'
 
 const formatExifDateTime = (dateTime: unknown): string => {
@@ -85,23 +86,23 @@ const Detail = (): JSX.Element => {
           {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
-              <Image key={index} source={{ uri }} style={styles.fishImage} />
+              <Image key={index} source={{ uri }} style={styles.fishImage} resizeMode='cover'/>
             ))}
           </Swiper>
           <View style={styles.fishTime}>
-          <Text>
-            {post?.exifData && post.exifData.length > 0 && post.exifData[0]?.dateTime
-              ? `釣果日時  :  ${formatExifDateTime(post.exifData[0].dateTime)}`
-              : post?.updatedAt
-                ? `投稿日時  :  ${post.updatedAt.toDate().toLocaleString('ja-JP', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}`
-                : '日時不明'}
-          </Text>
+            <Text>
+              {post?.exifData && post.exifData.length > 0 && post.exifData[0]?.dateTime
+                ? `釣果日時  :  ${formatExifDateTime(post.exifData[0].dateTime)}`
+                : post?.updatedAt
+                  ? `投稿日時  :  ${post.updatedAt.toDate().toLocaleString('ja-JP', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}`
+                  : '日時不明'}
+            </Text>
           </View>
           <View style={styles.fishingInfomation}>
             <View style={styles.leftInfo}>
@@ -130,6 +131,7 @@ const Detail = (): JSX.Element => {
           <Map
             latitude={post?.exifData[0]?.latitude ?? 0}
             longitude={post?.exifData[0]?.longitude ?? 0}
+            viewStyle={{ height: 300 }}
           />
           <View style={styles.fishInfo}>
             <Text>-釣果状況-</Text>
@@ -138,6 +140,9 @@ const Detail = (): JSX.Element => {
             </Text>
           </View>
         </View>
+        {auth.currentUser?.uid !== post?.userId && (
+          <ReportButton postId={post?.id} userId={post?.userId} />
+        )}
         {auth.currentUser?.uid === post?.userId && (
           <Button
             label='編集'

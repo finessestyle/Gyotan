@@ -3,6 +3,7 @@ import { Tabs, router } from 'expo-router'
 import { FontAwesome6 } from '@expo/vector-icons'
 import { auth } from '../config'
 import { useEffect } from 'react'
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency'
 import * as Notifications from 'expo-notifications'
 
 const Layout = (): JSX.Element => {
@@ -15,6 +16,16 @@ const Layout = (): JSX.Element => {
       </TouchableOpacity>
     )
   }
+  useEffect(() => {
+    const requestPermission = async (): Promise<void> => {
+      const { status } = await requestTrackingPermissionsAsync()
+      console.log('Tracking permission status:', status)
+      if (status === 'granted') {
+        // 必要であれば、許可後に初期化する処理をここに書いてもOK
+      }
+    }
+    void requestPermission()
+  }, [])
 
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(response => {

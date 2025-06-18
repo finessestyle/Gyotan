@@ -4,7 +4,7 @@ import type { ExpoConfig } from '@expo/config'
 const config: ExpoConfig = {
   name: 'Gyotan',
   slug: 'gyotan',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'portrait',
   icon: './assets/splash-icon(1).png',
   userInterfaceStyle: 'light',
@@ -15,7 +15,7 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: 'jp.gyotan.Gyotan',
-    buildNumber: '8',
+    buildNumber: '17',
     supportsTablet: false,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
@@ -29,7 +29,10 @@ const config: ExpoConfig = {
   android: {
     package: 'jp.gyotan.Gyotan',
     versionCode: 1,
-    googleServicesFile: './google-services.json'
+    googleServicesFile: './google-services.json',
+    config: {
+      googleMobileAdsAppId: process.env.EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID
+    }
   },
   extra: {
     eas: {
@@ -51,7 +54,10 @@ const config: ExpoConfig = {
   updates: {
     url: 'https://u.expo.dev/06d8c482-4d92-42af-9d1f-afe29526abe6'
   },
-  scheme: 'gyotan'
+  scheme: 'gyotan',
+  plugins: [
+    'expo-tracking-transparency'
+  ]
 }
 
 export default config

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
+import * as ImageManipulator from 'expo-image-manipulator'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 
@@ -113,7 +114,16 @@ const Edit = (): JSX.Element => {
     })
     if (!result.canceled) {
       const selectedAsset = result.assets[0]
-      setUserImage(selectedAsset.uri)
+      // JPEGに変換（HEIC対応含む）
+      const manipulated = await ImageManipulator.manipulateAsync(
+        selectedAsset.uri,
+        [],
+        {
+          compress: 0.9,
+          format: ImageManipulator.SaveFormat.JPEG
+        }
+      )
+      setUserImage(manipulated.uri)
     }
   }
 

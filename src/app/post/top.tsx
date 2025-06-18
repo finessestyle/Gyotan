@@ -3,8 +3,8 @@ import {
 } from 'react-native'
 import { useEffect, useState, useCallback } from 'react'
 import { Link, useFocusEffect } from 'expo-router'
-import { collection, onSnapshot, query, where, orderBy } from 'firebase/firestore'
-import { db } from '../../config'
+import { collection, onSnapshot, query, where, orderBy, getDocs } from 'firebase/firestore'
+import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
 import ListItem from '../../components/ListItem'
 import ListSizeItem from '../../components/ListSizeItem'
@@ -45,37 +45,55 @@ const Top = (): JSX.Element => {
     const ref = collection(db, 'posts')
     const q = query(ref, where('fishArea', '==', latestArea), orderBy('updatedAt', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remotePosts: Post[] = []
-      snapShot.forEach((doc) => {
-        const {
-          userId, userName, userImage, images, weather, content, length, weight, structure, cover,
-          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
-        } = doc.data()
-        remotePosts.push({
-          id: doc.id,
-          userId,
-          userName,
-          userImage,
-          images,
-          weather,
-          content,
-          length,
-          weight,
-          category,
-          lure,
-          lureAction,
-          waterDepth,
-          structure,
-          cover,
-          catchFish,
-          area,
-          fishArea,
-          updatedAt,
-          exifData,
-          likes
+      void (async () => {
+        const remotePosts: Post[] = []
+
+        if (auth.currentUser === null) return
+
+        let blockedUserIds: string[] = []
+        try {
+          const blockSnap = await getDocs(
+            query(collection(db, 'blocks'), where('blockerId', '==', auth.currentUser.uid))
+          )
+          blockedUserIds = blockSnap.docs.map((doc) => doc.data().blockedUserId)
+        } catch (e) {
+          console.warn('ブロック情報の取得に失敗:', e)
+        }
+
+        snapShot.forEach((doc) => {
+          const {
+            userId, userName, userImage, images, weather, content, length, weight, structure, cover,
+            category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
+          } = doc.data()
+
+          if (typeof userId === 'string' && !blockedUserIds.includes(userId)) {
+            remotePosts.push({
+              id: doc.id,
+              userId,
+              userName,
+              userImage,
+              images,
+              weather,
+              content,
+              length,
+              weight,
+              category,
+              lure,
+              lureAction,
+              waterDepth,
+              structure,
+              cover,
+              catchFish,
+              area,
+              fishArea,
+              updatedAt,
+              exifData,
+              likes
+            })
+          }
         })
-      })
-      setLatestPosts(remotePosts)
+        setLatestPosts(remotePosts)
+      })()
     })
     return unsubscribe
   }, [latestArea])
@@ -84,37 +102,55 @@ const Top = (): JSX.Element => {
     const ref = collection(db, 'posts')
     const q = query(ref, where('fishArea', '==', largestArea), orderBy('length', 'desc'))
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remotePosts: Post[] = []
-      snapShot.forEach((doc) => {
-        const {
-          userId, userName, userImage, images, weather, content, length, weight, structure, cover,
-          category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
-        } = doc.data()
-        remotePosts.push({
-          id: doc.id,
-          userId,
-          userName,
-          userImage,
-          images,
-          weather,
-          content,
-          length,
-          weight,
-          category,
-          lure,
-          lureAction,
-          waterDepth,
-          structure,
-          cover,
-          catchFish,
-          area,
-          fishArea,
-          updatedAt,
-          exifData,
-          likes
+      void (async () => {
+        const remotePosts: Post[] = []
+
+        if (auth.currentUser === null) return
+
+        let blockedUserIds: string[] = []
+        try {
+          const blockSnap = await getDocs(
+            query(collection(db, 'blocks'), where('blockerId', '==', auth.currentUser.uid))
+          )
+          blockedUserIds = blockSnap.docs.map((doc) => doc.data().blockedUserId)
+        } catch (e) {
+          console.warn('ブロック情報の取得に失敗:', e)
+        }
+
+        snapShot.forEach((doc) => {
+          const {
+            userId, userName, userImage, images, weather, content, length, weight, structure, cover,
+            category, lure, lureAction, waterDepth, catchFish, area, fishArea, exifData, updatedAt, likes
+          } = doc.data()
+
+          if (typeof userId === 'string' && !blockedUserIds.includes(userId)) {
+            remotePosts.push({
+              id: doc.id,
+              userId,
+              userName,
+              userImage,
+              images,
+              weather,
+              content,
+              length,
+              weight,
+              category,
+              lure,
+              lureAction,
+              waterDepth,
+              structure,
+              cover,
+              catchFish,
+              area,
+              fishArea,
+              updatedAt,
+              exifData,
+              likes
+            })
+          }
         })
-      })
-      setLargestPosts(remotePosts)
+        setLargestPosts(remotePosts)
+      })()
     })
     return unsubscribe
   }, [largestArea])
@@ -157,7 +193,7 @@ const Top = (): JSX.Element => {
             </View>
           }
         />
-        <Text style={styles.title}>今釣れてる!?</Text>
+        <Text style={styles.title}>今釣れる!?</Text>
         {latestPosts.length > 0 && (
           <View>
             <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }]}>

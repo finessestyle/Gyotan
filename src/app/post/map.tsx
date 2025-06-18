@@ -1,7 +1,7 @@
 import { View, StyleSheet, Text, Image, Button } from 'react-native'
 import { useState, useEffect, useRef } from 'react'
-import { collection, onSnapshot, query, orderBy, where, Timestamp } from 'firebase/firestore'
-import { db } from '../../config'
+import { collection, onSnapshot, query, orderBy, where, Timestamp, getDocs } from 'firebase/firestore'
+import { db, auth } from '../../config'
 import { router } from 'expo-router'
 import MapView, { Marker, Callout, CalloutSubview } from 'react-native-maps'
 
@@ -42,34 +42,53 @@ const Map = (): JSX.Element => {
     )
 
     const unsubscribe = onSnapshot(q, (snapShot) => {
-      const remotePosts: Post[] = []
-      snapShot.forEach((doc) => {
-        const {
-          userId, userName, userImage, images, weather, length, weight, lure,
-          lureAction, catchFish, fishArea, area, structure, cover, exifData, updatedAt, content
-        } = doc.data()
-        remotePosts.push({
-          id: doc.id,
-          userId,
-          userName,
-          userImage,
-          images,
-          exifData,
-          area,
-          fishArea,
-          weather,
-          lure,
-          lureAction,
-          structure,
-          cover,
-          length,
-          weight,
-          catchFish,
-          content,
-          updatedAt
+      void (async () => {
+        const remotePosts: Post[] = []
+
+        if (auth.currentUser === null) return
+
+        let blockedUserIds: string[] = []
+        try {
+          const blockSnap = await getDocs(
+            query(collection(db, 'blocks'), where('blockerId', '==', auth.currentUser.uid))
+          )
+          blockedUserIds = blockSnap.docs.map((doc) => doc.data().blockedUserId)
+        } catch (e) {
+          console.warn('ブロック情報の取得に失敗:', e)
+        }
+
+        snapShot.forEach((doc) => {
+          const {
+            userId, userName, userImage, images, weather, length, weight, lure,
+            lureAction, catchFish, fishArea, area, structure, cover, exifData, updatedAt, content
+          } = doc.data()
+
+          if (typeof userId === 'string' && !blockedUserIds.includes(userId)) {
+            remotePosts.push({
+              id: doc.id,
+              userId,
+              userName,
+              userImage,
+              images,
+              exifData,
+              area,
+              fishArea,
+              weather,
+              lure,
+              lureAction,
+              structure,
+              cover,
+              length,
+              weight,
+              catchFish,
+              content,
+              updatedAt
+            })
+          }
         })
-      })
-      setPosts(remotePosts)
+
+        setPosts(remotePosts)
+      })()
     })
 
     return unsubscribe
@@ -99,6 +118,7 @@ const Map = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.backgroundText}>みんなの釣果</Text>
       <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion} mapType='hybrid'>
         {posts.map((post) => {
           const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
@@ -112,22 +132,22 @@ const Map = (): JSX.Element => {
               }}
               style={{ zIndex: 1 }}
             >
-            <Callout>
-              <CalloutSubview
-                onPress={() => {
-                  router.push({ pathname: '/post/detail', params: { id: post.id } })
-                }}
-              >
-                <View style={{ alignItems: 'center' }}>
-                  <Text style={styles.area}>{post.area}</Text>
-                  <Image
-                    source={{ uri: post.images?.[0] }}
-                    style={{ width: 200, height: 200, borderRadius: 10 }}
-                  />
-                  <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
-                </View>
-              </CalloutSubview>
-            </Callout>
+              <Callout>
+                <CalloutSubview
+                  onPress={() => {
+                    router.push({ pathname: '/post/detail', params: { id: post.id } })
+                  }}
+                >
+                  <View style={{ alignItems: 'center' }}>
+                    <Text style={styles.area}>{post.area}</Text>
+                    <Image
+                      source={{ uri: post.images?.[0] }}
+                      style={{ width: 200, height: 200, borderRadius: 10 }}
+                    />
+                    <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
+                  </View>
+                </CalloutSubview>
+              </Callout>
             </Marker>
           )
         })}
@@ -148,6 +168,16 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1
+  },
+  backgroundText: {
+    position: 'absolute',
+    top: '5%',
+    alignSelf: 'center',
+    fontSize: 32,
+    color: '#ffffff',
+    fontWeight: 'bold',
+    opacity: 0.5, // ← ここで薄くする
+    zIndex: 2
   },
   length: {
     fontSize: 18,

@@ -1,19 +1,20 @@
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, type ViewStyle } from 'react-native'
 import MapView, { Circle, UrlTile } from 'react-native-maps'
 
 interface Props {
   latitude: number
   longitude: number
+  viewStyle: ViewStyle
 }
 
-const Map = ({ latitude, longitude }: Props): JSX.Element => {
+const Map = ({ latitude, longitude, viewStyle }: Props): JSX.Element => {
   const nRadiusHalfKm = 300
 
   return (
     <View style={styles.container}>
       {latitude !== 0 && longitude !== 0 && (
       <MapView
-        style={styles.map}
+        style={[styles.map, viewStyle]}
         mapType='standard'
         scrollEnabled={false}
         region={{
@@ -25,7 +26,7 @@ const Map = ({ latitude, longitude }: Props): JSX.Element => {
       >
         <UrlTile
           urlTemplate='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-          maximumZ={19}
+          maximumZ={16}
           flipY={false} // 必要に応じて設定
         />
         <Circle

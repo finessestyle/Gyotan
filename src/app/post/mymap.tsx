@@ -101,6 +101,7 @@ const MyMap = (): JSX.Element => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.backgroundText}>あなたの釣果</Text>
       <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion} mapType='hybrid'>
         {posts.map((post) => {
           const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
@@ -150,6 +151,16 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1
+  },
+  backgroundText: {
+    position: 'absolute',
+    top: '5%',
+    alignSelf: 'center',
+    fontSize: 32,
+    color: '#ffffff',
+    fontWeight: 'bold',
+    opacity: 0.5, // ← ここで薄くする
+    zIndex: 2
   },
   length: {
     fontSize: 18,
