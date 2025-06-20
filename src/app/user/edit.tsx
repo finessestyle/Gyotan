@@ -4,6 +4,7 @@ import {
 import { router } from 'expo-router'
 import { useState, useEffect } from 'react'
 import { setDoc, doc, getDoc, Timestamp } from 'firebase/firestore'
+import { onAuthStateChanged, verifyBeforeUpdateEmail } from 'firebase/auth'
 import { auth, db, storage } from '../../config'
 import * as ImagePicker from 'expo-image-picker'
 import * as ImageManipulator from 'expo-image-manipulator'
@@ -42,6 +43,12 @@ const handlePress = async (
     if (auth.currentUser === null) return
     const userId = auth.currentUser.uid
 
+    // メールアドレスが変更された場合にのみ確認メール送信
+    if (auth.currentUser.email !== email) {
+      await verifyBeforeUpdateEmail(auth.currentUser, email)
+      Alert.alert('確認メール送信', '新しいメールアドレスに確認リンクを送信しました。メールをご確認ください。')
+    }
+
     if (userImage !== null) {
       const response = await fetch(userImage)
       const blob = await response.blob()
@@ -66,10 +73,22 @@ const handlePress = async (
       userX: formattedX,
       updatedAt: Timestamp.fromDate(new Date())
     }, { merge: true })
-    router.back()
-  } catch (error) {
+    // メールアドレスが変更されていない、または既に確認済みの場合にのみ画面遷移
+    if (auth.currentUser.email === email) {
+      router.replace('/auth/login')
+    }
+  } catch (error: any) { // エラー型を明示
     console.log(error)
-    Alert.alert('更新に失敗しました')
+    // メールアドレス更新に関するより具体的なエラーハンドリング
+    if (error.code === 'auth/requires-recent-login') {
+      Alert.alert('認証エラー', 'メールアドレスを変更するには、再度ログインする必要があります。一度ログアウトし、再ログインしてからもう一度お試しください。')
+    } else if (error.code === 'auth/invalid-email') {
+      Alert.alert('エラー', '無効なメールアドレスです。')
+    } else if (error.code === 'auth/email-already-in-use') {
+      Alert.alert('エラー', 'このメールアドレスは既に使用されています。')
+    } else {
+      Alert.alert('更新に失敗しました', `詳細: ${error.message}`)
+    }
   }
 }
 
@@ -128,34 +147,37 @@ const Edit = (): JSX.Element => {
   }
 
   useEffect(() => {
-    if (auth.currentUser === null) return
-    const userId = auth.currentUser.uid
-    const ref = doc(db, 'users', userId)
-    getDoc(ref)
-      .then((docRef) => {
-        const data = docRef.data() as {
-          email?: string
-          userImage?: string
-          userName?: string
-          profile?: string
-          userYoutube?: string
-          userTiktok?: string
-          userInstagram?: string
-          userX?: string
-        }
-        setEmail(data.email ?? '')
-        setUserImage(data.userImage ?? null)
-        setUserName(data.userName ?? '')
-        setProfile(data.profile ?? '')
-        setUserYoutube(data.userYoutube ?? '')
-        setUserTiktok(data.userTiktok ?? '')
-        setUserInstagram(data.userInstagram ?? '')
-        setUserX(data.userX ?? '')
-      })
-      .catch((error) => {
-        console.log(error)
-        Alert.alert('データの取得に失敗しました')
-      })
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (auth.currentUser === null) return
+      const userId = auth.currentUser.uid
+      const ref = doc(db, 'users', userId)
+      getDoc(ref)
+        .then((docRef) => {
+          const data = docRef.data() as {
+            email?: string
+            userImage?: string
+            userName?: string
+            profile?: string
+            userYoutube?: string
+            userTiktok?: string
+            userInstagram?: string
+            userX?: string
+          }
+          setEmail(data.email ?? '')
+          setUserImage(data.userImage ?? null)
+          setUserName(data.userName ?? '')
+          setProfile(data.profile ?? '')
+          setUserYoutube(data.userYoutube ?? '')
+          setUserTiktok(data.userTiktok ?? '')
+          setUserInstagram(data.userInstagram ?? '')
+          setUserX(data.userX ?? '')
+        })
+        .catch((error) => {
+          console.log(error)
+          Alert.alert('データの取得に失敗しました')
+        })
+    })
+    return unsubscribe
   }, [])
 
   return (
@@ -306,6 +328,12 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     marginBottom: 16
+  },
+  icon: {
+    position: 'absolute',
+    right: 16,
+    top: 20,
+    transform: [{ translateY: -12 }]
   },
   imageBox: {
     borderWidth: 1,
