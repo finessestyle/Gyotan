@@ -75,7 +75,7 @@ const handlePress = async (
     }, { merge: true })
     // メールアドレスが変更されていない、または既に確認済みの場合にのみ画面遷移
     if (auth.currentUser.email === email) {
-      router.replace('/auth/login')
+      router.back()
     }
   } catch (error: any) { // エラー型を明示
     console.log(error)

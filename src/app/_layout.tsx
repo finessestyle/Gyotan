@@ -286,7 +286,7 @@ const Layout = (): JSX.Element => {
             headerLeft: () => {
               return (
                 <TouchableOpacity onPress={() => {
-                  router.replace('/user/mypage')
+                  router.replace('/user/follow')
                 }}>
                   <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
                 </TouchableOpacity>
@@ -326,7 +326,7 @@ const Layout = (): JSX.Element => {
           }}
         />
         <Tabs.Screen
-          name="user/list"
+          name="user/follow"
           options={{
             href: null,
             headerLeft: () => {

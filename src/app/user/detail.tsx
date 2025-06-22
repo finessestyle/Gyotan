@@ -33,7 +33,8 @@ const Detail = (): JSX.Element => {
         userTiktok: data.userTiktok,
         userX: data.userX,
         updatedAt: data.updatedAt,
-        followed: data.followed
+        followed: data.followed,
+        follower: data.follower
       })
     })
 

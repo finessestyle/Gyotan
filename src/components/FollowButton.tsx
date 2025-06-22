@@ -1,5 +1,5 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { useState, useEffect } from 'react'
+import { View, TouchableOpacity, StyleSheet, Animated } from 'react-native'
+import { useState, useEffect, useRef } from 'react'
 import { doc, updateDoc, arrayUnion, arrayRemove, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../config'
 import { FontAwesome6 } from '@expo/vector-icons'
@@ -11,45 +11,97 @@ interface User {
 const FollowButton = ({ userId }: { userId: string }): JSX.Element => {
   const [followed, setFollowed] = useState(false)
 
+  const shakeAnim = useRef(new Animated.Value(0)).current
+  const startShake = (): void => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, {
+        toValue: 1,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -1,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 1,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: -1,
+        duration: 50,
+        useNativeDriver: true
+      }),
+      Animated.timing(shakeAnim, {
+        toValue: 0,
+        duration: 50,
+        useNativeDriver: true
+      })
+    ]).start()
+  }
+
+  const rotate = shakeAnim.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: ['-10deg', '0deg', '10deg']
+  })
+
   useEffect(() => {
-    const userRef = doc(db, 'users', userId)
-    const unsubscribe = onSnapshot(userRef, (docSnap) => {
+    const currentUser = auth.currentUser
+    if (!currentUser) return
+    const currentUserRef = doc(db, 'users', currentUser.uid)
+    const unsubscribe = onSnapshot(currentUserRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as User
-        const followed = Array.isArray(data?.followed) ? data.followed : []
-        setFollowed(followed.includes(userId))
-      } else {
-        console.log('No such document')
+        const followedList = Array.isArray(data?.followed) ? data.followed : []
+        setFollowed(followedList.includes(userId))
       }
     })
     return unsubscribe
   }, [userId])
 
   const handlePress = async (): Promise<void> => {
-    const currentUser = auth.currentUser?.uid
-    if (userId === auth.currentUser?.uid) return
-    const userRef = doc(db, 'users', currentUser)
+    const currentUser = auth.currentUser
+    if (!currentUser || userId === currentUser.uid) return
+    const currentUserRef = doc(db, 'users', currentUser.uid)
+    const targetUserRef = doc(db, 'users', userId)
     if (followed) {
-      await updateDoc(userRef, {
-        followed: arrayRemove(userId)
-      })
+      // アンフォロー処理
+      await Promise.all([
+        updateDoc(currentUserRef, {
+          followed: arrayRemove(userId)
+        }),
+        updateDoc(targetUserRef, {
+          follower: arrayRemove(currentUser.uid)
+        })
+      ])
     } else {
-      await updateDoc(userRef, {
-        followed: arrayUnion(userId)
-      })
+      // フォロー処理
+      await Promise.all([
+        updateDoc(currentUserRef, {
+          followed: arrayUnion(userId)
+        }),
+        updateDoc(targetUserRef, {
+          follower: arrayUnion(currentUser.uid)
+        })
+      ])
     }
     setFollowed(!followed)
+    startShake() // ハートを震わせる
   }
 
   return (
     <View style={styles.followButtonContainer}>
       <TouchableOpacity style={styles.followButton} onPress={handlePress}>
-        <FontAwesome6
-          name='heart'
-          size={18}
-          color='red'
-          solid={followed}
-        />
+        <Animated.View style={{ transform: [{ rotate }] }}>
+          <FontAwesome6
+            name='heart'
+            size={24}
+            color='red'
+            solid={followed}
+          />
+        </Animated.View>
       </TouchableOpacity>
     </View>
   )

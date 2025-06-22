@@ -8,7 +8,7 @@ interface Props {
   user: User
 }
 
-const FollowedUser = (props: Props): JSX.Element => {
+const FollowUser = (props: Props): JSX.Element => {
   const { user } = props
 
   return (
@@ -48,4 +48,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default FollowedUser
+export default FollowUser

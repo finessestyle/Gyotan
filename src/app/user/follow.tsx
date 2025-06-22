@@ -1,15 +1,19 @@
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
 import { useFocusEffect } from 'expo-router'
 import { useEffect, useState, useCallback } from 'react'
 import { collection, doc, getDocs, query, where, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
-import FollowedUser from '../../components/FollowedUser'
+import FollowedUser from '../../components/FollowUser'
 import { chunk } from 'lodash'
 
-const List = (): JSX.Element => {
+const TAB_LABELS = ['フォロー', 'フォロワー']
+
+const Follow = (): JSX.Element => {
   const [users, setUsers] = useState<User[]>([])
   const [followed, setFollowed] = useState<string[]>([])
+  const [follower, setFollower] = useState<string[]>([])
+  const [selectedTab, setSelectedTab] = useState<'フォロー' | 'フォロワー'>('フォロー')
 
   useFocusEffect(
     useCallback(() => {
@@ -18,8 +22,8 @@ const List = (): JSX.Element => {
       const unsubscribe = onSnapshot(userRef, (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data()
-          const followedIds = Array.isArray(data?.followed) ? data.followed : []
-          setFollowed(followedIds)
+          setFollowed(Array.isArray(data?.followed) ? data.followed : [])
+          setFollower(Array.isArray(data?.follower) ? data.follower : [])
         }
       })
       return unsubscribe
@@ -28,13 +32,15 @@ const List = (): JSX.Element => {
 
   useEffect(() => {
     if (auth.currentUser === null) return
-    if (followed.length === 0) {
+
+    const targetIds = selectedTab === 'フォロー' ? followed : follower
+    if (targetIds.length === 0) {
       setUsers([])
       return
     }
 
-    const fetchFollowedUsers = async (): Promise<void> => {
-      const chunks = chunk(followed, 10)
+    const fetchUsers = async (): Promise<void> => {
+      const chunks = chunk(targetIds, 10)
       const promises = chunks.map(async (chunkIds) => {
         const ref = collection(db, 'users')
         const q = query(ref, where('__name__', 'in', chunkIds))
@@ -53,7 +59,8 @@ const List = (): JSX.Element => {
             userInstagram: data.userInstagram,
             userX: data.userX,
             updatedAt: data.updatedAt,
-            followed: data.followed
+            followed: data.followed,
+            follower: data.follower
           }
         })
 
@@ -61,16 +68,26 @@ const List = (): JSX.Element => {
       })
 
       const resultChunks = await Promise.all(promises)
-      const allUsers = resultChunks.flat()
-      setUsers(allUsers)
+      setUsers(resultChunks.flat())
     }
 
-    void fetchFollowedUsers()
-  }, [followed])
+    void fetchUsers()
+  }, [selectedTab, followed, follower])
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>フォローユーザー</Text>
+      <View style={styles.tabs}>
+        {TAB_LABELS.map((label) => (
+          <TouchableOpacity
+            key={label}
+            style={[styles.tab, selectedTab === label && styles.selectedTab]}
+            onPress={() => { setSelectedTab(label as 'フォロー' | 'フォロワー') }}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.tabText}>{label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <FlatList
         data={users}
         renderItem={({ item }) => <FollowedUser user={item} />}
@@ -79,7 +96,7 @@ const List = (): JSX.Element => {
         columnWrapperStyle={styles.columnWrapper}
         ListEmptyComponent={
           <View style={{ padding: 20 }}>
-            <Text>フォローユーザーがいません...。</Text>
+            <Text>表示するユーザーがいません...。</Text>
           </View>
         }
       />
@@ -102,7 +119,25 @@ const styles = StyleSheet.create({
   },
   columnWrapper: {
     justifyContent: 'space-between'
+  },
+  tabs: {
+
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 24
+  },
+  tab: {
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
+    paddingBottom: 4
+  },
+  selectedTab: {
+    borderBottomColor: '#467FD3'
+  },
+  tabText: {
+    fontSize: 16,
+    color: '#467FD3'
   }
 })
 
-export default List
+export default Follow

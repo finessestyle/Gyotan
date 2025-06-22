@@ -41,9 +41,9 @@ const Mypage = (): JSX.Element => {
           }
         },
         {
-          text: 'フォローユーザー',
+          text: 'フォロー/フォロワー',
           onPress: () => {
-            router.push({ pathname: 'user/list', params: { id: userId } })
+            router.push({ pathname: 'user/follow', params: { id: userId } })
           }
         },
         {

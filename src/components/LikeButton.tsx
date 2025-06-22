@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   likeButton: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   likeButtonCount: {
     paddingLeft: 4,

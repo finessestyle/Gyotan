@@ -12,6 +12,7 @@ interface User {
   userX: string
   updatedAt: Timestamp
   followed: string[]
+  follower: string[]
 }
 
 export type { User }
