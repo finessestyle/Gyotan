@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { collection, doc, getDocs, query, where, onSnapshot } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type User } from '../../../types/user'
-import FollowedUser from '../../components/FollowUser'
+import FollowUser from '../../components/FollowUser'
 import { chunk } from 'lodash'
 
 const TAB_LABELS = ['フォロー', 'フォロワー']
@@ -90,7 +90,7 @@ const Follow = (): JSX.Element => {
       </View>
       <FlatList
         data={users}
-        renderItem={({ item }) => <FollowedUser user={item} />}
+        renderItem={({ item }) => <FollowUser user={item} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         columnWrapperStyle={styles.columnWrapper}
