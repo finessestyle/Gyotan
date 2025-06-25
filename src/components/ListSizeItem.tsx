@@ -29,6 +29,7 @@ const ListSizeItem = (props: Props): JSX.Element | null => {
               <Image
                 style={styles.listItemImage}
                 source= {{ uri: images[0] }}
+                resizeMode='contain'
               />
               <Text style={styles.imageNumber}>{index + 1}</Text>
               <Text style={styles.length}>

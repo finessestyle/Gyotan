@@ -30,6 +30,7 @@ const ListItem = (props: Props): JSX.Element | null => {
               <Image
                 style={styles.listItemImage}
                 source= {{ uri: images[0] }}
+                resizeMode='contain'
               />
               <View style={styles.listItemImageFooter}>
                 <Text style={styles.length}>{post?.length}cm / {post?.weight}g</Text>

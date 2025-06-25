@@ -86,7 +86,7 @@ const Detail = (): JSX.Element => {
           {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
-              <Image key={index} source={{ uri }} style={styles.fishImage} resizeMode='cover'/>
+              <Image key={index} source={{ uri }} style={styles.fishImage} resizeMode='contain'/>
             ))}
           </Swiper>
           <View style={styles.fishTime}>
@@ -132,6 +132,7 @@ const Detail = (): JSX.Element => {
             latitude={post?.exifData[0]?.latitude ?? 0}
             longitude={post?.exifData[0]?.longitude ?? 0}
             viewStyle={{ height: 300 }}
+            showCircle
           />
           <View style={styles.fishInfo}>
             <Text>-釣果状況-</Text>
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   fishImage: {
-    height: 322,
+    height: 400,
     width: 'auto'
   },
   userInfo: {
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
     color: '#000000'
   },
   swiper: {
-    height: 322
+    height: 400
   }
 })
 

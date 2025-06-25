@@ -5,9 +5,10 @@ interface Props {
   latitude: number
   longitude: number
   viewStyle: ViewStyle
+  showCircle?: boolean
 }
 
-const Map = ({ latitude, longitude, viewStyle }: Props): JSX.Element => {
+const Map = ({ latitude, longitude, viewStyle, showCircle }: Props): JSX.Element => {
   const nRadiusHalfKm = 300
 
   return (
@@ -20,8 +21,8 @@ const Map = ({ latitude, longitude, viewStyle }: Props): JSX.Element => {
         region={{
           latitude,
           longitude,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005
         }}
       >
         <UrlTile
@@ -29,12 +30,14 @@ const Map = ({ latitude, longitude, viewStyle }: Props): JSX.Element => {
           maximumZ={16}
           flipY={false} // 必要に応じて設定
         />
-        <Circle
-          center={{ latitude, longitude }}
-          radius={nRadiusHalfKm}
-          strokeColor="#3333FF"
-          fillColor="rgba(51, 51, 255, 0.2)"
-        />
+        {showCircle === true && (
+          <Circle
+            center={{ latitude, longitude }}
+            radius={nRadiusHalfKm}
+            strokeColor="#3333FF"
+            fillColor="rgba(51, 51, 255, 0.2)"
+          />
+        )}
       </MapView>
       )}
     </View>

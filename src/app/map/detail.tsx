@@ -51,7 +51,7 @@ const Detail = (): JSX.Element => {
             <Text style={styles.title}>{map?.title}</Text>
             <Text>[{map?.season}]</Text>
           </View>
-          <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} viewStyle={{ height: 300 }} />
+          <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} viewStyle={{ height: 350 }} showCircle={false} />
           <Weather lat={map?.latitude ?? 0} lon={map?.longitude ?? 0} />
           {mapImages.length > 0 && (
             <Swiper style={styles.swiper} showsButtons={false}>
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8
   },
   mapImage: {
-    height: 322,
+    height: 400,
     width: 'auto'
   },
   feeldInfo: {
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     color: '#000000'
   },
   swiper: {
-    height: 322
+    height: 400
   }
 })
 
