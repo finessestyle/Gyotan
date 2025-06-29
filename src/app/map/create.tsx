@@ -21,7 +21,7 @@ const handlePress = async (
   latitude: number | null,
   longitude: number | null,
   access: string,
-  toile: string,
+  toilet: string,
   parking: string,
   content: string,
   setLoading: (value: boolean) => void
@@ -51,7 +51,7 @@ const handlePress = async (
       Alert.alert('エラー', 'アクセス情報を入力してください')
       return
     }
-    if (toile === null) {
+    if (toilet === null) {
       Alert.alert('エラー', 'トイレ情報を入力してください')
       return
     }
@@ -89,7 +89,7 @@ const handlePress = async (
       latitude,
       longitude,
       access,
-      toile,
+      toilet,
       parking,
       content,
       updatedAt: Timestamp.fromDate(new Date()) // 現在のタイムスタンプを保存
@@ -112,7 +112,7 @@ const Create = (): JSX.Element => {
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
   const [access, setAccess] = useState('')
-  const [toile, setToile] = useState('')
+  const [toilet, setToilet] = useState('')
   const [parking, setParking] = useState('')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
@@ -126,7 +126,7 @@ const Create = (): JSX.Element => {
       setLatitude('')
       setLongitude('')
       setAccess('')
-      setToile('')
+      setToilet('')
       setParking('')
       setContent('')
     }, [])
@@ -276,8 +276,8 @@ const Create = (): JSX.Element => {
           <Text style={styles.textTitle}>トイレ情報</Text>
           <TextInput
             style={styles.input}
-            value={toile !== null ? String(toile) : ''}
-            onChangeText={setToile}
+            value={toilet !== null ? String(toilet) : ''}
+            onChangeText={setToilet}
             placeholder='トイレ情報を入力してください'
             keyboardType='default'
             returnKeyType='done'
@@ -313,7 +313,7 @@ const Create = (): JSX.Element => {
                 parseFloat(latitude),
                 parseFloat(longitude),
                 access,
-                toile,
+                toilet,
                 parking,
                 content,
                 setLoading

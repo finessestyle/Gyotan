@@ -10,7 +10,7 @@ interface FishMap {
   latitude: number
   longitude: number
   access: string
-  toile: string
+  toilet: string
   parking: string
   content: string
   updatedAt: Timestamp

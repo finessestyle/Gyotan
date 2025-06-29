@@ -23,7 +23,7 @@ const Detail = (): JSX.Element => {
 
     const mapRef = doc(db, 'maps', id)
     const unsubscribe = onSnapshot(mapRef, (mapDoc) => {
-      const { userId, title, images, area, season, latitude, longitude, access, toile, parking, content, updatedAt } = mapDoc.data() as FishMap
+      const { userId, title, images, area, season, latitude, longitude, access, toilet, parking, content, updatedAt } = mapDoc.data() as FishMap
       setMap({
         id: mapDoc.id,
         userId,
@@ -34,7 +34,7 @@ const Detail = (): JSX.Element => {
         latitude,
         longitude,
         access,
-        toile,
+        toilet,
         parking,
         content,
         updatedAt
@@ -52,6 +52,12 @@ const Detail = (): JSX.Element => {
             <Text>[{map?.season}]</Text>
           </View>
           <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} viewStyle={{ height: 350 }} showCircle={false} />
+          <View style={styles.fishInfo}>
+            <Text>-アクセス情報-</Text>
+            <Text style={styles.fishText}>
+              {map?.access}
+            </Text>
+          </View>
           <Weather lat={map?.latitude ?? 0} lon={map?.longitude ?? 0} />
           {mapImages.length > 0 && (
             <Swiper style={styles.swiper} showsButtons={false}>
@@ -60,15 +66,9 @@ const Detail = (): JSX.Element => {
               ))}
             </Swiper>
           )}
-          <View style={styles.fishInfo}>
-            <Text>-アクセス情報-</Text>
-            <Text style={styles.fishText}>
-              {map?.access}
-            </Text>
-          </View>
           <View style={styles.feeldInfo}>
             <View style={styles.toile}>
-              <Text>トイレ  :  {map?.toile}</Text>
+              <Text>トイレ  :  {map?.toilet}</Text>
             </View>
             <View style={styles.parking}>
               <Text>駐車場  :  {map?.parking}</Text>
@@ -119,40 +119,41 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
+    borderBottomWidth: 1,
+    borderColor: '#B0B0B0'
   },
   mapImage: {
     height: 400,
     width: 'auto'
   },
   feeldInfo: {
-    height: 32,
+    height: 60,
     width: 'auto',
-    flexDirection: 'row',
+    flexDirection: 'column',
     borderTopWidth: 1,
     borderColor: '#B0B0B0'
   },
   toile: {
     flex: 1,
-    height: 32,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRightWidth: 1,
-    borderRightColor: '#D0D0D0'
+    alignItems: 'center'
   },
   parking: {
     flex: 1,
-    height: 32,
+    borderTopWidth: 1,
+    borderColor: '#B0B0B0',
     justifyContent: 'center',
     alignItems: 'center'
   },
   fishInfo: {
     borderTopWidth: 1,
-    borderTopColor: '#D0D0D0',
+    borderColor: '#B0B0B0',
     height: 'auto',
     lineHeight: 32,
     alignItems: 'center',
-    paddingVertical: 8
+    paddingVertical: 8,
+    borderBottomWidth: 1
   },
   fishText: {
     fontSize: 16,

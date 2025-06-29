@@ -214,7 +214,7 @@ const Top = (): JSX.Element => {
           </View>
         )}
 
-        <Text style={styles.title}>ランキング[長さ]</Text>
+        <Text style={styles.title}>ランキング</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
             <TouchableOpacity

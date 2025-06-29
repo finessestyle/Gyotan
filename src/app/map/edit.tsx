@@ -22,7 +22,7 @@ const handlePress = async (
   latitude: number | null,
   longitude: number | null,
   access: string,
-  toile: string,
+  toilet: string,
   parking: string,
   content: string,
   setLoading: (value: boolean) => void
@@ -52,7 +52,7 @@ const handlePress = async (
       Alert.alert('エラー', 'アクセス情報を入力してください')
       return
     }
-    if (toile === null) {
+    if (toilet === null) {
       Alert.alert('エラー', 'トイレ情報を入力してください')
       return
     }
@@ -90,7 +90,7 @@ const handlePress = async (
       latitude,
       longitude,
       access,
-      toile,
+      toilet,
       parking,
       content,
       updatedAt: Timestamp.fromDate(new Date())
@@ -113,8 +113,8 @@ const Edit = (): JSX.Element => {
   const [season, setSeason] = useState('')
   const [latitude, setLatitude] = useState('')
   const [longitude, setLongitude] = useState('')
-  const [access, useAccess] = useState('')
-  const [toile, setToile] = useState('')
+  const [access, setAccess] = useState('')
+  const [toilet, setToilet] = useState('')
   const [parking, setParking] = useState('')
   const [content, setContent] = useState('')
   const [loading, setLoading] = useState(false)
@@ -176,7 +176,7 @@ const Edit = (): JSX.Element => {
         setLatitude(data?.latitude ?? '')
         setLongitude(data?.longitude ?? '')
         setAccess(data?.access ?? '')
-        setToile(data?.toilet ?? '')
+        setToilet(data?.toilet ?? '')
         setParking(data?.parking ?? '')
         setContent(data.content ?? '')
       })
@@ -286,7 +286,7 @@ const Edit = (): JSX.Element => {
           <TextInput
             style={styles.input}
             value={access}
-            onChangeText={(text) => { setContent(text) }}
+            onChangeText={setAccess}
             placeholder='アクセス情報を入力してください'
             keyboardType='default'
             returnKeyType='done'
@@ -294,8 +294,8 @@ const Edit = (): JSX.Element => {
           <Text style={styles.textTitle}>トイレ情報</Text>
           <TextInput
             style={styles.input}
-            value={toile}
-            onChangeText={(text) => { setContent(text) }}
+            value={toilet}
+            onChangeText={setToilet}
             placeholder='トイレ情報を入力してください'
             keyboardType='default'
             returnKeyType='done'
@@ -304,7 +304,7 @@ const Edit = (): JSX.Element => {
           <TextInput
             style={styles.input}
             value={parking}
-            onChangeText={(text) => { setContent(text) }}
+            onChangeText={setParking}
             placeholder='駐車場情報を入力してください'
             keyboardType='default'
             returnKeyType='done'
@@ -313,7 +313,7 @@ const Edit = (): JSX.Element => {
           <TextInput
             style={styles.contentInput}
             value={content}
-            onChangeText={(text) => { setContent(text) }}
+            onChangeText={setContent}
             placeholder='釣り場内容を入力してください'
             keyboardType='default'
             returnKeyType='done'
@@ -330,7 +330,7 @@ const Edit = (): JSX.Element => {
                 parseFloat(latitude),
                 parseFloat(longitude),
                 access,
-                toile,
+                toilet,
                 parking,
                 content,
                 setLoading
