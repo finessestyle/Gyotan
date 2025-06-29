@@ -21,8 +21,8 @@ const Map = ({ latitude, longitude, viewStyle, showCircle }: Props): JSX.Element
         region={{
           latitude,
           longitude,
-          latitudeDelta: 0.006,
-          longitudeDelta: 0.006
+          latitudeDelta: 0.008,
+          longitudeDelta: 0.008
         }}
       >
         <UrlTile
