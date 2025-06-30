@@ -65,7 +65,8 @@ const styles = StyleSheet.create({
   },
   listItemImage: {
     width: 160,
-    height: 130
+    height: 120,
+    backgroundColor: '#B0B0B0'
   },
   length: {
     color: '#B0B0B0'

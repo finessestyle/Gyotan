@@ -28,7 +28,7 @@ const Map = ({ latitude, longitude, viewStyle, showCircle }: Props): JSX.Element
         <UrlTile
           urlTemplate='https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
           maximumZ={16}
-          flipY={false} // 必要に応じて設定
+          flipY={false}
         />
         {showCircle === true && (
           <Circle

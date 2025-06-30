@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
   },
   fishImage: {
     height: 400,
-    width: 'auto'
+    width: 'auto',
+    backgroundColor: '#B0B0B0'
   },
   userInfo: {
     height: 32,

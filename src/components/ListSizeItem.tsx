@@ -65,12 +65,13 @@ const styles = StyleSheet.create({
   },
   listItemImage: {
     width: 160,
-    height: 130
+    height: 120,
+    backgroundColor: '#B0B0B0'
   },
   imageNumber: {
     position: 'absolute',
     top: 24,
-    left: 4,
+    left: 6,
     backgroundColor: 'rgba(80, 77, 77, 0.5)',
     color: 'white',
     paddingHorizontal: 4,
