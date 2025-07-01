@@ -15,8 +15,14 @@ const Detail = (): JSX.Element => {
   const id = String(useLocalSearchParams().id)
   const [user, setUser] = useState<User | null>(null)
   const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
-  const [selectedArea, setSelectedArea] = useState<string>(areas[0]) // 初期エリアを設定
+  const [selectedArea, setSelectedArea] = useState<string>(areas[0])
   const [posts, setPosts] = useState<Post[]>([])
+  const socialLinks = [
+    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
+    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
+    { name: 'x-twitter', url: user?.userX, color: '#000000' },
+    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
+  ]
 
   useEffect(() => {
     const userRef = doc(db, 'users', id)
@@ -77,18 +83,13 @@ const Detail = (): JSX.Element => {
     }
   }, [selectedArea, id])
 
-  const socialLinks = [
-    { name: 'youtube', url: user?.userYoutube, color: '#FF0000' },
-    { name: 'instagram', url: user?.userInstagram, color: '#E4405F' },
-    { name: 'x-twitter', url: user?.userX, color: '#000000' },
-    { name: 'tiktok', url: user?.userTiktok, color: '#69C9D0' }
-  ]
-
   return (
     <ScrollView style={styles.container}>
+      <View style={styles.followButton}>
+        <FollowButton userId={id}/>
+      </View>
       <View style={styles.inner}>
         <Text style={styles.title}>ユーザー情報</Text>
-        <FollowButton userId={id} />
         <View style={styles.userTop}>
           <Image
             source={{ uri: user?.userImage }}
@@ -100,15 +101,22 @@ const Detail = (): JSX.Element => {
       </View>
       <View style={styles.userSnsTop}>
         {socialLinks.map((social, index) =>
-          social.url === null
+          social.url?.trim()
             ? (
-            <TouchableOpacity key={index} onPress={() => Linking.openURL(social.url) } style={styles.userSns}>
+            <TouchableOpacity
+              key={index}
+              onPress={() => {
+                void Linking.openURL(social.url)
+              }}
+              style={styles.userSns}
+            >
               <FontAwesome6 size={30} name={social.name} color={social.color} />
             </TouchableOpacity>)
             : null
         )}
       </View>
       <View style={styles.subInner}>
+        <Text style={styles.title}>最新釣果</Text>
         <View style={styles.tabs}>
           {areas.map((area) => (
             <TouchableOpacity
@@ -146,22 +154,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 24,
-    marginHorizontal: 8
+    paddingHorizontal: 16
   },
   subInner: {
-    marginVertical: 12,
-    marginHorizontal: 8
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
     lineHeight: 32,
     fontWeight: 'bold',
-    marginBottom: 24
+    paddingVertical: 16
   },
   userTop: {
-    alignItems: 'center',
-    marginBottom: 8
+    alignItems: 'center'
   },
   userImage: {
     width: 160,
@@ -174,6 +179,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginBottom: 8,
     fontWeight: 'bold'
+  },
+  followButton: {
+    marginTop: 8
   },
   userProfile: {
     fontSize: 14

@@ -93,7 +93,8 @@ const Mypage = (): JSX.Element => {
             userInstagram: '',
             userX: '',
             updatedAt: Timestamp.now(),
-            followed: []
+            followed: [],
+            follower: []
           })
         } else {
           setUser({
@@ -107,7 +108,8 @@ const Mypage = (): JSX.Element => {
             userInstagram: data.userInstagram,
             userX: data.userX,
             updatedAt: data.updatedAt,
-            followed: data.followed
+            followed: data.followed,
+            follower: data.follower
           })
         }
       })
