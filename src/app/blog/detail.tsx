@@ -40,9 +40,11 @@ const Detaile = () => {
             {blog?.bodyText}
           </Text>
       </ScrollView>
-      <CircleButton onPress={() => { handlePress(id) }} style={{ top: 60, bottom: 'auto' }}>
-        <Icon name='pencil' size={40} color='#ffffff' />
-      </CircleButton>
+      {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
+        <CircleButton onPress={() => { handlePress(id) }} style={{ top: 60, bottom: 'auto' }}>
+          <Icon name='pencil' size={40} color='#ffffff' />
+        </CircleButton>
+      )}
     </View>
   )
 }

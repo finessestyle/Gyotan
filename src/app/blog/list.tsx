@@ -5,7 +5,7 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { auth, db } from '../../config'
 import { type Blog } from '../../../types/blog'
 
-import BlogListItem from '../../components/BlogListItem'
+import BlogList from '../../components/BlogList'
 import CircleButton from '../../components/CircleButton'
 import Icon from '../../components/Icon'
 
@@ -37,11 +37,13 @@ const List = (): JSX.Element => {
     <View style={styles.container}>
       <FlatList
         data={blogs}
-        renderItem={ ({ item }) => <BlogListItem blog={item} />}
+        renderItem={ ({ item }) => <BlogList blog={item} />}
       />
-      <CircleButton onPress={() => { handlePress() }}>
-        <Icon name='plus' size={40} color='#ffffff' />
-      </CircleButton>
+      {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
+        <CircleButton onPress={() => { handlePress() }}>
+          <Icon name='plus' size={40} color='#ffffff' />
+        </CircleButton>
+      )}
     </View>
   )
 }

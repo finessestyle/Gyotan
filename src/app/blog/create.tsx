@@ -36,9 +36,11 @@ const Create = (): JSX.Element => {
         onChangeText={(text) => { setBodyText(text) }}
         autoFocus
       />
-      <CircleButton onPress={() => { handlePress(bodyText) }}>
-        <Icon name='check' size={40} color='#ffffff' />
-      </CircleButton>
+      {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
+        <CircleButton onPress={() => { handlePress(bodyText) }}>
+          <Icon name='check' size={40} color='#ffffff' />
+        </CircleButton>
+      )}
     </KeyboardAvoidingView>
   )
 }

@@ -271,15 +271,17 @@ const Top = (): JSX.Element => {
         />
         <View style={styles.blogInner}>
           <Text style={styles.title}>ブログ</Text>
-          <Button
-            label={'投稿する'}
-            onPress={() => { handlePress() }}
-            buttonStyle={{ marginVertical: 16 }}
-            labelStyle={{ fontSize: 16 }}
-          />
+          {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
+            <Button
+              label={'投稿する'}
+              onPress={() => { handlePress() }}
+              buttonStyle={{ marginVertical: 16 }}
+              labelStyle={{ fontSize: 16 }}
+            />
+          )}
         </View>
         <FlatList
-          data={blogs}
+          data={blogs.slice(0, 5)}
           renderItem={ ({ item }) => <BlogListItem blog={item} />}
         />
       </ScrollView>
@@ -304,8 +306,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   inner: {
-    paddingHorizontal: 16,
-    marginBottom: 16
+    paddingHorizontal: 16
   },
   title: {
     fontSize: 24,
@@ -360,7 +361,8 @@ const styles = StyleSheet.create({
   },
   blogInner: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    marginBottom: 8
   }
 })
 

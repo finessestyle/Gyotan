@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native'
 import { Link } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { auth, db } from '../config'
-import Icon from '../components/Icon'
+import Icon from './Icon'
 import { type Blog } from '../../types/blog'
 
 interface Props {
@@ -27,7 +27,7 @@ const handlePress = (id: string) => {
   ])
 }
 
-const BlogListItem = (props: Props) => {
+const BlogList = (props: Props) => {
   const { blog } = props
   const { bodyText, updatedAt } = blog
   if (bodyText === null || updatedAt === null) return null
@@ -60,10 +60,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 4,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#rgba(0,0,0,0.15)',
-    borderRadius: 8,
-    marginBottom: 8
+    borderBottomWidth: 1,
+    borderColor: '#rgba(0,0,0,0.15)'
   },
   memoListItemTitle: {
     fontSize: 16,
@@ -77,4 +75,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default BlogListItem
+export default BlogList
