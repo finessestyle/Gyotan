@@ -4,9 +4,36 @@ import {
 import { Link, router } from 'expo-router'
 import { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../config'
+import { auth, db } from '../../config'
+import { doc, updateDoc } from 'firebase/firestore'
 import Button from '../../components/Button'
 import { Ionicons } from '@expo/vector-icons'
+import * as Notifications from 'expo-notifications'
+
+const registerForPushNotificationsAsync = async (): Promise<string | undefined> => {
+  // Check and request permissions
+  const { status: existingStatus } = await Notifications.getPermissionsAsync()
+  let finalStatus = existingStatus
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync()
+    finalStatus = status
+  }
+  if (finalStatus !== 'granted') {
+    // If permissions are not granted, return undefined or handle appropriately
+    console.log('Failed to get push token for push notification!')
+    return undefined
+  }
+
+  // Get the Expo push token
+  try {
+    const token = (await Notifications.getExpoPushTokenAsync()).data
+    console.log('Expo Push Token:', token)
+    return token
+  } catch (error) {
+    console.error('Error getting Expo push token:', error)
+    return undefined
+  }
+}
 
 const handlePress = async (email: string, password: string): Promise<void> => {
   try {
@@ -18,7 +45,18 @@ const handlePress = async (email: string, password: string): Promise<void> => {
       Alert.alert('エラー', 'パスワードを入力してください')
       return
     }
-    await signInWithEmailAndPassword(auth, email, password)
+    const userCredential = await signInWithEmailAndPassword(auth, email, password)
+    const user = userCredential.user
+
+    // Expo Push Token を取得
+    const token = await registerForPushNotificationsAsync()
+    if (typeof token === 'string' && token.trim() !== '') {
+      // Firestore に保存
+      const userRef = doc(db, 'users', user.uid)
+      await updateDoc(userRef, {
+        expoPushToken: token
+      })
+    }
     router.replace('post/top')
   } catch (error) {
     Alert.alert('ログインに失敗しました')
@@ -66,14 +104,11 @@ const LogIn = (): JSX.Element => {
             />
           </TouchableOpacity>
         </View>
-        <Button label='ログイン' onPress={() => {
-          void handlePress(
-            email,
-            password
-          )
-        }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 32 }}
-          labelStyle={{ fontSize: 24, lineHeight: 22 }}
+        <Button
+          label='ログイン'
+          onPress={() => { void handlePress(email, password) }}
+          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', borderRadius: 8 }}
+          labelStyle={{ fontSize: 22, lineHeight: 22 }}
         />
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >
@@ -134,7 +169,7 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 14,
-    lineHeight: 24,
+    lineHeight: 16,
     color: '#467FD3',
     marginBottom: 8
   }

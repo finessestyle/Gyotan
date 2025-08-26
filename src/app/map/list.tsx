@@ -4,7 +4,7 @@ import { router } from 'expo-router'
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type FishMap } from '../../../types/fishmap'
-import MapView, { Marker, Callout, CalloutSubview } from 'react-native-maps'
+import MapView, { Marker, Callout } from 'react-native-maps'
 import Icon from '../../components/Icon'
 import CircleButton from '../../components/CircleButton'
 import Map from '../../components/Map'
@@ -23,6 +23,21 @@ const List = (): JSX.Element => {
   })
   const mapRef = useRef<MapView | null>(null)
 
+  const getSeasonColor = (season?: string): string => {
+    switch (season) {
+      case '春':
+        return 'pink'
+      case '夏':
+        return 'green'
+      case '秋':
+        return 'orange'
+      case '冬':
+        return 'white'
+      default:
+        return 'blue'
+    }
+  }
+
   useEffect(() => {
     if (auth.currentUser === null) return
     const ref = collection(db, 'maps')
@@ -34,7 +49,7 @@ const List = (): JSX.Element => {
       const remoteMaps: FishMap[] = []
       snapShot.forEach((doc) => {
         const {
-          userId, images, title, area, season, latitude, longitude, content, updatedAt
+          userId, images, title, area, season, latitude, longitude, access, toilet, parking, content, updatedAt
         } = doc.data()
         remoteMaps.push({
           id: doc.id,
@@ -46,6 +61,9 @@ const List = (): JSX.Element => {
           latitude,
           longitude,
           content,
+          access,
+          toilet,
+          parking,
           updatedAt
         })
       })
@@ -87,20 +105,19 @@ const List = (): JSX.Element => {
                 latitude: map.latitude,
                 longitude: map.longitude
               }}
+              pinColor={getSeasonColor(map.season)}
             >
-              <Callout>
-                <CalloutSubview
-                  onPress={() => {
-                    router.push({ pathname: '/map/detail', params: { id: map.id } })
-                  }}
-                >
-                  <View style={{ alignItems: 'center' }}>
-                    <Text style={styles.mapTitle}>{map.title}</Text>
-                    <View style={styles.submap} pointerEvents="none">
-                      <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
-                    </View>
+              <Callout
+                onPress={() => {
+                  router.push({ pathname: '/map/detail', params: { id: map.id } })
+                }}
+              >
+                <View style={{ alignItems: 'center' }}>
+                  <Text style={styles.mapTitle}>{map.title}</Text>
+                  <View style={styles.submap} pointerEvents="none">
+                    <Map latitude={map?.latitude ?? 0} longitude={map?.longitude ?? 0} />
                   </View>
-                </CalloutSubview>
+                </View>
               </Callout>
             </Marker>
           )

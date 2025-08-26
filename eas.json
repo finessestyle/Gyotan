@@ -7,15 +7,15 @@
         "simulator": false
       },
       "env": {
-        "EXPO_PUBLIC_FB_API_KEY": "process.env.EXPO_PUBLIC_FB_API_KEY",
-        "EXPO_PUBLIC_FB_AUTH_DOMAIN": "process.env.EXPO_PUBLIC_FB_AUTH_DOMAIN",
-        "EXPO_PUBLIC_FB_PROJECT_ID": "process.env.EXPO_PUBLIC_FB_PROJECT_ID",
-        "EXPO_PUBLIC_FB_STORAGE_BUCKET": "process.env.EXPO_PUBLIC_FB_STORAGE_BUCKET",
-        "EXPO_PUBLIC_FB_MESSAGING_SENDER_ID": "process.env.EXPO_PUBLIC_FB_MESSAGING_SENDER_ID",
-        "EXPO_PUBLIC_FB_WEB_APP_ID": "process.env.EXPO_PUBLIC_FB_WEB_APP_ID",
-        "EXPO_PUBLIC_FB_IOS_APP_ID": "process.env.EXPO_PUBLIC_FB_IOS_APP_ID",
-        "EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY": "process.env.EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY",
-        "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY": "process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY"
+        "EXPO_PUBLIC_FB_API_KEY": "AIzaSyD8IUwI7mnvKrv6M80SHITbl4AbgvVQ7x0",
+        "EXPO_PUBLIC_FB_AUTH_DOMAIN": "gyotan-fishing.firebaseapp.com",
+        "EXPO_PUBLIC_FB_PROJECT_ID": "gyotan-fishing",
+        "EXPO_PUBLIC_FB_STORAGE_BUCKET": "gyotan-fishing.firebasestorage.app",
+        "EXPO_PUBLIC_FB_MESSAGING_SENDER_ID": "509016720283",
+        "EXPO_PUBLIC_FB_WEB_APP_ID": "1:509016720283:web:9efed06d75c8fa25fc173e",
+        "EXPO_PUBLIC_FB_IOS_APP_ID": "1:509016720283:ios:ce0185dac04c4654fc173e",
+        "EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY": "118feebc1d67a0c61dbea53591f85cf2",
+        "EXPO_PUBLIC_GOOGLE_MAPS_API_KEY": "AIzaSyB7IrFyCeBW2OFun1nKRRitv3jM8Vvckqk"
       }
     },
     "preview": {

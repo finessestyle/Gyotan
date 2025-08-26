@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "509016720283",
+    "project_id": "gyotan-fishing",
+    "storage_bucket": "gyotan-fishing.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:509016720283:android:86073356f62cd0fafc173e",
+        "android_client_info": {
+          "package_name": "jp.gyotan.Gyotan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGWscGLbelv4zj1k3ris-MeSsP1W4zVVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

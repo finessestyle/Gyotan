@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   listItemImage: {
     width: 160,
     height: 120,
-    backgroundColor: '#B0B0B0'
+    backgroundColor: '#E0E0E0'
   },
   imageNumber: {
     position: 'absolute',

@@ -6,11 +6,18 @@ import { Link, useFocusEffect } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy, getDocs } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
+import { type Blog } from '../../../types/blog'
+import { router } from 'expo-router'
 import ListItem from '../../components/ListItem'
 import ListSizeItem from '../../components/ListSizeItem'
-import Icon from '../../components/Icon'
+import BlogListItem from '../../components/BlogListItem'
+import Button from '../../components/Button'
 
 const areas = ['北湖北岸', '北湖東岸', '北湖西岸', '南湖東岸', '南湖西岸']
+
+const handlePress = () => {
+  router.push('/blog/create')
+}
 
 const Top = (): JSX.Element => {
   const [latestPosts, setLatestPosts] = useState<Post[]>([])
@@ -155,6 +162,26 @@ const Top = (): JSX.Element => {
     return unsubscribe
   }, [largestArea])
 
+  const [blogs, setBlogs] = useState<Blog []>([])
+  useEffect(() => {
+    if (auth.currentUser === null) return
+    const ref = collection(db, 'blogs')
+    const q = query(ref, orderBy('updatedAt', 'desc'))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const remoteBlogs: Blog[] = []
+      snapshot.forEach((doc) => {
+        const { bodyText, updatedAt } = doc.data()
+        remoteBlogs.push({
+          id: doc.id,
+          bodyText,
+          updatedAt
+        })
+      })
+      setBlogs(remoteBlogs)
+    })
+    return unsubscribe
+  }, [])
+
   return (
     <View style={styles.container}>
       <Link replace href='/post/rule' asChild >
@@ -193,7 +220,7 @@ const Top = (): JSX.Element => {
             </View>
           }
         />
-        <Text style={styles.title}>今釣れる!?</Text>
+        {/* <Text style={styles.title}>今釣れる!?</Text>
         {latestPosts.length > 0 && (
           <View>
             <Animated.View style={[styles.fishingNow, { opacity: fadeAnime }]}>
@@ -206,7 +233,7 @@ const Top = (): JSX.Element => {
               </Text>
             </Animated.View>
           </View>
-        )}
+        )} */}
 
         {latestPosts.length === 0 && (
           <View style={{ padding: 20 }}>
@@ -241,6 +268,19 @@ const Top = (): JSX.Element => {
               <Text>投稿がありません...。</Text>
             </View>
           }
+        />
+        <View style={styles.blogInner}>
+          <Text style={styles.title}>ブログ</Text>
+          <Button
+            label={'投稿する'}
+            onPress={() => { handlePress() }}
+            buttonStyle={{ marginVertical: 16 }}
+            labelStyle={{ fontSize: 16 }}
+          />
+        </View>
+        <FlatList
+          data={blogs}
+          renderItem={ ({ item }) => <BlogListItem blog={item} />}
         />
       </ScrollView>
     </View>
@@ -317,6 +357,10 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#fffff',
     overflow: 'hidden'
+  },
+  blogInner: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })
 

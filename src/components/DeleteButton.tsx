@@ -4,7 +4,7 @@ import { deleteDoc, doc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
 import { auth, db, storage } from '../config'
 import { type Post } from '../../types/post'
-import Icon from './Icon'
+import Button from '../components/Button'
 
 interface Props {
   post: Post
@@ -55,22 +55,13 @@ const DeleteButton = ({ post }: Props): JSX.Element | null => {
   if (auth.currentUser?.uid !== post.userId) return null
 
   return (
-    <TouchableOpacity
-      style={styles.deleteButton}
-      onPress={() => {
-        handlePress(post.id, post)
-      }}
-    >
-      <Icon name="delete" size={32} color="#B0B0B0" />
-    </TouchableOpacity>
+    <Button
+      label='投稿削除'
+      buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, backgroundColor: 'red', marginBottom: 8 }}
+      labelStyle={{ fontSize: 24, lineHeight: 21 }}
+      onPress={() => { handlePress(post.id, post) }}
+    />
   )
 }
-
-const styles = StyleSheet.create({
-  deleteButton: {
-    position: 'absolute',
-    right: 100
-  }
-})
 
 export default DeleteButton

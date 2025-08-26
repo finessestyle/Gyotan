@@ -12,7 +12,7 @@ import Button from '../../components/Button'
 import Map from '../../components/Map'
 import LikeButton from '../../components/LikeButton'
 import ReportButton from '../../components/ReportButton'
-// import DeleteButton from '../../components/DeleteButton'
+import DeleteButton from '../../components/DeleteButton'
 
 const formatExifDateTime = (dateTime: unknown): string => {
   if (typeof dateTime !== 'string' || dateTime === null) return '不明'
@@ -72,6 +72,7 @@ const Detail = (): JSX.Element => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
+        {post !== null && <DeleteButton post={post} />}
         <View style={styles.postBody}>
           <Link href={{ pathname: '/user/detail', params: { id: post?.userId ?? 'default-id' } }} asChild>
             <TouchableOpacity>
@@ -83,7 +84,6 @@ const Detail = (): JSX.Element => {
             </TouchableOpacity>
           </Link>
           <LikeButton postId={id} userId={auth.currentUser.uid}/>
-          {/* {post !== null && <DeleteButton post={post} />} */}
           <Swiper style={styles.swiper} showsButtons={false}>
             {postImages.map((uri, index) => (
               <Image key={index} source={{ uri }} style={styles.fishImage} resizeMode='contain'/>
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   fishImage: {
     height: 400,
     width: 'auto',
-    backgroundColor: '#B0B0B0'
+    backgroundColor: '#E0E0E0'
   },
   userInfo: {
     height: 32,

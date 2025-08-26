@@ -4,6 +4,7 @@ import { router } from 'expo-router'
 import { auth } from '../../config'
 import { signInAnonymously } from 'firebase/auth'
 import Button from '../../components/Button'
+import UserCount from '../../components/UserCount'
 
 const FirstStep = (): JSX.Element => {
   const [fadeAnim] = useState(new Animated.Value(0))
@@ -58,6 +59,7 @@ const FirstStep = (): JSX.Element => {
             onPress={handlePress}
           />
         </Animated.View>
+        <UserCount />
       </View>
     </ImageBackground>
   )

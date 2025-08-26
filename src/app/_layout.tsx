@@ -129,11 +129,155 @@ const Layout = (): JSX.Element => {
           })}
         />
         <Tabs.Screen
+          name="post/detail"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/mapswitcher')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="post/edit"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/map')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="post/rule"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/post/top')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
           name="map/list"
           options={{
             title: '釣り場MAP',
             headerShown: false,
             tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="map" color={color} />
+          }}
+        />
+        <Tabs.Screen
+          name="map/create"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+
+        <Tabs.Screen
+          name="map/detail"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="map/edit"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="blog/list"
+          options={{
+            href: null,
+            title: 'ブログ',
+            tabBarIcon: ({ color }) => <FontAwesome6 size={24} name="list" color={color} />
+          }}
+        />
+        <Tabs.Screen
+          name="blog/create"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/map/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="blog/detail"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/blog/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
+          }}
+        />
+        <Tabs.Screen
+          name="blog/edit"
+          options={{
+            href: null,
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/blog/list')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen
@@ -186,97 +330,6 @@ const Layout = (): JSX.Element => {
           options={{
             href: null,
             tabBarStyle: { display: 'none' }
-          }}
-        />
-        <Tabs.Screen
-          name="post/detail"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/post/mapswitcher')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
-          }}
-        />
-        <Tabs.Screen
-          name="post/edit"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/post/map')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
-          }}
-        />
-        <Tabs.Screen
-          name="post/rule"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/post/top')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
-          }}
-        />
-        <Tabs.Screen
-          name="map/create"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/map/list')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
-          }}
-        />
-
-        <Tabs.Screen
-          name="map/detail"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/map/list')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
-          }}
-        />
-        <Tabs.Screen
-          name="map/edit"
-          options={{
-            href: null,
-            headerLeft: () => {
-              return (
-                <TouchableOpacity onPress={() => {
-                  router.replace('/map/list')
-                }}>
-                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
-                </TouchableOpacity>
-              )
-            }
           }}
         />
         <Tabs.Screen

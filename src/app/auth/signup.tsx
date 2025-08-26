@@ -13,32 +13,32 @@ import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import Button from '../../components/Button'
 import { Ionicons } from '@expo/vector-icons'
 import CheckBox from 'expo-checkbox'
-// import * as Notifications from 'expo-notifications'
+import * as Notifications from 'expo-notifications'
 
-// const registerForPushNotificationsAsync = async (): Promise<string | undefined> => {
-//   // Check and request permissions
-//   const { status: existingStatus } = await Notifications.getPermissionsAsync()
-//   let finalStatus = existingStatus
-//   if (existingStatus !== 'granted') {
-//     const { status } = await Notifications.requestPermissionsAsync()
-//     finalStatus = status
-//   }
-//   if (finalStatus !== 'granted') {
-//     // If permissions are not granted, return undefined or handle appropriately
-//     console.log('Failed to get push token for push notification!')
-//     return undefined
-//   }
+const registerForPushNotificationsAsync = async (): Promise<string | undefined> => {
+  // Check and request permissions
+  const { status: existingStatus } = await Notifications.getPermissionsAsync()
+  let finalStatus = existingStatus
+  if (existingStatus !== 'granted') {
+    const { status } = await Notifications.requestPermissionsAsync()
+    finalStatus = status
+  }
+  if (finalStatus !== 'granted') {
+    // If permissions are not granted, return undefined or handle appropriately
+    console.log('Failed to get push token for push notification!')
+    return undefined
+  }
 
-//   // Get the Expo push token
-//   try {
-//     const token = (await Notifications.getExpoPushTokenAsync()).data
-//     console.log('Expo Push Token:', token)
-//     return token
-//   } catch (error) {
-//     console.error('Error getting Expo push token:', error)
-//     return undefined
-//   }
-// }
+  // Get the Expo push token
+  try {
+    const token = (await Notifications.getExpoPushTokenAsync()).data
+    console.log('Expo Push Token:', token)
+    return token
+  } catch (error) {
+    console.error('Error getting Expo push token:', error)
+    return undefined
+  }
+}
 
 const handlePress = async (
   email: string,
@@ -82,8 +82,7 @@ const handlePress = async (
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
     const userId = user.uid
-
-    // const pushToken = await registerForPushNotificationsAsync()
+    const pushToken = await registerForPushNotificationsAsync()
 
     if (userImage !== null) {
       const response = await fetch(userImage)
@@ -98,18 +97,17 @@ const handlePress = async (
       email,
       profile,
       userImage,
-      updatedAt: new Date()
-      // ...((pushToken !== undefined && pushToken !== '') && { expoPushToken: pushToken })
+      updatedAt: new Date(),
+      ...((pushToken !== undefined && pushToken !== '') && { expoPushToken: pushToken })
     })
-    // console.log('取得したトークン', pushToken)
     await sendEmailVerification(user)
     Alert.alert('確認メール送信', 'メールをご確認ください')
     router.replace('/auth/emailCheck')
-  } catch (error) {
-    if (error.code === 'auth/email-already-in-use') {
+  } catch (e) {
+    if (e.code === 'auth/email-already-in-use') {
       Alert.alert('エラー', 'このメールアドレスはすでに使用されています')
     } else {
-      Alert.alert('新規登録に失敗しました', error.message)
+      Alert.alert('新規登録に失敗しました', e.message)
     }
   }
 }
@@ -232,7 +230,7 @@ const SignUp = (): JSX.Element => {
           <View style={styles.checkBox}>
             <CheckBox
               value={isTermsChecked}
-              disabled={true}
+              onValueChange={setIsTermsChecked}
             />
             <Link replace href='/auth/term' asChild >
               <TouchableOpacity>
@@ -243,7 +241,7 @@ const SignUp = (): JSX.Element => {
           <View style={styles.checkBox}>
             <CheckBox
               value={isPrivacyChecked}
-              disabled={true}
+              onValueChange={setIsPrivacyChecked}
             />
             <Link replace href='/auth/privacy' asChild >
               <TouchableOpacity>

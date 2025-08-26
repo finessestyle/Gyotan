@@ -66,6 +66,12 @@ const Detail = (): JSX.Element => {
               ))}
             </Swiper>
           )}
+          <View style={styles.fishInfo}>
+            <Text>-釣り場情報-</Text>
+            <Text style={styles.fishText}>
+              {map?.content}
+            </Text>
+          </View>
           <View style={styles.feeldInfo}>
             <View style={styles.toile}>
               <Text>トイレ  :  {map?.toilet}</Text>
@@ -73,12 +79,6 @@ const Detail = (): JSX.Element => {
             <View style={styles.parking}>
               <Text>駐車場  :  {map?.parking}</Text>
             </View>
-          </View>
-          <View style={styles.fishInfo}>
-            <Text>-釣り場情報-</Text>
-            <Text style={styles.fishText}>
-              {map?.content}
-            </Text>
           </View>
         </View>
         {auth.currentUser?.uid === '3EpeDeL97kN5a2oefZCypnEdXGx2' && (
@@ -130,9 +130,7 @@ const styles = StyleSheet.create({
   feeldInfo: {
     height: 60,
     width: 'auto',
-    flexDirection: 'column',
-    borderTopWidth: 1,
-    borderColor: '#B0B0B0'
+    flexDirection: 'column'
   },
   toile: {
     flex: 1,
@@ -148,12 +146,12 @@ const styles = StyleSheet.create({
   },
   fishInfo: {
     borderTopWidth: 1,
+    borderBottomWidth: 1,
     borderColor: '#B0B0B0',
     height: 'auto',
     lineHeight: 32,
     alignItems: 'center',
-    paddingVertical: 8,
-    borderBottomWidth: 1
+    paddingVertical: 8
   },
   fishText: {
     fontSize: 16,

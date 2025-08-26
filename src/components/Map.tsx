@@ -4,7 +4,7 @@ import MapView, { Circle, UrlTile } from 'react-native-maps'
 interface Props {
   latitude: number
   longitude: number
-  viewStyle: ViewStyle
+  viewStyle?: ViewStyle
   showCircle?: boolean
 }
 

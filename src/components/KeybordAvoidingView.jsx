@@ -34,12 +34,12 @@ const KeyboardSafeView = ({ children, style }) => {
   const handleShow = ({ endCoordinates }) => {
     if (endCoordinates.height && initialViewHeight.current) {
       const keyboardHeight = Dimensions.get('window').height - endCoordinates.screenY
-      setViewHeight(initialViewHeight.current - keyboardHeight - 80)
+      setViewHeight(initialViewHeight.current - keyboardHeight)
     }
   }
 
   const handleHide = () => {
-    setViewHeight(initialViewHeight.current - 80)
+    setViewHeight(initialViewHeight.current)
   }
 
   const handleLayout = ({ nativeEvent }) => {

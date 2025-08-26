@@ -11,7 +11,7 @@ const Index = (): JSX.Element => {
         void (async () => {
           try {
             await user.reload()
-            if (user.isAnonymous) {
+            if (user.isAnonymous) {indexedDB.
               router.replace('/post/top')
             } else if (user.emailVerified) {
               router.replace('/post/top')
