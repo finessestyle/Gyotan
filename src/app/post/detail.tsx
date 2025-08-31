@@ -13,6 +13,7 @@ import Map from '../../components/Map'
 import LikeButton from '../../components/LikeButton'
 import ReportButton from '../../components/ReportButton'
 import DeleteButton from '../../components/DeleteButton'
+import Comment from '../../components/Comment'
 
 const formatExifDateTime = (dateTime: unknown): string => {
   if (typeof dateTime !== 'string' || dateTime === null) return '不明'
@@ -72,7 +73,17 @@ const Detail = (): JSX.Element => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
-        {post !== null && <DeleteButton post={post} />}
+        <View style={styles.buttonRow}>
+          {post !== null && <DeleteButton post={post} />}
+          {auth.currentUser?.uid === post?.userId && (
+            <Button
+              label='編集'
+              buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
+              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              onPress={() => { handlePress(id) }}
+            />
+          )}
+        </View>
         <View style={styles.postBody}>
           <Link href={{ pathname: '/user/detail', params: { id: post?.userId ?? 'default-id' } }} asChild>
             <TouchableOpacity>
@@ -144,15 +155,8 @@ const Detail = (): JSX.Element => {
         {auth.currentUser?.uid !== post?.userId && (
           <ReportButton postId={post?.id} userId={post?.userId} />
         )}
-        {auth.currentUser?.uid === post?.userId && (
-          <Button
-            label='編集'
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
-            onPress={() => { handlePress(id) }}
-          />
-        )}
       </View>
+      {post !== null && <Comment postId={post.id} />}
     </ScrollView>
   )
 }
@@ -163,8 +167,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F4F8'
   },
   inner: {
-    marginVertical: 16,
+    marginVertical: 8,
     marginHorizontal: 16
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 8,
+    width: '50%'
   },
   postBody: {
     borderWidth: 1,

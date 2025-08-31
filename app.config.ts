@@ -4,7 +4,7 @@ import type { ExpoConfig } from '@expo/config'
 const config: ExpoConfig = {
   name: 'Gyotan',
   slug: 'gyotan',
-  version: '1.0.3',
+  version: '1.0.4',
   orientation: 'portrait',
   icon: './assets/splash-icon(1).png',
   userInterfaceStyle: 'light',
@@ -15,7 +15,7 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: 'jp.gyotan.Gyotan',
-    buildNumber: '20',
+    buildNumber: '21',
     supportsTablet: false,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
