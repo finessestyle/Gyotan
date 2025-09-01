@@ -3,7 +3,62 @@ import {onSchedule} from "firebase-functions/v2/scheduler";
 import {onDocumentCreated} from "firebase-functions/v2/firestore";
 import fetch from "node-fetch";
 
+// OpenAI API Key
+const OPEN_AI_API_KEY = process.env.OPEN_AI_API_KEY;
+
+// X API credentials
+const X_ACCESS_TOKEN = process.env.X_ACCESS_TOKEN;
+
 admin.initializeApp();
+
+// 毎週月曜 9:00 に実行
+export const postWeeklyFishingTips = onSchedule("0 9 * * 1", async () => {
+  const areas = ["北湖北岸", "北湖東岸", "北湖西岸", "南湖東岸", "南湖南岸"];
+  const now = new Date();
+  const weekId = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+
+  for (const area of areas) {
+    // 1. ChatGPTにエリア別釣り方を生成させる
+    const prompt = `今週の琵琶湖バス釣り(${area})のおすすめ釣り方を200文字以内で生成してください。`;
+    const aiRes = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${OPEN_AI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const aiData = await aiRes.json();
+    const tip = aiData.choices?.[0]?.message?.content || "釣果情報をお楽しみに！";
+
+    // 2. Xに投稿する内容
+    const tweet = `🎣今週の${area}バス釣り🎣\n${tip}\n釣果投稿は👇で\nhttps://apps.apple.com/app/gyotan/id6745893318\n#琵琶湖バス釣り #Gyotan #琵琶湖 #琵琶湖バス釣り`;
+
+    await fetch("https://api.twitter.com/2/tweets", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${X_ACCESS_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text: tweet })
+    });
+
+    // 3. Firestoreに保存（アプリ側で表示用）
+    await admin.firestore()
+      .collection("weeklyTips")
+      .doc(weekId)
+      .collection("areas")
+      .doc(area)
+      .set({
+        area,
+        tip,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+  }
+});
 
 // 匿名ログインアカウントの自動削除（v2スケジューラー）
 export const deleteOldAnonymousUsers =
