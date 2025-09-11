@@ -28,6 +28,7 @@ const handlePress = (id: string): void => {
 }
 
 const Detail = (): JSX.Element => {
+  if (auth.currentUser === null) return
   const id = String(useLocalSearchParams().id)
   const [post, setPost] = useState<Post | null>(null)
   const postImages = post !== null && Array.isArray(post.images) ? post.images : []
@@ -78,8 +79,7 @@ const Detail = (): JSX.Element => {
           {auth.currentUser?.uid === post?.userId && (
             <Button
               label='編集'
-              buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              buttonStyle={{ width: '100%' }}
               onPress={() => { handlePress(id) }}
             />
           )}
@@ -172,8 +172,6 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
     marginBottom: 8,
     width: '50%'
   },

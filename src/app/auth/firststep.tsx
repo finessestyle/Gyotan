@@ -54,7 +54,7 @@ const FirstStep = (): JSX.Element => {
           />
           <Button
             label={'試してみる'}
-            buttonStyle={[styles.button, styles.anonymousButton]}
+            buttonStyle={styles.anonymousButton}
             labelStyle={styles.buttonLabel}
             onPress={handlePress}
           />
@@ -112,6 +112,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   anonymousButton: {
+    width: '60%',
+    height: 'auto',
+    marginHorizontal: 'auto',
+    borderRadius: 50,
+    shadowColor: '#000000',
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 8,
+    alignItems: 'center',
     backgroundColor: '#rgba(156, 207, 145, 0.6)'
   }
 })

@@ -122,15 +122,14 @@ const Map = (): JSX.Element => {
       <MapView ref={mapRef} style={styles.map} initialRegion={mapRegion} mapType='hybrid'>
         {posts.map((post) => {
           const exif = Array.isArray(post.exifData) ? post.exifData[0] : post.exifData
-          if (!exif?.latitude || !exif?.longitude) return null
+          if (exif?.latitude === null || exif?.longitude === null) return null
           return (
             <Marker
               key={post.id}
               coordinate={{
-                latitude: exif.latitude,
-                longitude: exif.longitude
+                latitude: exif?.latitude,
+                longitude: exif?.longitude
               }}
-              style={{ zIndex: 1 }}
             >
               <Callout
                 onPress={() => {

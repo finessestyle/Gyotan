@@ -288,6 +288,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: '釣果エリアを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
           {fishArea !== '' && (
             <RNPickerSelect
@@ -300,6 +301,7 @@ const Edit = (): JSX.Element => {
               items={areaOptions}
               placeholder={{ label: 'エリアを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
 
@@ -319,6 +321,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: '天気を選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>ルアーを選択</Text>
@@ -337,6 +340,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
           {category !== '' && (
             <RNPickerSelect
@@ -350,6 +354,7 @@ const Edit = (): JSX.Element => {
               items={lureOptions}
               placeholder={{ label: 'ルアーを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
           {lure !== '' && (
@@ -363,6 +368,7 @@ const Edit = (): JSX.Element => {
               items={lureActionOptions}
               placeholder={{ label: 'ルアーアクションを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
 
@@ -381,6 +387,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: '水深を選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>ストラクチャー（水中の地形変化）を選択</Text>
@@ -410,6 +417,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: 'ストラクチャーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>カバー（障害物）を選択</Text>
@@ -442,6 +450,7 @@ const Edit = (): JSX.Element => {
             ]}
             placeholder={{ label: 'カバーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>長さを入力(cm)</Text>
@@ -450,6 +459,7 @@ const Edit = (): JSX.Element => {
             style={styles.input}
             onChangeText={setLength}
             placeholder='長さ(cm)を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -465,6 +475,7 @@ const Edit = (): JSX.Element => {
               }
             }}
             placeholder='重さ(g)を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -480,6 +491,7 @@ const Edit = (): JSX.Element => {
               }
             }}
             placeholder='釣果数を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -508,8 +520,7 @@ const Edit = (): JSX.Element => {
               setLoading
             )
           }}
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            buttonStyle={{ width: '100%', marginBottom: 16 }}
           />
         </ScrollView>
       </KeyboardAwareScrollView>

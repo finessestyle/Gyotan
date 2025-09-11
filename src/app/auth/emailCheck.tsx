@@ -13,6 +13,7 @@ const EmailCheck = (): JSX.Element => {
     try {
       await auth.currentUser?.reload()
       const user = auth.currentUser
+      if (user === null) return
       if (user.emailVerified) {
         Alert.alert('認証完了', 'メールアドレスが確認されました')
         router.replace('/post/top')

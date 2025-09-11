@@ -1,6 +1,7 @@
 {
   "projects": {
-    "default": "gyotan-fishing"
+    "default": "gyotan-fishing",
+    "production": "gyotan-fishing"
   },
   "targets": {},
   "etags": {}

@@ -190,6 +190,7 @@ const Edit = (): JSX.Element => {
           value={userName}
           onChangeText={(text) => { setUserName(text) }}
           placeholder='ユーザーネームを入力'
+          placeholderTextColor="#CCCCCC"
           keyboardType='default'
           returnKeyType='done'
         />
@@ -201,13 +202,14 @@ const Edit = (): JSX.Element => {
           autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='emailAddress'
           returnKeyType='done'
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          buttonStyle={{ backgroundColor: '#D0D0D0', marginBottom: 3 }}
+          labelStyle={{ fontSize: 16, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
             }).catch((error) => {
@@ -224,6 +226,7 @@ const Edit = (): JSX.Element => {
           value={profile}
           onChangeText={(text) => { setProfile(text) }}
           placeholder='プロフィールを入力'
+          placeholderTextColor="#CCCCCC"
           keyboardType='default'
           maxLength={30}
           returnKeyType='done'
@@ -235,6 +238,7 @@ const Edit = (): JSX.Element => {
           onChangeText={(text) => { setUserYoutube(text) }}
           keyboardType='url'
           placeholder='@ユーザー名 または URL を入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='URL'
           returnKeyType='done'
         />
@@ -245,6 +249,7 @@ const Edit = (): JSX.Element => {
           onChangeText={(text) => { setUserTiktok(text) }}
           keyboardType='url'
           placeholder='@ユーザー名 または URL を入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='URL'
           returnKeyType='done'
         />
@@ -255,6 +260,7 @@ const Edit = (): JSX.Element => {
           onChangeText={(text) => { setUserInstagram(text) }}
           keyboardType='url'
           placeholder='ユーザー名 または URL を入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='URL'
           returnKeyType='done'
         />
@@ -265,6 +271,7 @@ const Edit = (): JSX.Element => {
           onChangeText={(text) => { setUserX(text) }}
           keyboardType='url'
           placeholder='ユーザー名 または URL を入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='URL'
           returnKeyType='done'
         />
@@ -287,14 +294,7 @@ const Edit = (): JSX.Element => {
           }}
           buttonStyle={{
             width: '100%',
-            marginTop: 8,
-            alignItems: 'center',
-            height: 30,
-            marginBottom: 24
-          }}
-          labelStyle={{
-            fontSize: 24,
-            lineHeight: 21
+            marginVertical: 16
           }}
         />
       </View>

@@ -24,14 +24,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#467FD3',
     borderRadius: 8,
     alignSelf: 'flex-start',
-    width: 'auto',
-    height: 'auto'
+    minHeight: 40,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   buttonLabel: {
     fontSize: 16,
-    lineHeight: 32,
     color: '#ffffff',
-    paddingVertical: 8,
     paddingHorizontal: 24
   }
 })

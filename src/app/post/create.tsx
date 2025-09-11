@@ -218,8 +218,8 @@ const Create = (): JSX.Element => {
           <Text style={styles.textTitle}>ファイルを選択</Text>
           <Button
             label="釣果画像を選択"
-            buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
-            labelStyle={{ lineHeight: 12, color: '#000000' }}
+            buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
+            labelStyle={{ lineHeight: 16, color: '#000000' }}
             onPress={() => {
               pickImage().then(() => {
               }).catch((error) => {
@@ -261,6 +261,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: 'エリアを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
           {fishArea !== '' && (
             <RNPickerSelect
@@ -273,6 +274,7 @@ const Create = (): JSX.Element => {
               items={areaOptions}
               placeholder={{ label: '詳細エリアを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
 
@@ -292,6 +294,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: '天気を選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>ルアーを選択</Text>
@@ -310,6 +313,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: 'カテゴリーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
           {category !== '' && (
             <RNPickerSelect
@@ -323,6 +327,7 @@ const Create = (): JSX.Element => {
               items={lureOptions}
               placeholder={{ label: 'ルアーを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
           {lure !== '' && (
@@ -336,6 +341,7 @@ const Create = (): JSX.Element => {
               items={lureActionOptions}
               placeholder={{ label: 'ルアーアクションを選択してください', value: '' }}
               style={pickerSelectStyles}
+              useNativeAndroidPickerStyle={false}
             />
           )}
 
@@ -354,6 +360,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: '水深を選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>ストラクチャー（地形変化）を選択</Text>
@@ -382,6 +389,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: 'ストラクチャーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>カバー（障害物）を選択</Text>
@@ -414,6 +422,7 @@ const Create = (): JSX.Element => {
             ]}
             placeholder={{ label: 'カバーを選択してください', value: '' }}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
           />
 
           <Text style={styles.textTitle}>長さを入力(cm)</Text>
@@ -422,6 +431,7 @@ const Create = (): JSX.Element => {
             value={length !== null ? String(length) : ''}
             onChangeText={setLength}
             placeholder='長さ(cm)を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -437,6 +447,7 @@ const Create = (): JSX.Element => {
               }
             }}
             placeholder='重さ(g)を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -452,6 +463,7 @@ const Create = (): JSX.Element => {
               }
             }}
             placeholder='釣果数を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='number-pad'
             returnKeyType='done'
           />
@@ -479,8 +491,7 @@ const Create = (): JSX.Element => {
               setLoading
             )
           }}
-            buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
+            buttonStyle={{ width: '100%', marginBottom: 16 }}
           />
         </View>
       </KeyboardAwareScrollView>

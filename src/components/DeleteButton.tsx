@@ -1,4 +1,4 @@
-import { TouchableOpacity, StyleSheet, Alert } from 'react-native'
+import { Alert } from 'react-native'
 import { router } from 'expo-router'
 import { deleteDoc, doc } from 'firebase/firestore'
 import { ref, deleteObject, listAll } from 'firebase/storage'
@@ -57,8 +57,7 @@ const DeleteButton = ({ post }: Props): JSX.Element | null => {
   return (
     <Button
       label='投稿削除'
-      buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, backgroundColor: 'red', marginBottom: 8 }}
-      labelStyle={{ fontSize: 24, lineHeight: 21 }}
+      buttonStyle={{ backgroundColor: 'red', width: '100%' }}
       onPress={() => { handlePress(post.id, post) }}
     />
   )

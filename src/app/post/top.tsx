@@ -2,12 +2,11 @@ import {
   View, FlatList, StyleSheet, Text, TouchableOpacity, ScrollView, Animated
 } from 'react-native'
 import { useEffect, useState, useCallback } from 'react'
-import { Link, useFocusEffect } from 'expo-router'
+import { Link, useFocusEffect, router } from 'expo-router'
 import { collection, onSnapshot, query, where, orderBy, getDocs } from 'firebase/firestore'
 import { db, auth } from '../../config'
 import { type Post } from '../../../types/post'
 import { type Blog } from '../../../types/blog'
-import { router } from 'expo-router'
 import ListItem from '../../components/ListItem'
 import ListSizeItem from '../../components/ListSizeItem'
 import BlogListItem from '../../components/BlogListItem'

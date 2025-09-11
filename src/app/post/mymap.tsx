@@ -115,21 +115,19 @@ const MyMap = (): JSX.Element => {
               }}
               style={{ zIndex: 1 }}
             >
-              <Callout>
-                <CalloutSubview
-                  onPress={() => {
-                    router.push({ pathname: '/post/detail', params: { id: post.id } })
-                  }}
-                >
-                  <View style={{ alignItems: 'center' }}>
-                    <Text style={styles.area}>{post.area}</Text>
-                    <Image
-                      source={{ uri: post.images?.[0] }}
-                      style={{ width: 200, height: 200, borderRadius: 10 }}
-                    />
-                    <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
-                  </View>
-                </CalloutSubview>
+              <Callout
+                onPress={() => {
+                  router.push({ pathname: '/post/detail', params: { id: post.id } })
+                }}
+              >
+                <View style={{ alignItems: 'center' }}>
+                  <Text style={styles.area}>{post.area}</Text>
+                  <Image
+                    source={{ uri: post.images?.[0] }}
+                    style={{ width: 200, height: 200, borderRadius: 10 }}
+                  />
+                  <Text style={styles.length}>{`${post.length ?? '-'}cm / ${post.weight}g`}</Text>
+                </View>
              </Callout>
             </Marker>
           )

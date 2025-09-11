@@ -78,6 +78,7 @@ const LogIn = (): JSX.Element => {
           autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='emailAddress'
           returnKeyType='done'
           onChangeText={(text) => { setEmail(text) }}
@@ -89,6 +90,7 @@ const LogIn = (): JSX.Element => {
             autoCapitalize='none'
             secureTextEntry={!isPasswordVisible}
             placeholder='パスワードを入力'
+            placeholderTextColor="#CCCCCC"
             textContentType='password'
             returnKeyType='done'
             onChangeText={(text) => { setPassword(text) }}
@@ -107,8 +109,7 @@ const LogIn = (): JSX.Element => {
         <Button
           label='ログイン'
           onPress={() => { void handlePress(email, password) }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', borderRadius: 8 }}
-          labelStyle={{ fontSize: 22, lineHeight: 22 }}
+          buttonStyle={{ width: '100%', marginTop: 8 }}
         />
         <View style={styles.footer}>
           <Link replace href='/auth/signup' asChild >
@@ -146,8 +147,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
-    padding: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 8,
+    minHeight: 40,
     fontSize: 16,
     marginBottom: 16
   },

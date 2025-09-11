@@ -163,6 +163,7 @@ const SignUp = (): JSX.Element => {
           onChangeText={(text) => { setUserName(text) }}
           autoCapitalize='none'
           placeholder='ユーザーネームを入力※10文字以内'
+          placeholderTextColor="#CCCCCC"
           maxLength={10}
           keyboardType='default'
           returnKeyType='done'
@@ -174,6 +175,7 @@ const SignUp = (): JSX.Element => {
           autoCapitalize='none'
           keyboardType='email-address'
           placeholder='メールアドレスを入力'
+          placeholderTextColor="#CCCCCC"
           textContentType='emailAddress'
           returnKeyType='done'
         />
@@ -185,6 +187,7 @@ const SignUp = (): JSX.Element => {
             autoCapitalize='none'
             secureTextEntry={!isPasswordVisible}
             placeholder='パスワードを入力'
+            placeholderTextColor="#CCCCCC"
             textContentType='password'
             returnKeyType='done'
             onChangeText={(text) => { setPassword(text) }}
@@ -207,14 +210,15 @@ const SignUp = (): JSX.Element => {
           onChangeText={(text) => { setProfile(text) }}
           autoCapitalize='none'
           placeholder='プロフィールを入力※30文字以内'
+          placeholderTextColor="#CCCCCC"
           maxLength={30}
           keyboardType='default'
           returnKeyType='done'
         />
         <Button
           label="ユーザー画像を選択"
-          buttonStyle={{ height: 28, backgroundColor: '#D0D0D0', marginBottom: 3 }}
-          labelStyle={{ lineHeight: 16, color: '#000000' }}
+          buttonStyle={{ height: 20, backgroundColor: '#D0D0D0', marginBottom: 3 }}
+          labelStyle={{ fontSize: 16, color: '#000000' }}
           onPress={() => {
             pickImage().then(() => {
             }).catch((error) => {
@@ -251,19 +255,20 @@ const SignUp = (): JSX.Element => {
           </View>
         </View>
 
-        <Button label='新規登録' onPress={() => {
-          void handlePress(
-            email,
-            password,
-            userName,
-            profile,
-            userImage,
-            isTermsChecked,
-            isPrivacyChecked
-          )
-        }}
-          buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 32 }}
-          labelStyle={{ fontSize: 24, lineHeight: 22 }}
+        <Button
+          label='新規登録'
+          onPress={() => {
+            void handlePress(
+              email,
+              password,
+              userName,
+              profile,
+              userImage,
+              isTermsChecked,
+              isPrivacyChecked
+            )
+          }}
+          buttonStyle={{ width: '100%', marginTop: 8 }}
         />
         <View style={styles.footer}>
           <Link replace href='/auth/login' asChild >
@@ -296,7 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#DDDDDD',
     backgroundColor: '#ffffff',
-    height: 40,
+    minHeight: 40,
     padding: 8,
     fontSize: 16,
     marginBottom: 16
