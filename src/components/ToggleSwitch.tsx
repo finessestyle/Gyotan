@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'absolute',
-    bottom: 36,
+    top: 40,
     right: 16,
     alignItems: 'center',
     zIndex: 100,

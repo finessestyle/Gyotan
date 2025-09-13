@@ -198,6 +198,7 @@ const Edit = (): JSX.Element => {
             onChangeText={(text) => { setTitle(text) }}
             value={title}
             placeholder='タイトルを入力'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
@@ -244,6 +245,7 @@ const Edit = (): JSX.Element => {
               { label: '南湖西岸', value: '南湖西岸' }
             ]}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
             placeholder={{ label: 'エリアを選択してください', value: '' }}
           />
           <Text style={styles.textTitle}>季節を選択</Text>
@@ -262,6 +264,7 @@ const Edit = (): JSX.Element => {
               { label: '通年', value: '通年' }
             ]}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
             placeholder={{ label: '季節を選択してください', value: '' }}
           />
           <Text style={styles.textTitle}>緯度</Text>
@@ -269,6 +272,7 @@ const Edit = (): JSX.Element => {
             style={styles.input}
             onChangeText={setLatitude}
             placeholder='緯度を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='decimal-pad'
             returnKeyType='done'
             value={latitude !== null ? String(latitude) : ''}
@@ -278,6 +282,7 @@ const Edit = (): JSX.Element => {
             style={styles.input}
             onChangeText={setLongitude}
             placeholder='経度を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='numeric'
             returnKeyType='done'
             value={longitude !== null ? String(longitude) : ''}
@@ -288,6 +293,7 @@ const Edit = (): JSX.Element => {
             value={access}
             onChangeText={setAccess}
             placeholder='アクセス情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
@@ -297,6 +303,7 @@ const Edit = (): JSX.Element => {
             value={toilet}
             onChangeText={setToilet}
             placeholder='トイレ情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
@@ -306,6 +313,7 @@ const Edit = (): JSX.Element => {
             value={parking}
             onChangeText={setParking}
             placeholder='駐車場情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
@@ -315,6 +323,7 @@ const Edit = (): JSX.Element => {
             value={content}
             onChangeText={setContent}
             placeholder='釣り場内容を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
             multiline
@@ -336,8 +345,7 @@ const Edit = (): JSX.Element => {
                 setLoading
               )
             }}
-              buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
-              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              buttonStyle={{ width: '100%', marginBottom: 16 }}
             />
           )}
         </View>

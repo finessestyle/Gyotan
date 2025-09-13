@@ -329,7 +329,16 @@ const Layout = (): JSX.Element => {
           name="auth/emailCheck"
           options={{
             href: null,
-            tabBarStyle: { display: 'none' }
+            tabBarStyle: { display: 'none' },
+            headerLeft: () => {
+              return (
+                <TouchableOpacity onPress={() => {
+                  router.replace('/auth/login')
+                }}>
+                  <FontAwesome6 name="arrow-left" size={24} color="#ffffff" style={{ paddingLeft: 24 }} />
+                </TouchableOpacity>
+              )
+            }
           }}
         />
         <Tabs.Screen

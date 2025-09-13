@@ -177,14 +177,15 @@ const Create = (): JSX.Element => {
             onChangeText={(text) => { setTitle(text) }}
             value={title}
             placeholder='タイトルを入力'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
           <Text style={styles.textTitle}>ファイルを選択</Text>
           <Button
             label="釣り場画像を選択"
-            buttonStyle={{ height: 24, backgroundColor: '#D0D0D0' }}
-            labelStyle={{ lineHeight: 12, color: '#000000' }}
+            buttonStyle={{ height: 28, backgroundColor: '#D0D0D0' }}
+            labelStyle={{ lineHeight: 16, color: '#000000' }}
             onPress={() => {
               pickImage().then(() => {
               }).catch((error) => {
@@ -223,6 +224,7 @@ const Create = (): JSX.Element => {
               { label: '南湖西岸', value: '南湖西岸' }
             ]}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
             placeholder={{ label: 'エリアを選択してください', value: '' }}
           />
           <Text style={styles.textTitle}>季節を選択</Text>
@@ -241,6 +243,7 @@ const Create = (): JSX.Element => {
               { label: '通年', value: '通年' }
             ]}
             style={pickerSelectStyles}
+            useNativeAndroidPickerStyle={false}
             placeholder={{ label: '季節を選択してください', value: '' }}
           />
           <Text style={styles.textTitle}>緯度</Text>
@@ -249,56 +252,57 @@ const Create = (): JSX.Element => {
             value={latitude !== null ? String(latitude) : ''}
             onChangeText={setLatitude}
             placeholder='緯度を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='numeric'
             returnKeyType='done'
           />
-
           <Text style={styles.textTitle}>経度</Text>
           <TextInput
             style={styles.input}
             value={longitude !== null ? String(longitude) : ''}
             onChangeText={setLongitude}
             placeholder='緯度を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='numeric'
             returnKeyType='done'
           />
-
           <Text style={styles.textTitle}>アクセス情報</Text>
           <TextInput
             style={styles.input}
             value={access !== null ? String(access) : ''}
             onChangeText={setAccess}
             placeholder='アクセス情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
-
           <Text style={styles.textTitle}>トイレ情報</Text>
           <TextInput
             style={styles.input}
             value={toilet !== null ? String(toilet) : ''}
             onChangeText={setToilet}
             placeholder='トイレ情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
-
           <Text style={styles.textTitle}>駐車場情報</Text>
           <TextInput
             style={styles.input}
             value={parking !== null ? String(parking) : ''}
             onChangeText={setParking}
             placeholder='駐車場情報を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
           />
-
           <Text style={styles.textTitle}>釣り場内容</Text>
           <TextInput
             style={styles.contentInput}
             value={content}
             onChangeText={(text) => { setContent(text) }}
             placeholder='釣り場内容を入力してください'
+            placeholderTextColor="#CCCCCC"
             keyboardType='default'
             returnKeyType='done'
             multiline
@@ -319,8 +323,7 @@ const Create = (): JSX.Element => {
                 setLoading
               )
             }}
-              buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30, marginBottom: 24 }}
-              labelStyle={{ fontSize: 24, lineHeight: 21 }}
+              buttonStyle={{ width: '100%', marginBottom: 16 }}
             />
           )}
         </View>

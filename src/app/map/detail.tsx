@@ -85,7 +85,6 @@ const Detail = (): JSX.Element => {
           <Button
             label='編集'
             buttonStyle={{ width: '100%', marginTop: 8, alignItems: 'center', height: 30 }}
-            labelStyle={{ fontSize: 24, lineHeight: 21 }}
             onPress={() => { handlePress(id) }}
           />
         )}

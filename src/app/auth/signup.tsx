@@ -341,7 +341,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   footer: {
-    flexDirection: 'row'
   },
   footerLink: {
     marginTop: 8,
