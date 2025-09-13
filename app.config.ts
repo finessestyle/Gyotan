@@ -4,7 +4,7 @@ import type { ExpoConfig } from '@expo/config'
 const config: ExpoConfig = {
   name: 'Gyotan',
   slug: 'gyotan',
-  version: '1.0.6',
+  version: '1.0.7',
   orientation: 'portrait',
   icon: './assets/splash-icon(1).png',
   userInterfaceStyle: 'light',
@@ -15,7 +15,7 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: 'jp.gyotan.Gyotan',
-    buildNumber: '23',
+    buildNumber: '24',
     supportsTablet: false,
     config: {
       googleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
@@ -31,11 +31,11 @@ const config: ExpoConfig = {
     versionCode: 1,
     googleServicesFile: './google-services.json',
     config: {
-      googleMobileAdsAppId: process.env.EXPO_PUBLIC_ADMOB_INTERSTITIAL_ID,
       googleMaps: {
         apiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
       }
-    }
+    },
+    permissions: ['ACCESS_FINE_LOCATION', 'CAMERA', 'READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']
   },
   extra: {
     eas: {
@@ -48,6 +48,7 @@ const config: ExpoConfig = {
     expoPublicFbMessagingSenderId: process.env.EXPO_PUBLIC_FB_MESSAGING_SENDER_ID,
     expoPublicFbWebAppId: process.env.EXPO_PUBLIC_FB_WEB_APP_ID,
     expoPublicFbIosAppId: process.env.EXPO_PUBLIC_FB_IOS_APP_ID,
+    expoPublicFbAndroidAppId: process.env.EXPO_PUBLIC_FB_ANDROID_APP_ID,
     expoPublicFbOpenWeatherApiKey: process.env.EXPO_PUBLIC_FB_OPEN_WEATHER_API_KEY,
     expoPublicGoogleMapsApiKey: process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
   },
